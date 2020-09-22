@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"github.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="leetcode题目的一些记录，记录方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LeetCode总结">
+<meta property="og:url" content="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/20/leetcode%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="siyuan Chen">
+<meta property="og:description" content="leetcode题目的一些记录，记录方法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/pchen7592/picgo/raw/master/image-20200730112751015.png">
+<meta property="og:image" content="c:/Users/陈思远/AppData/Roaming/Typora/typora-user-images/image-20200812115145367.png">
+<meta property="og:image" content="c:/Users/陈思远/AppData/Roaming/Typora/typora-user-images/image-20200812123905412.png">
+<meta property="og:image" content="c:/Users/陈思远/AppData/Roaming/Typora/typora-user-images/image-20200812125250593.png">
+<meta property="og:image" content="c:/Users/陈思远/AppData/Roaming/Typora/typora-user-images/image-20200812175321802.png">
+<meta property="og:image" content="c:/Users/陈思远/AppData/Roaming/Typora/typora-user-images/image-20200812175516556.png">
+<meta property="og:image" content="c:/Users/陈思远/AppData/Roaming/Typora/typora-user-images/image-20200812180616301.png">
+<meta property="article:published_time" content="2020-09-20T02:39:42.000Z">
+<meta property="article:modified_time" content="2020-09-22T00:03:51.249Z">
+<meta property="article:author" content="Peter chen">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/pchen7592/picgo/raw/master/image-20200730112751015.png">
+
+<link rel="canonical" href="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/20/leetcode%E6%80%BB%E7%BB%93/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-cn'
+  };
+</script>
+
+  <title>LeetCode总结 | siyuan Chen</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">siyuan Chen</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-cn">
+    <link itemprop="mainEntityOfPage" href="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/20/leetcode%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Peter chen">
+      <meta itemprop="description" content="siyuan Chen personal page">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="siyuan Chen">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          LeetCode总结
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-09-20 10:39:42" itemprop="dateCreated datePublished" datetime="2020-09-20T10:39:42+08:00">2020-09-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-09-22 08:03:51" itemprop="dateModified" datetime="2020-09-22T08:03:51+08:00">2020-09-22</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+            <div class="post-description">leetcode题目的一些记录，记录方法。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="104-二叉树最大深度"><a href="#104-二叉树最大深度" class="headerlink" title="104.二叉树最大深度"></a>104.二叉树最大深度</h2><p><strong>给定一个二叉树，找出其最大深度。</strong></p>
+<p><strong>二叉树的深度为根节点到最远叶子节点的最长路径上的节点数。</strong></p>
+<h4 id="递归方法"><a href="#递归方法" class="headerlink" title="递归方法"></a>递归方法</h4><p><strong>方法一</strong></p>
+<p>通过遍历二叉树来获取最大深度（先序遍历：根左右）</p>
+<p>访问根节点的时，代表从其父节点向下访问一层，故将深度+1。函数在进行左右节点访问后返回，返回即代表回到其父节点，depth-1。使用max记录最大值。</p>
+<p>tips：go语言中没有static类型变量，只好用全局变量保持状态（闭包匿名函数又无法实现递归调用。。。）</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// go</span></span><br><span class="line"><span class="keyword">var</span> depth <span class="keyword">int</span>= <span class="number">0</span></span><br><span class="line"><span class="keyword">var</span> max <span class="keyword">int</span> = <span class="number">0</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">maxDepth</span><span class="params">(root *TreeNode)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">    depth, max = <span class="number">0</span>, <span class="number">0</span>	<span class="comment">//这一步初始化是因为程序有时会令其初始值为2，如果不报错可省略</span></span><br><span class="line">    <span class="keyword">if</span> root == <span class="literal">nil</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    &#125;</span><br><span class="line">    Traverse(root)</span><br><span class="line">    <span class="keyword">return</span> max</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Traverse</span><span class="params">(node *TreeNode)</span></span>&#123;</span><br><span class="line">    depth++</span><br><span class="line">    <span class="keyword">if</span> max &lt; depth&#123;</span><br><span class="line">        max = depth</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> node.Left!=<span class="literal">nil</span>&#123;</span><br><span class="line">        Traverse(node.Left)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> node.Right!=<span class="literal">nil</span>&#123;</span><br><span class="line">        Traverse(node.Right)</span><br><span class="line">    &#125;</span><br><span class="line">    depth--</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>中序遍历和后序遍历为什么不可以？</p>
+<p><strong>方法二</strong></p>
+<p>通过返回左右节点深度来递归的获取根节点深度。</p>
+<p>递归定义：定义节点深度为，其左右节点深度的最大值加1。停止条件：当一个节点为空时其深度为0并返回。通过这两个我们可以写出函数。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># python</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">maxDepth</span>(<span class="params">self, root: TreeNode</span>) -&gt; int:</span></span><br><span class="line">        <span class="keyword">if</span> root == <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        <span class="keyword">return</span> depth(root)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">depth</span>(<span class="params">node: TreeNode</span>) -&gt; int:</span></span><br><span class="line">    <span class="keyword">if</span> node.left != <span class="literal">None</span>:	<span class="comment"># 访问左节点</span></span><br><span class="line">        ld = depth(node.left)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        ld = <span class="number">0</span></span><br><span class="line">    <span class="keyword">if</span> node.right != <span class="literal">None</span>:	<span class="comment"># 访问右节点</span></span><br><span class="line">        rd = depth(node.right)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        rd = <span class="number">0</span></span><br><span class="line">    <span class="keyword">return</span> max(ld,rd)+<span class="number">1</span>		<span class="comment"># 访问根节点</span></span><br></pre></td></tr></table></figure>
+
+<p>这其实可以看做是对二叉树的后序遍历。</p>
+<h4 id="迭代方法"><a href="#迭代方法" class="headerlink" title="迭代方法"></a>迭代方法</h4><p>首先，可以思考函数的调用过程，进行函数调用时，被调用的函数会被压入栈顶，当函数返回时，当前函数会被弹出，而当前执行的函数的信息一直保存在栈顶。我们可以采用类似的结构，将递归转变为迭代。</p>
+<p>一个函数需要记录的是：调用参数，局部变量，函数执行的状态。（返回值之后会讨论）</p>
+<p><strong>将方法一改为迭代</strong></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// go</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Traverse</span><span class="params">(node *TreeNode)</span></span>&#123;</span><br><span class="line">    <span class="comment">// 第一件事：访问根节点</span></span><br><span class="line">    depth++</span><br><span class="line">    <span class="keyword">if</span> max &lt; depth&#123;</span><br><span class="line">        max = depth</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 第二件事：访问左节点</span></span><br><span class="line">    <span class="keyword">if</span> node.Left!=<span class="literal">nil</span>&#123;</span><br><span class="line">        Traverse(node.Left)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 第三件事：访问右节点</span></span><br><span class="line">    <span class="keyword">if</span> node.Right!=<span class="literal">nil</span>&#123;</span><br><span class="line">        Traverse(node.Right)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 第四件事：返回父节点</span></span><br><span class="line">    depth--</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这次我们按照函数调用的思路来改造该函数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># python</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">stackframe</span>:</span>   <span class="comment"># 记录栈帧</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, node, status</span>):</span></span><br><span class="line">        self.node = node    	<span class="comment"># 记录当前节点</span></span><br><span class="line">        self.status = status	<span class="comment"># 记录当前做第几件事</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">maxDepth</span>(<span class="params">self, root: TreeNode</span>) -&gt; int:</span></span><br><span class="line">        depth = <span class="number">0</span>   <span class="comment"># 当前节点深度</span></span><br><span class="line">        maxd = <span class="number">0</span>    <span class="comment"># 最大深度</span></span><br><span class="line">        <span class="keyword">if</span> root == <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        stack = [stackframe(root, <span class="number">1</span>)]  <span class="comment"># 将root压入栈</span></span><br><span class="line">        <span class="keyword">while</span>(len(stack) != <span class="number">0</span>):</span><br><span class="line">            top = stack[len(stack)<span class="number">-1</span>]  <span class="comment"># 从栈顶获取参数</span></span><br><span class="line">            <span class="keyword">if</span> top.status == <span class="number">1</span>:        <span class="comment"># 执行第一条语句</span></span><br><span class="line">                depth +=<span class="number">1</span></span><br><span class="line">                <span class="keyword">if</span> maxd &lt; depth:</span><br><span class="line">                    maxd = depth</span><br><span class="line">                top.status += <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> top.status == <span class="number">2</span>:        <span class="comment"># 执行第二条语句</span></span><br><span class="line">            	<span class="comment"># if node.Left!=nil&#123;</span></span><br><span class="line">        		<span class="comment"># 	Traverse(node.Left)</span></span><br><span class="line">    			<span class="comment"># &#125;</span></span><br><span class="line">                <span class="comment"># 与下面逻辑一致</span></span><br><span class="line">                <span class="keyword">if</span> top.node.left != <span class="literal">None</span>:</span><br><span class="line">                    top.status += <span class="number">1</span></span><br><span class="line">                    stack.append(stackframe(top.node.left, <span class="number">1</span>))</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    top.status += <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> top.status == <span class="number">3</span>:        <span class="comment"># 执行第三条语句</span></span><br><span class="line">                <span class="keyword">if</span> top.node.right != <span class="literal">None</span>:</span><br><span class="line">                    top.status += <span class="number">1</span></span><br><span class="line">                    stack.append(stackframe(top.node.right, <span class="number">1</span>))</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    top.status += <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> top.status == <span class="number">4</span>:        <span class="comment"># 执行第四条语句</span></span><br><span class="line">                depth -= <span class="number">1</span></span><br><span class="line">                stack.pop()</span><br><span class="line">        <span class="keyword">return</span> maxd</span><br></pre></td></tr></table></figure>
+
+<p>node字段记录当前节点的指针，用来访问节点</p>
+<p>status字段用于记录节点的运行状态。类比函数调用，假设A调用B，当B返回后A继续执行，这个继续执行的位置就由status记录。</p>
+<p>首先把root节点压入栈，之后进入循环体，在循环体中每次都访问栈顶（类比当前执行的函数），根据status判断执行哪一步。</p>
+<p>当status等于2和3时，在递归方式中是函数调用，这里我们就要进行手动的push stack，将数据压入栈中，这里压入的数据有参数node，函数状态status。之后重新开始迭代，类比进入了被调用的函数</p>
+<p>status等于4时，需要将执行返回任务，深度-1并pop stack。pop 代表了函数的返回</p>
+<p><strong>总结</strong>：</p>
+<p>当进行函数调用时，转变为手工push stack，记录传入参数，状态。当函数返回时，pop stack。</p>
+<p>这里的程序被我划分为了4个动作，具体动作划分的逻辑，我认为就是按照函数调用划分开：</p>
+<p><img src="https://gitee.com/pchen7592/picgo/raw/master/image-20200730112751015.png" alt="image-20200730112751015"></p>
+<p><strong>将方法2转为迭代</strong></p>
+<p>方法2的函数中涉及到了返回值，这就涉及了返回值的处理。</p>
+<p>首先有一个认知，一个函数栈中两个相邻的元素，在下面的是调用者，上面的是被调用者。</p>
+<p>给栈中创建一个放置返回值的字段，然后将返回值放入栈顶下一个元素放置返回值的位置，然后由调用者决定这个值怎么用。</p>
+<p>不过这个整体比较复杂，，，然后一开始是用python写的，然后发现它没指针。。。。所以就偷懒没弄了</p>
+<p><strong>进一步思考</strong></p>
+<p>后面又想了想，我发现这两种依据修改递归的方法无非就是记录了状态，那我何必需要将任务依据函数调用进行划分呢？只需要记录其是否访问过左，右节点就行了。</p>
+<p>首先写了一个迭代的后序遍历函数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">node</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, node, go_left, go_right</span>):</span></span><br><span class="line">        self.node = node</span><br><span class="line">        self.go_left = go_left</span><br><span class="line">        self.go_right = go_right</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">LRD</span>(<span class="params">self, root: TreeNode</span>) -&gt; int:</span></span><br><span class="line">        stack = []</span><br><span class="line">        stack.append(node(root, <span class="literal">False</span>, <span class="literal">False</span>))</span><br><span class="line">        <span class="keyword">while</span>(len(stack) != <span class="number">0</span>):</span><br><span class="line">            <span class="comment"># 获取栈顶</span></span><br><span class="line">            cur_node = stack[len(stack)<span class="number">-1</span>]</span><br><span class="line">            <span class="comment"># 访问左子树</span></span><br><span class="line">            <span class="keyword">if</span> cur_node.go_left == <span class="literal">False</span>:</span><br><span class="line">                <span class="keyword">if</span> cur_node.node.left != <span class="literal">None</span>:</span><br><span class="line">                    cur_node.go_left = <span class="literal">True</span></span><br><span class="line">                    stack.append(node(cur_node.node.left, <span class="literal">False</span>, <span class="literal">False</span>))</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                cur_node.go_left = <span class="literal">True</span></span><br><span class="line">			<span class="comment"># 访问右子树</span></span><br><span class="line">            <span class="keyword">if</span> cur_node.go_right == <span class="literal">False</span>:</span><br><span class="line">                <span class="keyword">if</span> cur_node.node.right != <span class="literal">None</span>:</span><br><span class="line">                    cur_node.go_right = <span class="literal">True</span></span><br><span class="line">                    stack.append(node(cur_node.node.right, <span class="literal">False</span>, <span class="literal">False</span>))</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                cur_node.go_right = <span class="literal">True</span></span><br><span class="line">            <span class="comment"># 访问</span></span><br><span class="line">            print(cur_node.node.val)</span><br><span class="line">            stack.pop()</span><br></pre></td></tr></table></figure>
+
+<p>然后需要将后序遍历改成返回最大深度的函数，难点还是返回值的处理</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">node</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, node</span>):</span></span><br><span class="line">        self.node = node</span><br><span class="line">        self.go_left = <span class="literal">False</span></span><br><span class="line">        self.go_right = <span class="literal">False</span></span><br><span class="line">        self.rdepth = <span class="number">0</span></span><br><span class="line">        self.ldepth = <span class="number">0</span></span><br><span class="line">        self.retval = <span class="number">0</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">maxDepth</span>(<span class="params">self, root: TreeNode</span>) -&gt; int:</span></span><br><span class="line">        stack = []</span><br><span class="line">        <span class="keyword">if</span> root == <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        stack.append(node(root))</span><br><span class="line">        <span class="keyword">while</span>(len(stack) != <span class="number">0</span>):</span><br><span class="line">            <span class="comment"># 获取栈顶</span></span><br><span class="line">            cur_node = stack[len(stack)<span class="number">-1</span>]</span><br><span class="line">			<span class="comment"># 处理返回值</span></span><br><span class="line">            <span class="keyword">if</span> cur_node.go_right == <span class="literal">False</span>:</span><br><span class="line">                <span class="keyword">if</span> cur_node.go_left == <span class="literal">True</span>:</span><br><span class="line">                    cur_node.ldepth = cur_node.retval</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                cur_node.rdepth = cur_node.retval</span><br><span class="line">			<span class="comment"># 访问左子树</span></span><br><span class="line">            <span class="keyword">if</span> cur_node.go_left == <span class="literal">False</span>:</span><br><span class="line">                <span class="keyword">if</span> cur_node.node.left != <span class="literal">None</span>:</span><br><span class="line">                    cur_node.go_left = <span class="literal">True</span></span><br><span class="line">                    stack.append(node(cur_node.node.left))</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                cur_node.go_left = <span class="literal">True</span></span><br><span class="line">			<span class="comment"># 访问右子树</span></span><br><span class="line">            <span class="keyword">if</span> cur_node.go_right == <span class="literal">False</span>:</span><br><span class="line">                <span class="keyword">if</span> cur_node.node.right != <span class="literal">None</span>:</span><br><span class="line">                    cur_node.go_right = <span class="literal">True</span></span><br><span class="line">                    stack.append(node(cur_node.node.right))</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                cur_node.go_right = <span class="literal">True</span></span><br><span class="line">            <span class="comment"># 返回退栈，如果stack长度等于1，代表只剩下根节点了，直接return</span></span><br><span class="line">            <span class="keyword">if</span> len(stack) &gt; <span class="number">1</span>:</span><br><span class="line">                stack[len(stack)<span class="number">-2</span>].retval = \</span><br><span class="line">                        max(cur_node.ldepth, cur_node.rdepth) + <span class="number">1</span></span><br><span class="line">                stack.pop()</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">return</span> max(cur_node.ldepth, cur_node.rdepth) + <span class="number">1</span></span><br><span class="line">  </span><br></pre></td></tr></table></figure>
+
+<p>在这个特定问题中返回值的处理，还是比较容易解决的，只要判断该节点是否访问过左右节点就行，如果访问过左，没访问过右，则该返回值赋值给左，如果访问过左右，则赋值给右，其与情况不会出现有意义的返回值。这种方法虽然可行，但是总觉得不是很有扩展性。</p>
+<p>最后，当栈大小再次回到1时，即仅剩根节点，这是这时只需要将深度返回即可。</p>
+<p><strong>总结</strong></p>
+<p>通过这个题目，我也顺带复习了下函数的运行规则与调用规则，并且复习了如何将递归函数转化为迭代函数的方法。</p>
+<h2 id="面试题-10-01-合并排序的数组"><a href="#面试题-10-01-合并排序的数组" class="headerlink" title="面试题 10.01. 合并排序的数组"></a>面试题 10.01. 合并排序的数组</h2><p><strong>给定两个排序后的数组 A 和 B，其中 A 的末端有足够的缓冲空间容纳 B。 编写一个方法，将 B 合并入 A 并排序。</strong></p>
+<p><strong>初始化 A 和 B 的元素数量分别为 m 和 n。</strong></p>
+<p>合并排序好的数组在有足够空间的情况下，所需的时间复杂度是O(m+n)，这道题的关键是如何使用最少的空间复杂度来解决该问题。</p>
+<p>所以思考一个不需要额外空间的合并方法，常规的从小到大是不可行的，因为从数组中间插入的开销是O(n)级别的。</p>
+<p>考虑从合并后最后位置插入，由于A有足够大的空间，合并后A仍能容纳，不需要额外空间，同时从末尾插入不需要对数组元素进行移位，搞定！</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">merge</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; A, <span class="keyword">int</span> m, <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; B, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> k=m+n<span class="number">-1</span>;	<span class="comment">// 合并后最后一个元素位置</span></span><br><span class="line">        m--;	<span class="comment">// 这里省2个变量的内存，不过感觉这样修改不好让人看懂</span></span><br><span class="line">        n--;</span><br><span class="line">        <span class="keyword">while</span>(m&gt;=<span class="number">0</span> &amp;&amp; n&gt;=<span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(A[m] &gt; B[n])&#123;</span><br><span class="line">                A[k--] = A[m--];</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span>&#123;</span><br><span class="line">                A[k--] = B[n--];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span>(n&gt;=<span class="number">0</span>)&#123;	</span><br><span class="line">            A[k--] = B[n--];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//这里如果m或者n大于0代表一个数组归并完成一个数组有剩余，如果A有剩余则就会放入其原来的位置，所以可以省略</span></span><br><span class="line">        <span class="comment">//while(m&gt;=0)&#123;		</span></span><br><span class="line">        <span class="comment">//    A[k--] = A[m--];</span></span><br><span class="line">        <span class="comment">//&#125;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="836-矩形重叠"><a href="#836-矩形重叠" class="headerlink" title="836. 矩形重叠"></a>836. 矩形重叠</h2><p><strong>矩形以列表 [x1, y1, x2, y2] 的形式表示，其中 (x1, y1) 为左下角的坐标，(x2, y2) 是右上角的坐标。如果相交的面积为正，则称两矩形重叠。需要明确的是，只在角或边接触的两个矩形不构成重叠。给出两个矩形，判断它们是否重叠并返回结果。</strong></p>
+<p><strong>两个矩形 rec1 和 rec2 都以含有四个整数的列表的形式给出。</strong><br><strong>矩形中的所有坐标都处于 -10^9 和 10^9 之间。</strong><br><strong>x 轴默认指向右，y 轴默认指向上。</strong><br><strong>你可以仅考虑矩形是正放的情况。</strong></p>
+<p>两个矩形的位置会有很多不同的情况，如果将其一一列举再进行判断，就会十分复杂。</p>
+<p>一个十分简单的判断方法就是将两个矩形分别投影至x，y轴上，再判断每一个轴上的投影是否有重叠，如果x，y轴投影均有重叠，则矩形有重叠，否则无重叠。(这道题考验转化能力)</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">isLineOverlap</span><span class="params">(<span class="keyword">int</span> amin, <span class="keyword">int</span> amax, <span class="keyword">int</span> bmin, <span class="keyword">int</span> bmax)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(amin &lt; bmin)&#123;</span><br><span class="line">        <span class="keyword">if</span>(amax &lt;= bmin)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(amin &gt; bmin)&#123;</span><br><span class="line">        <span class="keyword">if</span>(bmax &lt;= amin)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;   </span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">isRectangleOverlap</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; rec1, <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; rec2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(isLineOverlap(rec1[<span class="number">0</span>], rec1[<span class="number">2</span>], rec2[<span class="number">0</span>], rec2[<span class="number">2</span>]) &amp;&amp; </span><br><span class="line">           isLineOverlap(rec1[<span class="number">1</span>], rec1[<span class="number">3</span>], rec2[<span class="number">1</span>], rec2[<span class="number">3</span>]))</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="221-最大正方形"><a href="#221-最大正方形" class="headerlink" title="221. 最大正方形"></a>221. 最大正方形</h2><p><strong>在一个由 0 和 1 组成的二维矩阵内，找到只包含 1 的最大正方形，并返回其面积。</strong></p>
+<p><strong>示例:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">输入: </span><br><span class="line"></span><br><span class="line">1 0 1 0 0</span><br><span class="line">1 0 1 1 1</span><br><span class="line">1 1 1 1 1</span><br><span class="line">1 0 0 1 0</span><br><span class="line"></span><br><span class="line">输出: 4</span><br></pre></td></tr></table></figure>
+
+<p>这个问题如果使用暴力解，搜索每一种可能性，则需要搜索5x5,4x4,3x3,2x2,1x1大小的所有正方形，计算复杂度十分大，不可取。</p>
+<p>由于这个问题明显不能划分为<strong>独立的</strong>子问题，所以不能用分治。自然思考到了动态规划。</p>
+<p>动态规划的关键是思考子问题的的划分方法，将大问题划分为子问题。</p>
+<p><strong>经历了如下历程</strong></p>
+<ol>
+<li>dp[i]代表左上ixi正方形区域中最大的正方形面积。但是题目的区域并不一定是正方形，所以需要变一下。</li>
+<li>dp[i,j]代表的是从左上，到第i行，第j列的最大正方形面积。这种构建子问题的方法问题在于构建dp[i,j] = f(dp[i,j-1])这样的递推关系式时，有些困难。</li>
+<li>dp[i,j]代表以(i,j)为右下角坐标的最大的正方形，最后只需要遍历整个dp[i,j]，就能找到最大的正方形。</li>
+</ol>
+<p>那么递推关系式又如何寻找呢，由于定义的问题是<strong>dp[i,j]代表以(i,j)为右下角坐标的最大的正方形</strong>，所以其大小肯定与左上方区域有关，dp算法一般考虑其<strong>临近</strong>的几个值，这里我先尝试dp[i-1,j], dp[i,j-1], dp[i-1,j-1]这3个</p>
+<p><img src="C:\Users\陈思远\AppData\Roaming\Typora\typora-user-images\image-20200812115145367.png" alt="image-20200812115145367"></p>
+<p>若matrix[i,j] == 0, 则dp[i,j] = 0</p>
+<p>若matrix[i,j] = =1, 则去寻找dp[i,j]与dp[i-1,j], dp[i,j-1], dp[i-1,j-1]的关系。</p>
+<p><img src="C:\Users\陈思远\AppData\Roaming\Typora\typora-user-images\image-20200812123905412.png" alt="image-20200812123905412"></p>
+<p>于是我们得到递推关系式：</p>
+<p>​    dp[i,j] = 0     if matrix[i,j] == 0</p>
+<p>​    dp[i,j]=min{dp[i-1,j], dp[i,j-1], dp[i-1,j-1]}     if matrix[i,j] == 1</p>
+<p>这个递推关系需要确定左上角3个值。</p>
+<p>接下来寻找初值条件，显而易见的，左上角部分值只能为0,1。有了初值，就可以进行迭代求解了：</p>
+<p><img src="C:\Users\陈思远\AppData\Roaming\Typora\typora-user-images\image-20200812125250593.png" alt="image-20200812125250593"></p>
+<p>迭代的方向是从左上到右下，最后找到最大的dp[i,j]。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">inline</span> <span class="keyword">int</span> <span class="title">triMin</span><span class="params">(<span class="keyword">int</span> num1, <span class="keyword">int</span> num2, <span class="keyword">int</span> num3)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> min;</span><br><span class="line">        num1 &lt; num2 ? min = num1 : min = num2;</span><br><span class="line">        min &lt; num3 ?  min = min : min = num3;</span><br><span class="line">        <span class="keyword">return</span> min; </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">maximalSquare</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">char</span>&gt;&gt;&amp; matrix)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 获取matrix大小</span></span><br><span class="line">        <span class="keyword">int</span> row = matrix.size();</span><br><span class="line">        <span class="keyword">if</span>(row == <span class="number">0</span>) </span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> col = matrix[<span class="number">0</span>].size();</span><br><span class="line">        <span class="function"><span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&gt; <span class="title">maxM</span><span class="params">(row, <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;(col, <span class="number">0</span>))</span></span>;</span><br><span class="line">        <span class="comment">// cout &lt;&lt; maxM.size() &lt;&lt; maxM[0].size();</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 设定初值</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> iterRow = <span class="number">0</span>; iterRow &lt; matrix.size(); iterRow++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(matrix[iterRow][<span class="number">0</span>] == <span class="string">&#x27;1&#x27;</span>)&#123;</span><br><span class="line">                maxM[iterRow][<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span>&#123;</span><br><span class="line">                maxM[iterRow][<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> iterCol = <span class="number">1</span>; iterCol &lt; matrix[<span class="number">0</span>].size(); iterCol++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(matrix[<span class="number">0</span>][iterCol] == <span class="string">&#x27;1&#x27;</span>)&#123;</span><br><span class="line">                maxM[<span class="number">0</span>][iterCol] = <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span>&#123;</span><br><span class="line">                maxM[<span class="number">0</span>][iterCol] = <span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 从左上往右下赋值</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; min(row,col); i++)&#123;	</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j = i; j &lt; col; j++)&#123;</span><br><span class="line">                <span class="keyword">if</span> (matrix[i][j] != <span class="string">&#x27;0&#x27;</span>)&#123;</span><br><span class="line">                    maxM[i][j] = triMin(maxM[i<span class="number">-1</span>][j], maxM[i][j<span class="number">-1</span>], maxM[i<span class="number">-1</span>][j<span class="number">-1</span>])+<span class="number">1</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span>&#123;</span><br><span class="line">                    maxM[i][j] = <span class="number">0</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j = i; j &lt; row; j++)&#123;</span><br><span class="line">                <span class="keyword">if</span> (matrix[j][i] != <span class="string">&#x27;0&#x27;</span>)&#123;</span><br><span class="line">                    maxM[j][i] = triMin(maxM[j<span class="number">-1</span>][i], maxM[j][i<span class="number">-1</span>], maxM[j<span class="number">-1</span>][i<span class="number">-1</span>])+<span class="number">1</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span>&#123;</span><br><span class="line">                    maxM[j][i] = <span class="number">0</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// // 输出matrix</span></span><br><span class="line">        <span class="comment">// for(int iterRow = 0; iterRow &lt; row; iterRow++)&#123;</span></span><br><span class="line">        <span class="comment">//     for(int iterCol = 0; iterCol &lt; col; iterCol++)&#123;</span></span><br><span class="line">        <span class="comment">//         cout &lt;&lt; matrix[iterRow][iterCol] &lt;&lt; &quot; &quot;;</span></span><br><span class="line">        <span class="comment">//     &#125;</span></span><br><span class="line">        <span class="comment">//     cout &lt;&lt; &quot;\n&quot;;</span></span><br><span class="line">        <span class="comment">// &#125;</span></span><br><span class="line">        <span class="comment">// cout&lt;&lt;&quot;\n\n&quot;;</span></span><br><span class="line">        <span class="comment">// // 输出maxM</span></span><br><span class="line">        <span class="comment">// for(int iterRow = 0; iterRow &lt; row; iterRow++)&#123;</span></span><br><span class="line">        <span class="comment">//     for(int iterCol = 0; iterCol &lt; col; iterCol++)&#123;</span></span><br><span class="line">        <span class="comment">//         cout &lt;&lt; maxM[iterRow][iterCol] &lt;&lt; &quot; &quot;;</span></span><br><span class="line">        <span class="comment">//     &#125;</span></span><br><span class="line">        <span class="comment">//     cout &lt;&lt; &quot;\n&quot;;</span></span><br><span class="line">        <span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 找到最大面积</span></span><br><span class="line">        <span class="keyword">int</span> maxlen = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> iterRow = <span class="number">0</span>; iterRow &lt; row; iterRow++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> iterCol = <span class="number">0</span>; iterCol &lt; col; iterCol++)&#123;</span><br><span class="line">                <span class="keyword">if</span> (maxM[iterRow][iterCol] &gt; maxlen)&#123;</span><br><span class="line">                    maxlen = maxM[iterRow][iterCol];</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> maxlen*maxlen;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>事实上还有优化方法，就是可以在对dp进行赋值时就进行最大值统计，这样可以省去最后一个循环。</p>
+<h2 id="5-最长回文子串"><a href="#5-最长回文子串" class="headerlink" title="5. 最长回文子串"></a>5. 最长回文子串</h2><p>给定一个字符串 <code>s</code>，找到 <code>s</code> 中最长的回文子串。你可以假设 <code>s</code> 的最大长度为 1000。</p>
+<p>这显然是一个动态规划算法题，关键是如何构造递归关系式。</p>
+<p><strong>一开始我的想法是</strong></p>
+<p>记录以i为结尾的最长的回文字符串。dp[i]的值记录最长串的起始位置。范围[dp[i]~i]</p>
+<p>dp[i] = dp[i-1]    if s[i] == s[dp[i]-1]</p>
+<p>但是当s[i] ≠ s[dp[i]-1] 事情就复杂了，我们无法从记录的信息dp[i-1]中获取我们需要的信息，所以这个方法不可行。</p>
+<p><strong>答案方法:</strong></p>
+<p><strong>首先是递归关系式</strong></p>
+<p>记dp[i,j]为s[i]~s[j]是否为回文字符串。显然需要i&lt;=j。</p>
+<p>关键的观察，如果一个串是回文字符串，那么其左右个减少一个元素的字串也是回文字符串</p>
+<p>dp[i,j] = true    if dp[i+1,j-1] == true且 s[i] == s[j]</p>
+<p>递归关系式找到了。</p>
+<p><strong>接下来寻找初值</strong></p>
+<p>dp[i,i] = true，</p>
+<p>dp[i, i+1] = true     if s[i] == s[i+1]</p>
+<p>计算方式可以画成下图</p>
+<p><img src="C:\Users\陈思远\AppData\Roaming\Typora\typora-user-images\image-20200812175321802.png" alt="image-20200812175321802"></p>
+<p><strong>代码如下：</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="built_in">string</span> <span class="title">longestPalindrome</span><span class="params">(<span class="built_in">string</span> s)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(s.size() == <span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">bool</span> dp[s.size()][s.size()];</span><br><span class="line">        <span class="keyword">int</span> i,j = <span class="number">0</span>;    <span class="comment">// 迭代变量，i代表行号，i+j代表列号</span></span><br><span class="line">        <span class="comment">// 设定初值</span></span><br><span class="line">        <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; s.size()<span class="number">-1</span>; i++)&#123;</span><br><span class="line">            dp[i][i] = <span class="literal">true</span>;</span><br><span class="line">            s[i] == s[i+<span class="number">1</span>] ? dp[i][i+<span class="number">1</span>] = <span class="literal">true</span> : dp[i][i+<span class="number">1</span>] = <span class="literal">false</span>; </span><br><span class="line">        &#125;</span><br><span class="line">        dp[i][i] = <span class="literal">true</span>;</span><br><span class="line">        <span class="comment">// 根据迭代关系式计算</span></span><br><span class="line">        <span class="keyword">for</span>(j = <span class="number">2</span>; j &lt; s.size(); j++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; s.size()-j; i++)&#123;</span><br><span class="line">                (dp[i+<span class="number">1</span>][i+j<span class="number">-1</span>] &amp;&amp; s[i] == s[i+j]) ? dp[i][i+j] = <span class="literal">true</span> : dp[i][i+j] = <span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// // 打印dp表</span></span><br><span class="line">        <span class="comment">// for(int i = 0; i &lt; s.size(); i++)&#123;</span></span><br><span class="line">        <span class="comment">//     for(int j = 0; j &lt; s.size(); j++)&#123;</span></span><br><span class="line">        <span class="comment">//         i &gt; j ? cout &lt;&lt; 0 : cout &lt;&lt; dp[i][j];</span></span><br><span class="line">        <span class="comment">//     &#125;</span></span><br><span class="line">        <span class="comment">//     cout &lt;&lt; endl;</span></span><br><span class="line">        <span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 找到最大的回文串</span></span><br><span class="line">        <span class="keyword">for</span>(j = s.size()<span class="number">-1</span>; j &gt;= <span class="number">0</span>; j--)&#123;</span><br><span class="line">            <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; s.size()-j; i++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(dp[i][i+j] == <span class="literal">true</span>)</span><br><span class="line">                    <span class="keyword">return</span> s.substr(i,j+<span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;oops&quot;</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>进一步的优化</strong></p>
+<p>再次回顾计算方式图</p>
+<p><img src="C:\Users\陈思远\AppData\Roaming\Typora\typora-user-images\image-20200812175516556.png" alt="image-20200812175516556"></p>
+<p>我们只需要最大项，而之前的方法会记录所有的值。所以思考能否不用dp数组存储，直接储存最大值。</p>
+<p>之所以需要存储dp结果的原因是，我们需要获取依赖值来进行迭代关系式运算，所以，考虑将计算方向改为迭代依赖方向。</p>
+<p><img src="C:\Users\陈思远\AppData\Roaming\Typora\typora-user-images\image-20200812180616301.png" alt="image-20200812180616301"></p>
+<p>这样就不需要对结果进行存储了，并且可以直接在计算过程中记录最大值。</p>
+<p>代码如下：</p>
+<p>(待完成)</p>
+<h2 id="1248-统计「优美子数组」"><a href="#1248-统计「优美子数组」" class="headerlink" title="1248. 统计「优美子数组」"></a>1248. 统计「优美子数组」</h2><p><strong>给你一个整数数组 nums 和一个整数 k。</strong></p>
+<p><strong>如果某个 连续 子数组中恰好有 k 个奇数数字，我们就认为这个子数组是「优美子数组」。</strong></p>
+<p><strong>请返回这个数组中「优美子数组」的数目。</strong></p>
+<p>这道题我一开始想用动态规划来做，但是想到了一个也很简单的方法，就先解决了。</p>
+<p>首先，发现一个事实，在优美子数组的左右如果有偶数，则加上这些偶数仍是优美子数组，直到加上了一个奇数，则失效。</p>
+<p>其次，优美子数组只与奇数出现有关。所以只需要统计奇数信息即可。</p>
+<p>再者在一个优美子数组且左右两边都是奇数的子数组左右各加m，n个偶数，可以得到满足要求的子数组为(m+1)*(n+1)个。</p>
+<p>所以可以通过找到不同的左右两边都是奇数的优美子数组进行<strong>扩张</strong>，计算出优美子数组个数。</p>
+<p>通过该方法可以以O(n)的时间复杂度解决问题。</p>
+<p>首先遍历一次数组，记录奇数位置location[]</p>
+<p>再遍历一次数组，记录奇数位置之间的间隔location_interval[]</p>
+<p>通过间隔计算即：location_interval[i] * location_interval[i+k]</p>
+<p><strong>代码如下：</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">numberOfSubarrays</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; nums, <span class="keyword">int</span> k)</span> </span>&#123;</span><br><span class="line">        <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; odd_location;</span><br><span class="line">        <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; location_interval;</span><br><span class="line">        <span class="comment">// int location[nums.size()];</span></span><br><span class="line">        <span class="comment">// 记录奇数出现的位置</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.size(); i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(nums[i] % <span class="number">2</span> == <span class="number">1</span>)&#123;</span><br><span class="line">                odd_location.push_back(i);  <span class="comment">//location记录下标</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 记录各个位置之间的间隔</span></span><br><span class="line">        <span class="keyword">if</span>(odd_location.size() &gt; <span class="number">0</span>)&#123;</span><br><span class="line">            location_interval.push_back(odd_location[<span class="number">0</span>]);</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; odd_location.size()<span class="number">-1</span>; i++)&#123;</span><br><span class="line">                location_interval.push_back(odd_location[i+<span class="number">1</span>]-odd_location[i]<span class="number">-1</span>);</span><br><span class="line">            &#125;</span><br><span class="line"> 			location_interval.push_back(nums.size()<span class="number">-1</span> - </span><br><span class="line">                                        odd_location[odd_location.size()<span class="number">-1</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 通过间隔计算优美子数组个数</span></span><br><span class="line">        <span class="keyword">int</span> numOfSubarr = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i+k &lt; location_interval.size(); i++)&#123;</span><br><span class="line">            numOfSubarr += (location_interval[i]+<span class="number">1</span>) * (location_interval[i+k]+<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// // 输出odd_location</span></span><br><span class="line">        <span class="comment">// for(int i = 0; i &lt; odd_location.size(); i++)&#123;</span></span><br><span class="line">        <span class="comment">//     cout &lt;&lt; odd_location[i];</span></span><br><span class="line">        <span class="comment">// &#125;</span></span><br><span class="line">        <span class="comment">// // 输出location_interval</span></span><br><span class="line">        <span class="comment">// for(int i = 0; i &lt; location_interval.size(); i++)&#123;</span></span><br><span class="line">        <span class="comment">//     cout &lt;&lt; location_interval[i];</span></span><br><span class="line">        <span class="comment">// &#125;</span></span><br><span class="line">        <span class="keyword">return</span> numOfSubarr;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="466-统计重复个数"><a href="#466-统计重复个数" class="headerlink" title="466. 统计重复个数"></a>466. 统计重复个数</h2><p><strong>由 n 个连接的字符串 s 组成字符串 S，记作 S = [s,n]。例如，[“abc”,3]=“abcabcabc”。</strong></p>
+<p><strong>如果我们可以从 s2 中删除某些字符使其变为 s1，则称字符串 s1 可以从字符串 s2 获得。例如，根据定义，”abc” 可以从 “abdbec” 获得，但不能从 “acbbe” 获得。</strong></p>
+<p><strong>现在给你两个非空字符串 s1 和 s2（每个最多 100 个字符长）和两个整数 0 ≤ n1 ≤ 106 和 1 ≤ n2 ≤ 106。现在考虑字符串 S1 和 S2，其中 S1=[s1,n1] 、S2=[s2,n2] 。</strong></p>
+<p><strong>请你找出一个可以满足使[S2,M] 从 S1 获得的最大整数 M 。</strong></p>
+<p> <strong>示例：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">输入：</span><br><span class="line">s1 &#x3D;&quot;acb&quot;,n1 &#x3D; 4</span><br><span class="line">s2 &#x3D;&quot;ab&quot;,n2 &#x3D; 2</span><br><span class="line"></span><br><span class="line">返回：</span><br><span class="line">2</span><br></pre></td></tr></table></figure>
+
+
+
+<p>这道题做不出来，使用的是组合数学方面的知识，通过构造循环节来迅速跳过中间重复段，循环节的存在性可以使用鸽笼原理证明。</p>
+<p>一开始我的想法是：去计算能够使用几个s1构造s2，或者是一个s1能构造几个s2，但是这样的方法会漏掉一些可行的部分，下例可说明：”bbb” 4 “bb” 2。</p>
+<p>解答可以看官方解答视频。</p>
+<p>这里说几个痛点</p>
+<ol>
+<li>如何去寻找循环节</li>
+<li>寻找循环节方法的正确性</li>
+<li>循环节的存在性</li>
+<li>到底是什么在循环</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2020/09/20/%E5%AE%A2%E6%88%B7%E6%9C%BA(ubuntu)%E5%A6%82%E4%BD%95ssh%E8%BF%9E%E6%8E%A5vmware/" rel="next" title="客户机如何ssh连接vmware（ubuntu）">
+      客户机如何ssh连接vmware（ubuntu） <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#104-%E4%BA%8C%E5%8F%89%E6%A0%91%E6%9C%80%E5%A4%A7%E6%B7%B1%E5%BA%A6"><span class="nav-number">1.</span> <span class="nav-text">104.二叉树最大深度</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%92%E5%BD%92%E6%96%B9%E6%B3%95"><span class="nav-number">1.0.1.</span> <span class="nav-text">递归方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%AD%E4%BB%A3%E6%96%B9%E6%B3%95"><span class="nav-number">1.0.2.</span> <span class="nav-text">迭代方法</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%A2%E8%AF%95%E9%A2%98-10-01-%E5%90%88%E5%B9%B6%E6%8E%92%E5%BA%8F%E7%9A%84%E6%95%B0%E7%BB%84"><span class="nav-number">2.</span> <span class="nav-text">面试题 10.01. 合并排序的数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#836-%E7%9F%A9%E5%BD%A2%E9%87%8D%E5%8F%A0"><span class="nav-number">3.</span> <span class="nav-text">836. 矩形重叠</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#221-%E6%9C%80%E5%A4%A7%E6%AD%A3%E6%96%B9%E5%BD%A2"><span class="nav-number">4.</span> <span class="nav-text">221. 最大正方形</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E6%9C%80%E9%95%BF%E5%9B%9E%E6%96%87%E5%AD%90%E4%B8%B2"><span class="nav-number">5.</span> <span class="nav-text">5. 最长回文子串</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1248-%E7%BB%9F%E8%AE%A1%E3%80%8C%E4%BC%98%E7%BE%8E%E5%AD%90%E6%95%B0%E7%BB%84%E3%80%8D"><span class="nav-number">6.</span> <span class="nav-text">1248. 统计「优美子数组」</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#466-%E7%BB%9F%E8%AE%A1%E9%87%8D%E5%A4%8D%E4%B8%AA%E6%95%B0"><span class="nav-number">7.</span> <span class="nav-text">466. 统计重复个数</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Peter chen</p>
+  <div class="site-description" itemprop="description">siyuan Chen personal page</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Peter chen</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

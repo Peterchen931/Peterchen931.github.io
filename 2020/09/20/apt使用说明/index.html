@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"github.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="本文叙述了apt是为了解决何种问题出现的，apt常用指令，apt具体做了什么。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="apt使用说明">
+<meta property="og:url" content="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/20/apt%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/index.html">
+<meta property="og:site_name" content="siyuan Chen">
+<meta property="og:description" content="本文叙述了apt是为了解决何种问题出现的，apt常用指令，apt具体做了什么。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/pchen7592/picgo/raw/master/image-20200917231440318.png">
+<meta property="og:image" content="https://gitee.com/pchen7592/picgo/raw/master/image-20200917230636544.png">
+<meta property="article:published_time" content="2020-09-20T02:39:42.000Z">
+<meta property="article:modified_time" content="2020-09-21T08:56:36.275Z">
+<meta property="article:author" content="Peter chen">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/pchen7592/picgo/raw/master/image-20200917231440318.png">
+
+<link rel="canonical" href="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/20/apt%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-cn'
+  };
+</script>
+
+  <title>apt使用说明 | siyuan Chen</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">siyuan Chen</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-cn">
+    <link itemprop="mainEntityOfPage" href="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/20/apt%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Peter chen">
+      <meta itemprop="description" content="siyuan Chen personal page">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="siyuan Chen">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          apt使用说明
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-09-20 10:39:42" itemprop="dateCreated datePublished" datetime="2020-09-20T10:39:42+08:00">2020-09-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-09-21 16:56:36" itemprop="dateModified" datetime="2020-09-21T16:56:36+08:00">2020-09-21</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+            <div class="post-description">本文叙述了apt是为了解决何种问题出现的，apt常用指令，apt具体做了什么。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="为什么需要包管理工具"><a href="#为什么需要包管理工具" class="headerlink" title="为什么需要包管理工具"></a>为什么需要包管理工具</h3><p>最早在linux系统上安装软件是需要通过源码进行构建的。最初只有.tar.gz 的打包文件，用户必须编译每个他想在 GNU/Linux 上运行的软件。这种方法十分复杂且容易出错，于是就有将这一系列安装过程打包起来的需求，就产生了deb包。deb包中的内容可以看该文章<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/6b89c9a4c002">如何制作deb包</a>，其中列出了deb包中的内容。</p>
+<p>在有了deb包之后，安装软件似乎变得简单了许多，但是新的问题又出现了，在deb包中有一个<code>Depends</code>项，这是该deb包安装所需要的前提条件，如果这些前提条件未能满足，则deb包无法正常安装（在使用dpkg安装deb包时，依赖错误是很常见的一种）。并且这个依赖关系可能是一个很大的树状关系。而apt就是提供一个能够解决这些依赖关系的<strong>高级包管理工具</strong></p>
+<h3 id="软件依赖的解决思路"><a href="#软件依赖的解决思路" class="headerlink" title="软件依赖的解决思路"></a>软件依赖的解决思路</h3><p>apt就是通过一个数据库来记录各种软件安装包的依赖关系，这样每一个包都可以生成一个依赖关系树。同时apt还记录着本地下载的软件列表。在安装软件时，apt会检查该软件依赖树，并与本地软件列表进行对比，将其所需要的所有本地没有的依赖一并下载。完成软件的安装。  </p>
+<h3 id="APT是什么"><a href="#APT是什么" class="headerlink" title="APT是什么"></a>APT是什么</h3><p>首先应用debian wiki的原话</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/APT_(Package_Manager)">Advanced Package Tool (or APT)</a>, the main command-line package manager for Debian and its derivatives. It provides command-line <a target="_blank" rel="noopener" href="https://wiki.debian.org/PackageManagementTools">tools</a> for searching, <a target="_blank" rel="noopener" href="https://wiki.debian.org/PackageManagement">managing</a> and querying information about packages, as well as low-level access to all features provided by the libapt-pkg and libapt-inst libraries which higher-level package managers can depend upon.</li>
+</ul>
+<p>意思就是APT是debian以及其衍生产品（ubuntu等）的主要<strong>命令行</strong>包管理工具。它提供了命令行工具，用于搜索，管理和查询有关软件包的信息。同时提供更高级的包管理器所依赖的libapt-pkg和libapt-inst库提供的所有功能的低级访问。</p>
+<p>这里需要注意大写的APT是Debian使用的一组<strong>高级打包工具</strong>，用来管理其打包系统。不要将它与apt命令混淆，这是不一样的。有多种工具可以与APT交互，并允许您在基于Debian的Linux发行版中安装，删除和管理软件包。apt-get是一种广泛使用的命令行工具。另一个流行的工具是 同时具有GUI和命令行选项的Aptitude</p>
+<h3 id="apt常用命令"><a href="#apt常用命令" class="headerlink" title="apt常用命令"></a>apt常用命令</h3><ul>
+<li>更新软件清单：<code>sudo apt update</code></li>
+<li>升级软件包：<code>sudo apt upgrade</code></li>
+<li>升级软件包，升级前先删除需要更新软件包：<code>sudo apt full-upgrade</code></li>
+<li>安装软件包：<code>sudo apt install &lt;package_1&gt; &lt;package_2&gt; &lt;package_3&gt;</code></li>
+<li>更新指定的软件：<code>sudo apt update &lt;package_name&gt;</code></li>
+<li>显示软件包具体信息,例如：版本号，安装大小，依赖关系等等：<code>sudo apt show &lt;package_name&gt;</code></li>
+<li>删除软件包：<code>sudo apt remove &lt;package_name&gt;</code></li>
+<li>清理不再使用的依赖和库文件: <code>sudo apt autoremove</code></li>
+<li>移除软件包<strong>及配置文件</strong>: <code>sudo apt purge &lt;package_name&gt;</code></li>
+<li>查找软件包： <code>sudo apt search &lt;keyword&gt;</code></li>
+<li>列出所有{已安装 |可升级|所有版本}的包：<code>apt list &#123;--installed | --upgradeable | --all-version&#125;</code></li>
+</ul>
+<h3 id="apt-get常用指令"><a href="#apt-get常用指令" class="headerlink" title="apt-get常用指令"></a>apt-get常用指令</h3><ul>
+<li>搜索包：<code>apt-cache search &lt;package_name&gt;</code> </li>
+<li>获取包的相关信息，如说明、大小、版本等：<code>apt-cache show &lt;package_name&gt;</code> </li>
+<li>安装包：<code>apt-get install &lt;package_name&gt;</code> </li>
+<li>重新安装包：<code>apt-get install &lt;package_name&gt;</code> - - reinstall </li>
+<li>修复安装”-f = –fix-broken”：<code>apt-get -f install</code> </li>
+<li>删除包：<code>apt-get remove &lt;package_name&gt;</code></li>
+<li>删除包，包括删除配置文件等：<code>apt-get remove &lt;package_name&gt;</code> - - purge` </li>
+<li>更新源：<code>apt-get update</code> </li>
+<li>更新已安装的包：<code>apt-get upgrade</code> </li>
+<li>更新包（更自动处理冲突，有风险）：<code>apt-get dist-upgrade</code> </li>
+<li>使用 dselect 升级：<code>apt-get dselect-upgrade</code> </li>
+<li>查看包依赖：<code>apt-cache depends &lt;package_name&gt;</code> </li>
+<li>是查看该包被哪些包依赖：`apt-cache rdepends <package_name>``</li>
+<li>安装相关的编译环境：<code>apt-get build-dep &lt;package_name&gt;</code> </li>
+<li>下载该包的源代码：<code>apt-get source &lt;package_name&gt;</code> </li>
+<li>清理无用的包：<code>apt-get clean &amp;&amp; apt-get autoclean</code> </li>
+<li>检查是否有损坏的依赖：<code>apt-get check</code> </li>
+</ul>
+<h3 id="apt与apt-get区别"><a href="#apt与apt-get区别" class="headerlink" title="apt与apt-get区别"></a>apt与apt-get区别</h3><p><code>apt-get</code>是之前围绕APT最受欢迎的工具。但是它似乎有些过于繁琐，所以apt就出来将<code>apt-get</code>与<code>apt-cache</code>中常用的指令提取出来，形成一个新的方法集。</p>
+<p>apt是apt-get和apt-cache命令的子集，为软件包管理提供必要的命令</p>
+<p>虽然apt-get未被弃用，但作为普通用户应该更频繁地使用apt</p>
+<p><code>apt</code>的命令行形式还没稳定，所以在编写脚本时更倾向于使用<code>apt-get</code></p>
+<h3 id="apt工作原理（apt-get基本相同）"><a href="#apt工作原理（apt-get基本相同）" class="headerlink" title="apt工作原理（apt-get基本相同）"></a>apt工作原理（apt-get基本相同）</h3><ol>
+<li><code>apt update</code> </li>
+</ol>
+<p>该操作就是访问<code>/etc/apt/source.list</code>，以及<code>/etc/apt/source.list.d/*</code>中的所有条目（关于 /etc/apt/sources.list的信息可以参考<a target="_blank" rel="noopener" href="https://www.cnblogs.com/beanmoon/p/3387652.html">debian软件源source.list文件格式说明</a>），获取这些条目中的软件信息，并将这些信息放入<code>/var/lib/apt/lists</code>中</p>
+<p>我们来看看<code>/var/lib/apt/lists</code>中的东西是什么：</p>
+<p><img src="https://gitee.com/pchen7592/picgo/raw/master/image-20200917231440318.png" alt="image-20200917231440318"></p>
+<p>首先我们找到一类名字中有Packages的文件</p>
+<p><img src="https://gitee.com/pchen7592/picgo/raw/master/image-20200917230636544.png"></p>
+<p>我们可以看到Packages文件中是很多的存储包信息文档，在这些文档储存了包的依赖关系以及一些其他描述，而依赖树就是通过这些信息生成的。当然它还有很多的其他信息，如校验和等。</p>
+<ol start="2">
+<li><code>apt install &lt;package&gt;</code> </li>
+</ol>
+<p>该指令会通过/<code>var/lib/apt/lists</code>获取软件所需要的安装信息，并生成依赖关系树，最后确定安装所需的依赖，并且安装所有未安装的依赖项</p>
+<ol start="3">
+<li><code>apt upgrade</code></li>
+</ol>
+<p>在<code>apt update</code>后，会获取软件的更新信息，<code>apt upgrade</code>会将所有可更新的包进行更新。</p>
+<ol start="4">
+<li><code>apt remove &lt;package&gt;</code></li>
+</ol>
+<p>该指令会移除一个包。但是问题出现了，移除一个包，其安装时附加的依赖项会被保留，但是却又是无用的，这样会造成很大的资源浪费。另一方面，如果直接将所有进行移除，也会出现问题，假设A包与B包同时依赖C包，当删除A包时就不能删除C包，只有A，B都被remove后才能确定这是一个无用的包。</p>
+<p>有了这个思路，就可以去思考apt的逻辑。apt对每一个包信息都保存一个依赖计数器与一个用户下载标记，记录其被依赖的数量，当其被依赖的数量降为0，且其不是用户主动下载时，其就可以视为<strong>无用的</strong>。<code>apt autoremove</code>就是会检查这一类型的包并进行删除。</p>
+<p>删除一个包时，会对该包的所有<strong>直接</strong>依赖的依赖计数器进行减1，并且递归的对直接依赖进行操作（假设依赖A还直接依赖B，若A被视为<strong>无用的</strong>，B的依赖也减一，依次递归）。</p>
+<ol start="5">
+<li><code>apt autoremove</code></li>
+</ol>
+<p>将所有不被依赖且非用户下载的包进行删除</p>
+<h3 id="添加软件源"><a href="#添加软件源" class="headerlink" title="添加软件源"></a>添加软件源</h3><p>有时候我们需要下载一些官方软件源中没有的软件，如果还想通过apt的方式进行安装，就需要添加第三方的软件源（前提是该软件有第三方源），之后就可以使用apt进行安装。</p>
+<ol>
+<li><strong>添加apt仓库</strong></li>
+</ol>
+<p>添加仓库常用格式</p>
+<p><code>sudo add-apt-repository &quot;deb https://developer.../ubuntu2004/x86_64/ /&quot;</code></p>
+<p><code> sudo add-apt-repository ppa:bashtop-monitor/bashtop</code>  </p>
+<p><code>curl -s -L https://.../xx.list | sudo tee /etc/apt/sources.list.d/xx.list</code></p>
+<p>第一种是添加第三方仓库，<code>&quot;deb https://developer.../ubuntu2004/x86_64/ /&quot;</code>会附加在<code>/etc/apt/sources.list</code>末尾</p>
+<p>第二种是添加私人仓库，该方法会在<code>/etc/apt/sources.list.d</code>创建一个文件内容为<code>ppa:bashtop-monitor/bashtop</code>。这种方法ubuntu会自动配置gpg-key，不需要手动添加。</p>
+<p>第三种方法是手动修改，可以选择在<code>/etc/apt/sources.list</code>后append条目，也可以在<code>/etc/apt/sources.list.d</code>创建新的文件来保存条目，但是文件必须以<code>.list</code>结尾</p>
+<ol start="2">
+<li><strong>添加秘钥</strong></li>
+</ol>
+<p>为了验证第三方软件仓库的真实性，防止安装恶意的软件，第三方的软件仓库都会提供GPG公钥来进行身份验证，防止获取到的是被串改的恶意软件源，<code>apt-key</code>用于管理apt验证软件包的密钥列表，被添加的包视为可信任的。</p>
+<p>在添加apt仓库时，需要将该仓库的密钥加入受信任的列表中，不然无法进行update。</p>
+<p>添加key常用格式</p>
+<p><code>wget -qO - https://typora.io/linux/public-key.asc | sudo apt-key add -</code></p>
+<p><code>curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -</code></p>
+<p><code>sudo apt-key adv --fetch-keys https://developer.../ubuntu2004/x86_64/7fa2af80.pub</code></p>
+<p>注：<code>sudo apt-key add -</code> 中 <code>-</code>代表标准输出，即访问该网址将输出写入key中</p>
+<p>同样，<code>apt-key</code>也可以使用修改文件的方法添加</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;etc&#x2F;apt&#x2F;trusted.gpg</span><br><span class="line">	本地可信的keys</span><br><span class="line">&#x2F;etc&#x2F;apt&#x2F;trusted.gpg.d&#x2F;</span><br><span class="line">	信任密钥的片段，其他密钥可以存储在此处（通过其他软件包或管理员配置）</span><br><span class="line">&#x2F;etc&#x2F;apt&#x2F;trustdb.gpg</span><br><span class="line">	保存密钥的本地可信数据库。</span><br></pre></td></tr></table></figure>
+
+<p>直接将<code>.gpg</code>文件放入<code>/etc/apt/trusted.gpg.d/</code>中也是可以的</p>
+<h3 id="删除软件源"><a href="#删除软件源" class="headerlink" title="删除软件源"></a>删除软件源</h3><p>删除与添加的方法相似，需要删除repository与gpg-key</p>
+<p><code>apt-add-repository -r &lt;repository&gt;    # deb或ppa打头的字符串 </code></p>
+<p><code>apt-key del &lt;keyid&gt;    # key的末8位</code></p>
+<p>同样可以用修改文件的方法删除，只要删除对应的<code>.list</code>与<code>.gpg</code>文件即可</p>
+<h3 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h3><p><a target="_blank" rel="noopener" href="https://itsfoss.com/apt-command-guide/">https://itsfoss.com/apt-command-guide/</a></p>
+<p><a target="_blank" rel="noopener" href="https://itsfoss.com/apt-vs-apt-get-difference/">https://itsfoss.com/apt-vs-apt-get-difference/</a></p>
+<p><a target="_blank" rel="noopener" href="https://itsfoss.com/apt-get-linux-guide/">https://itsfoss.com/apt-get-linux-guide/</a></p>
+<p><a target="_blank" rel="noopener" href="https://attacker.cc/index.php/archives/20/">https://attacker.cc/index.php/archives/20/</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/beanmoon/p/3387652.html">https://www.cnblogs.com/beanmoon/p/3387652.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000011463440">https://segmentfault.com/a/1190000011463440</a></p>
+<p><a target="_blank" rel="noopener" href="http://manpages.ubuntu.com/manpages/">http://manpages.ubuntu.com/manpages/</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.skk.moe/post/add-ppa-to-debian/">https://blog.skk.moe/post/add-ppa-to-debian/</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/09/20/git%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/" rel="prev" title="git常用命令">
+      <i class="fa fa-chevron-left"></i> git常用命令
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/09/20/#%20C++primer%E7%AC%94%E8%AE%B0/" rel="next" title="C++primer随笔">
+      C++primer随笔 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E5%8C%85%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7"><span class="nav-number">1.</span> <span class="nav-text">为什么需要包管理工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E4%BE%9D%E8%B5%96%E7%9A%84%E8%A7%A3%E5%86%B3%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">软件依赖的解决思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#APT%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">3.</span> <span class="nav-text">APT是什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#apt%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">4.</span> <span class="nav-text">apt常用命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#apt-get%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4"><span class="nav-number">5.</span> <span class="nav-text">apt-get常用指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#apt%E4%B8%8Eapt-get%E5%8C%BA%E5%88%AB"><span class="nav-number">6.</span> <span class="nav-text">apt与apt-get区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#apt%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%EF%BC%88apt-get%E5%9F%BA%E6%9C%AC%E7%9B%B8%E5%90%8C%EF%BC%89"><span class="nav-number">7.</span> <span class="nav-text">apt工作原理（apt-get基本相同）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E8%BD%AF%E4%BB%B6%E6%BA%90"><span class="nav-number">8.</span> <span class="nav-text">添加软件源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E8%BD%AF%E4%BB%B6%E6%BA%90"><span class="nav-number">9.</span> <span class="nav-text">删除软件源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">10.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Peter chen</p>
+  <div class="site-description" itemprop="description">siyuan Chen personal page</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Peter chen</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
