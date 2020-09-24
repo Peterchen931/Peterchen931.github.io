@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"github.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="记录阅读PointNet论文时的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PointNet论文笔记">
+<meta property="og:url" content="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/22/pointnet%E8%AE%BA%E6%96%87%E7%9A%84%E7%90%86%E8%A7%A3%E4%B8%8E%E6%80%9D%E8%80%83/index.html">
+<meta property="og:site_name" content="siyuan Chen">
+<meta property="og:description" content="记录阅读PointNet论文时的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/pchen7592/picgo/raw/master/20200924104000.png">
+<meta property="og:image" content="https://gitee.com/pchen7592/picgo/raw/master/20200924104001.png">
+<meta property="og:image" content="https://gitee.com/pchen7592/picgo/raw/master/20200924104002.png">
+<meta property="og:image" content="https://gitee.com/pchen7592/picgo/raw/master/20200924104002.png">
+<meta property="og:image" content="https://gitee.com/pchen7592/picgo/raw/master/20200924104003.png">
+<meta property="og:image" content="https://gitee.com/pchen7592/picgo/raw/master/20200924104004.png">
+<meta property="og:image" content="https://gitee.com/pchen7592/picgo/raw/master/20200924104005.png">
+<meta property="og:image" content="https://gitee.com/pchen7592/picgo/raw/master/20200924104006.png">
+<meta property="og:image" content="https://gitee.com/pchen7592/picgo/raw/master/20200924104007.png">
+<meta property="og:image" content="https://gitee.com/pchen7592/picgo/raw/master/20200924104008.png">
+<meta property="og:image" content="https://gitee.com/pchen7592/picgo/raw/master/20200924104009.png">
+<meta property="og:image" content="https://gitee.com/pchen7592/picgo/raw/master/20200924104010.png">
+<meta property="og:image" content="https://gitee.com/pchen7592/picgo/raw/master/20200924104011.png">
+<meta property="og:image" content="https://gitee.com/pchen7592/picgo/raw/master/20200924104010.png">
+<meta property="og:image" content="https://gitee.com/pchen7592/picgo/raw/master/20200924104010.png">
+<meta property="og:image" content="https://gitee.com/pchen7592/picgo/raw/master/20200924104010.png">
+<meta property="article:published_time" content="2020-09-22T08:34:58.000Z">
+<meta property="article:modified_time" content="2020-09-24T02:41:17.447Z">
+<meta property="article:author" content="Peter chen">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/pchen7592/picgo/raw/master/20200924104000.png">
+
+<link rel="canonical" href="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/22/pointnet%E8%AE%BA%E6%96%87%E7%9A%84%E7%90%86%E8%A7%A3%E4%B8%8E%E6%80%9D%E8%80%83/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-cn'
+  };
+</script>
+
+  <title>PointNet论文笔记 | siyuan Chen</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">siyuan Chen</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-cn">
+    <link itemprop="mainEntityOfPage" href="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/22/pointnet%E8%AE%BA%E6%96%87%E7%9A%84%E7%90%86%E8%A7%A3%E4%B8%8E%E6%80%9D%E8%80%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Peter chen">
+      <meta itemprop="description" content="siyuan Chen personal page">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="siyuan Chen">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          PointNet论文笔记
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-09-22 16:34:58" itemprop="dateCreated datePublished" datetime="2020-09-22T16:34:58+08:00">2020-09-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-09-24 10:41:17" itemprop="dateModified" datetime="2020-09-24T10:41:17+08:00">2020-09-24</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+            <div class="post-description">记录阅读PointNet论文时的</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>论文原文：<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1612.00593.pdf">https://arxiv.org/pdf/1612.00593.pdf</a></p>
+<p>论文翻译：<a target="_blank" rel="noopener" href="https://blog.csdn.net/BatFlo_wsh/article/details/89330195">https://blog.csdn.net/BatFlo_wsh/article/details/89330195</a>    注：翻译有些小错误，建议对着原文看</p>
+<h3 id="3D数据的深度学习方式（类似普通的矩阵表示形式）"><a href="#3D数据的深度学习方式（类似普通的矩阵表示形式）" class="headerlink" title="3D数据的深度学习方式（类似普通的矩阵表示形式）"></a><strong>3D数据的深度学习方式</strong>（类似普通的矩阵表示形式）</h3><ol>
+<li><p><strong>Volumetric CNNs</strong>：将点云转化为3维张量的中的一个个坐标，并形成一个三维的稀疏矩阵。随后，对该矩阵进行3D卷积。</p>
+<p>最早的3D数据表示形式</p>
+<p><strong>缺：</strong>点云的数据是稀疏的，这就意味着其生成的3D矩阵十分稀疏，很多数据可以说是<strong>无用的0</strong>。这就像储存稀疏矩阵一样，直接使用3维矩阵储存点云会产生比较大的浪费，尤其是在矩阵空间（分辨率）较大的场景，利用3D矩阵来表示如此稀疏的点云会产生很大的储存负担。在增大储存负担的同时，3D卷积的计算代价也是远超过稀疏点表示的。</p>
+<p>FPNN 和 Vote3D提出了处理稀疏性问题的特殊方法；然而，他们的操作仍然是在稀疏的体积上，处理非常大的点云对他们来说是一种挑战。</p>
+</li>
+<li><p><strong><em>Multiview CNNs：</em></strong>将3D的点云或者形状渲染成2D图像，然后利用2D卷积进行处理（如何选择渲染角度？精心设计的图像CNN是什么？）。</p>
+<p><strong>优：</strong>这一系列方法在形状分类和检索任务方面取得了主导作用。</p>
+<p><strong>缺：</strong>将它们扩展到场景理解或其他3D任务（eg.点分类、形状完成）上时表现很普通。</p>
+</li>
+<li><p><strong><em>Spectral CNNs：</em></strong> 最近的一些工作在网格上使用了光谱CNN。（不懂）</p>
+</li>
+<li><p><strong>Feature-based DNNs：</strong>首先通过提取传统的形状特征将3D数据转换成向量（SIFT？），然后使用全连接网络对形状进行分类。作者认为它们受限于所提取特征的表示能力。</p>
+<p>我认为这种方法很像对传统二维图像处理的方法。</p>
+</li>
+</ol>
+<h3 id="无序集的空间特性"><a href="#无序集的空间特性" class="headerlink" title="无序集的空间特性"></a><strong>无序集的空间特性</strong></h3><p>如果将点云用稀疏的方法进行表示，即(x, y, z)，这样也会伴随一个问题：这些点是无序的，并不能表示出实际的空间结构。为此，作者提出了对这一问题的思考</p>
+<p>首先，点云是一个来自于n维欧式空间的子集，那么他就有欧式空间的特性</p>
+<ul>
+<li><strong>无序性</strong> 与图像中的像素数组或体积网格中的体素数组不同，点云是一组没有特定顺序的点。换句话说，处理N个3D点集的网络需要能够对输入数据集按照喂进来的顺序排列N ! 保持不变。</li>
+<li><strong>点之间的相互作用</strong> 这些点来自具有距离度量的空间。这意味着这些点不是孤立的，而且相邻的点形成一个具有意义的子集。因此模型需要能够捕获附近点的局部结构，以及局部结构之间组合的相互作用。</li>
+<li><strong>转换的不变性</strong> 对于几何对象，点集学习到的表示应该对某些变换具有不变性。例如，所有的旋转点和平移点都不能修改全局点云的类别或者点的分割。</li>
+</ul>
+<p>所以，将无序集点作为输入，需要进行一些变换来使其具有上面的三个性质，PointNet有三个关键模块：</p>
+<ul>
+<li>最大池层作为对称函数用于聚合所有点的信息（<strong>无序输入的对称函数</strong>）</li>
+<li>组合局部信息和全局信息的结构（<strong>局部和全局信息聚类</strong>）</li>
+<li>两个对齐输入点和点的特征的联合对齐网络（<strong>联合对准网络</strong>）</li>
+</ul>
+<h3 id="无序输入的对称函数"><a href="#无序输入的对称函数" class="headerlink" title="无序输入的对称函数"></a><strong>无序输入的对称函数</strong></h3><p>在使用稀疏坐标表示点云数据时，需要找到一个<strong>对称函数来实现映射的无序性</strong>，文章采用了一种比较robust的方式作为基础模型</p>
+<p>为了使<strong>模型对输入排序不变</strong>，作者列出了三种策略：</p>
+<ol>
+<li><p><strong>将输入排序为规范顺序</strong></p>
+<p>方法1似乎是一个简单的方法，但是什么才是“规范的排序呢”？可能首先会想到的是按照空间位置进行排序，但是这并不不是一种很好的排序方法。因为，当我们保持点云位置不变，仅仅切换一个坐标系时其空间坐标会有很大的改变，而其输入的顺序也随之变化。但是，我们需要的输出应该是一致的，这不符合我们对<strong>转换不变性</strong>的需求。</p>
+<p>文中使用了理论的方法进行论证：尽管排序听起来像是一个简单的解决方法，但谈及到一般意义上的<strong>点的扰动</strong>时，在高维空间中实际上并不存在稳定的排序。这可以很容易地通过矛盾来显示。如果这样一种排序策略存在，那么它定义了<strong>高维空间和1维空间之间的双向映射</strong>。不难看出，谈及点扰动时要求<strong>排序的稳定等同在维度降低时保持映射在空间上的接近度</strong>，这在一般情况下是无法实现的任务。因此，排序并不能完全解决排序问题，而且因为排序问题的存在，网络很难学习到一致的从输入到输出的映射。</p>
+</li>
+<li><p><strong>将输入看作训练RNN的序列，但其通过各种排列来增加训练数据，希望得到的RNN将会变得和输入顺序无关</strong></p>
+<p>方法2在“OrderMatters”中，作者已经证明顺序确实很重要而且无法完全被忽略。尽管RNN对于具有小长度（数十个）的序列的输入排序已经具有相对良好的鲁棒性，但是很难扩展到成千上万的输入元素上，而这是点集的很常见的规模。</p>
+</li>
+<li><p><strong>寻找一个对称函数来<em>聚合</em>每个点的信息。这里，对称函数将n个向量作为输入，同时输出一个对输入顺序不变的新向量。</strong></p>
+<p>方法3也是作者的方案，通过寻找一个对称函数来聚合点的信息。</p>
+<p><strong>对称函数(Symmetric function)：</strong>In mathematics, a function of n variables is symmetric if its value is the same no matter the order of its arguments. </p>
+<p><strong>关键公式</strong></p>
+<img src="https://gitee.com/pchen7592/picgo/raw/master/20200924104000.png" alt="image-20200922214353033" style="zoom:67%;" />
+
+
+
+</li>
+</ol>
+<p>   <img src="https://gitee.com/pchen7592/picgo/raw/master/20200924104001.png" alt="image-20200922220644514" style="zoom:50%;" />代表我们的目标函数，该函数可以使用<img src="https://gitee.com/pchen7592/picgo/raw/master/20200924104002.png" alt="image-20200922220619071" style="zoom:50%;" />来近似，函数f是一个对称函数，所以g也需要是一个对称函数。而maxpool函数就是一个对称函数，所以，不管h(x)是不是对称函数，<img src="https://gitee.com/pchen7592/picgo/raw/master/20200924104002.png" alt="image-20200922220619071" style="zoom:50%;" />整体都是一个对称函数。这就保证了拟合出的函数具有对称性。</p>
+<p>最后文章也用实验论证了对输入排序效果，虽然比不排序有明显的提升，但是总体来说较为一般<img src="https://gitee.com/pchen7592/picgo/raw/master/20200924104003.png" alt="image-20200922223125868" style="zoom:50%;" /></p>
+<h3 id="理论分析"><a href="#理论分析" class="headerlink" title="理论分析"></a>理论分析</h3><p>理论证明在文章的附加部分，这里解读这两个定理的意义，不做推导</p>
+<p><strong>定理一：</strong></p>
+<p><strong>定理一证明了当max pooling层给定足够多的神经元时，即K足够大时，目标函数可以由文章中网络任意近似。</strong></p>
+<p><img src="https://gitee.com/pchen7592/picgo/raw/master/20200924104004.png" alt="image-20200923155510104">                                                </p>
+<p><img src="https://gitee.com/pchen7592/picgo/raw/master/20200924104005.png" alt="image-20200923160002537" style="zoom:67%;" />:需要寻找的函数（是对称函数）</p>
+<p><img src="https://gitee.com/pchen7592/picgo/raw/master/20200924104006.png" alt="image-20200923160044234" style="zoom:67%;" />：利用网络找到的函数，其中<img src="https://gitee.com/pchen7592/picgo/raw/master/20200924104007.png" alt="image-20200923161539957" style="zoom:67%;" />是通过mpl找到的函数，这里的r函数代表一种分类函数。</p>
+<p>MAX：MAX函数是将n个k唯向量进行逐元素取最大值的函数（即maxpool，返回kx1向量）</p>
+<p>S：{x1, x2, …, xn}的某一种排序序列</p>
+<p>整体矩阵变化过程如下：（补充）</p>
+<p>注：关于Hausdorff距离的连续集函数的定义，文章中也有说明：</p>
+<p><img src="https://gitee.com/pchen7592/picgo/raw/master/20200924104008.png" alt="image-20200923163617700"></p>
+<p><strong>定理二：</strong></p>
+<p><img src="https://gitee.com/pchen7592/picgo/raw/master/20200924104009.png" alt="image-20200923194416328"></p>
+<p><img src="https://gitee.com/pchen7592/picgo/raw/master/20200924104010.png" alt="image-20200923194754859" style="zoom:80%;" />： corruption S    即S减少部分特定点的子集合</p>
+<p><img src="https://gitee.com/pchen7592/picgo/raw/master/20200924104011.png" alt="image-20200923194919728" style="zoom: 67%;" />：noisy S    即S增加部分噪声点形成的新集合</p>
+<p>定理就是叙述，当去掉或者增加一定的点时，f函数仍旧会得到正确的值，并且<img src="https://gitee.com/pchen7592/picgo/raw/master/20200924104010.png" alt="image-20200923194754859" style="zoom:80%;" />元素的个数具有上界，即小于K</p>
+<p>（这个定理不是很理解，这个K不是自己定的吗？）</p>
+<p>换句话说，f (S) 实际上完全由小于或等于K维元素的有限子集<img src="https://gitee.com/pchen7592/picgo/raw/master/20200924104010.png" alt="image-20200923194754859" style="zoom:80%;" />决定。</p>
+<p>文中称<img src="https://gitee.com/pchen7592/picgo/raw/master/20200924104010.png" alt="image-20200923194754859" style="zoom:80%;" />为S的临界点集，K为f的瓶颈维度</p>
+<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/BatFlo_wsh/article/details/89330195">PointNet翻译</a></p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1612.00593">PointNet: Deep Learning on Point Sets for 3D Classification and Segmentation</a></p>
+<p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Symmetric_function">Symmetric function</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/09/20/#%20C++primer%E7%AC%94%E8%AE%B0/" rel="prev" title="C++primer随笔">
+      <i class="fa fa-chevron-left"></i> C++primer随笔
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#3D%E6%95%B0%E6%8D%AE%E7%9A%84%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%96%B9%E5%BC%8F%EF%BC%88%E7%B1%BB%E4%BC%BC%E6%99%AE%E9%80%9A%E7%9A%84%E7%9F%A9%E9%98%B5%E8%A1%A8%E7%A4%BA%E5%BD%A2%E5%BC%8F%EF%BC%89"><span class="nav-number">1.</span> <span class="nav-text">3D数据的深度学习方式（类似普通的矩阵表示形式）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A0%E5%BA%8F%E9%9B%86%E7%9A%84%E7%A9%BA%E9%97%B4%E7%89%B9%E6%80%A7"><span class="nav-number">2.</span> <span class="nav-text">无序集的空间特性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A0%E5%BA%8F%E8%BE%93%E5%85%A5%E7%9A%84%E5%AF%B9%E7%A7%B0%E5%87%BD%E6%95%B0"><span class="nav-number">3.</span> <span class="nav-text">无序输入的对称函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%90%86%E8%AE%BA%E5%88%86%E6%9E%90"><span class="nav-number">4.</span> <span class="nav-text">理论分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">5.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Peter chen</p>
+  <div class="site-description" itemprop="description">siyuan Chen personal page</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Peter chen</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
