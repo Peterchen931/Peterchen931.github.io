@@ -20,22 +20,22 @@
     var CONFIG = {"hostname":"github.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="title: 一个简易的ftp实现date: 2020-09-20 10:39:42categories:tags:description: 本学期老师布置了一个使用epollET+非阻塞方法实现的FTP服务器，这里写下自己的思路与感想。 一个简易的ftp实现思路本学期老师布置了一个使用epollET+非阻塞方法实现的FTP服务器，这里写下自己的思路与感想。本例实现login, logout, l">
+  <meta name="description" content="本学期老师布置了一个使用epollET+非阻塞方法实现的FTP服务器，这里写下自己的思路与感想。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="siyuan Chen">
-<meta property="og:url" content="https://github.com/Peterchen931/Peterchen931.github.io/2021/02/28/%E4%B8%80%E4%B8%AA%E7%AE%80%E6%98%93%E7%9A%84ftp%E5%AE%9E%E7%8E%B0/index.html">
+<meta property="og:title" content="一个简易的ftp实现">
+<meta property="og:url" content="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/20/%E4%B8%80%E4%B8%AA%E7%AE%80%E6%98%93%E7%9A%84ftp%E5%AE%9E%E7%8E%B0/index.html">
 <meta property="og:site_name" content="siyuan Chen">
-<meta property="og:description" content="title: 一个简易的ftp实现date: 2020-09-20 10:39:42categories:tags:description: 本学期老师布置了一个使用epollET+非阻塞方法实现的FTP服务器，这里写下自己的思路与感想。 一个简易的ftp实现思路本学期老师布置了一个使用epollET+非阻塞方法实现的FTP服务器，这里写下自己的思路与感想。本例实现login, logout, l">
+<meta property="og:description" content="本学期老师布置了一个使用epollET+非阻塞方法实现的FTP服务器，这里写下自己的思路与感想。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://gitee.com/pchen7592/picgo/raw/master/20200921154823.png">
 <meta property="og:image" content="https://gitee.com/pchen7592/picgo/raw/master/20200921154824.png">
-<meta property="article:published_time" content="2021-02-28T07:59:01.475Z">
-<meta property="article:modified_time" content="2021-02-26T03:20:05.778Z">
+<meta property="article:published_time" content="2020-09-20T02:39:42.000Z">
+<meta property="article:modified_time" content="2021-02-28T09:03:52.159Z">
 <meta property="article:author" content="Peter chen">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://gitee.com/pchen7592/picgo/raw/master/20200921154823.png">
 
-<link rel="canonical" href="https://github.com/Peterchen931/Peterchen931.github.io/2021/02/28/%E4%B8%80%E4%B8%AA%E7%AE%80%E6%98%93%E7%9A%84ftp%E5%AE%9E%E7%8E%B0/">
+<link rel="canonical" href="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/20/%E4%B8%80%E4%B8%AA%E7%AE%80%E6%98%93%E7%9A%84ftp%E5%AE%9E%E7%8E%B0/">
 
 
 <script id="page-configurations">
@@ -48,7 +48,7 @@
   };
 </script>
 
-  <title> | siyuan Chen</title>
+  <title>一个简易的ftp实现 | siyuan Chen</title>
   
 
 
@@ -153,7 +153,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-cn">
-    <link itemprop="mainEntityOfPage" href="https://github.com/Peterchen931/Peterchen931.github.io/2021/02/28/%E4%B8%80%E4%B8%AA%E7%AE%80%E6%98%93%E7%9A%84ftp%E5%AE%9E%E7%8E%B0/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/20/%E4%B8%80%E4%B8%AA%E7%AE%80%E6%98%93%E7%9A%84ftp%E5%AE%9E%E7%8E%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -166,7 +166,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          
+          一个简易的ftp实现
         </h1>
 
         <div class="post-meta">
@@ -176,14 +176,14 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2021-02-28 15:59:01" itemprop="dateCreated datePublished" datetime="2021-02-28T15:59:01+08:00">2021-02-28</time>
+              <time title="Created: 2020-09-20 10:39:42" itemprop="dateCreated datePublished" datetime="2020-09-20T10:39:42+08:00">2020-09-20</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-02-26 11:20:05" itemprop="dateModified" datetime="2021-02-26T11:20:05+08:00">2021-02-26</time>
+                <time title="Modified: 2021-02-28 17:03:52" itemprop="dateModified" datetime="2021-02-28T17:03:52+08:00">2021-02-28</time>
               </span>
 
           
@@ -194,6 +194,7 @@
               <span class="post-meta-item-text">Views: </span>
               <span id="busuanzi_value_page_pv"></span>
             </span>
+            <div class="post-description">本学期老师布置了一个使用epollET+非阻塞方法实现的FTP服务器，这里写下自己的思路与感想。</div>
 
         </div>
       </header>
@@ -204,8 +205,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>title: 一个简易的ftp实现<br>date: 2020-09-20 10:39:42<br>categories:<br>tags:<br>description: 本学期老师布置了一个使用epollET+非阻塞方法实现的FTP服务器，这里写下自己的思路与感想。</p>
-<h1 id="一个简易的ftp实现"><a href="#一个简易的ftp实现" class="headerlink" title="一个简易的ftp实现"></a>一个简易的ftp实现</h1><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>本学期老师布置了一个使用epollET+非阻塞方法实现的FTP服务器，这里写下自己的思路与感想。<br>本例实现login, logout, ls, put, get功能。<br>首先，是主体的设计思路，每个client使用一个socket与client进行通信，使用epoll进行IO复用，所有任务都由epoll_event驱动。收到epoll_event后，对每一个event进行响应。每个client的socket都使用一个变量保存任务状态。</p>
+        <h1 id="一个简易的ftp实现"><a href="#一个简易的ftp实现" class="headerlink" title="一个简易的ftp实现"></a>一个简易的ftp实现</h1><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>本学期老师布置了一个使用epollET+非阻塞方法实现的FTP服务器，这里写下自己的思路与感想。<br>本例实现login, logout, ls, put, get功能。<br>首先，是主体的设计思路，每个client使用一个socket与client进行通信，使用epoll进行IO复用，所有任务都由epoll_event驱动。收到epoll_event后，对每一个event进行响应。每个client的socket都使用一个变量保存任务状态。</p>
 <a id="more"></a>
 
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> State[FDNUM]; <span class="comment">//每个client都有一个state</span></span><br></pre></td></tr></table></figure>
@@ -392,10 +392,13 @@ H--put完成-->A</pre>
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/01/05/cmake/" rel="prev" title="c++ const与constexpr区别">
-      <i class="fa fa-chevron-left"></i> c++ const与constexpr区别
+    <a href="/2020/09/20/%E5%AE%A2%E6%88%B7%E6%9C%BA(ubuntu)%E5%A6%82%E4%BD%95ssh%E8%BF%9E%E6%8E%A5vmware/" rel="prev" title="客户机如何ssh连接vmware（ubuntu）">
+      <i class="fa fa-chevron-left"></i> 客户机如何ssh连接vmware（ubuntu）
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2020/09/20/ssh%E5%AF%86%E9%92%A5%E8%BF%9E%E6%8E%A5/" rel="next" title="ssh秘钥连接">
+      ssh秘钥连接 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
