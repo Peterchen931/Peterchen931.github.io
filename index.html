@@ -147,7 +147,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-cn">
-    <link itemprop="mainEntityOfPage" href="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/27/ssh%E5%8A%9F%E8%83%BD%E4%BB%A5%E5%8F%8A%E5%88%A9%E7%94%A8%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/Peterchen931/Peterchen931.github.io/2021/02/28/%E4%B8%80%E4%B8%AA%E7%AE%80%E6%98%93%E7%9A%84ftp%E5%AE%9E%E7%8E%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -161,7 +161,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/09/27/ssh%E5%8A%9F%E8%83%BD%E4%BB%A5%E5%8F%8A%E5%88%A9%E7%94%A8%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/" class="post-title-link" itemprop="url">ssh功能以及利用端口转发实现内网穿透</a>
+            <a href="/2021/02/28/%E4%B8%80%E4%B8%AA%E7%AE%80%E6%98%93%E7%9A%84ftp%E5%AE%9E%E7%8E%B0/" class="post-title-link" itemprop="url">Untitled</a>
         </h2>
 
         <div class="post-meta">
@@ -171,14 +171,14 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2020-09-27 22:30:48" itemprop="dateCreated datePublished" datetime="2020-09-27T22:30:48+08:00">2020-09-27</time>
+              <time title="Created: 2021-02-28 15:59:01" itemprop="dateCreated datePublished" datetime="2021-02-28T15:59:01+08:00">2021-02-28</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-09-28 20:18:15" itemprop="dateModified" datetime="2020-09-28T20:18:15+08:00">2020-09-28</time>
+                <time title="Modified: 2021-02-26 11:20:05" itemprop="dateModified" datetime="2021-02-26T11:20:05+08:00">2021-02-26</time>
               </span>
 
           
@@ -192,10 +192,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>本文叙述ssh的一些功能，并且详述了ssh端口转发的过程，以及利用其转发功能ssh连接两个不同局域网的主机</p>
+          <p>title: 一个简易的ftp实现<br>date: 2020-09-20 10:39:42<br>categories:<br>tags:<br>description: 本学期老师布置了一个使用epollET+非阻塞方法实现的FTP服务器，这里写下自己的思路与感想。</p>
+<h1 id="一个简易的ftp实现"><a href="#一个简易的ftp实现" class="headerlink" title="一个简易的ftp实现"></a>一个简易的ftp实现</h1><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>本学期老师布置了一个使用epollET+非阻塞方法实现的FTP服务器，这里写下自己的思路与感想。<br>本例实现login, logout, ls, put, get功能。<br>首先，是主体的设计思路，每个client使用一个socket与client进行通信，使用epoll进行IO复用，所有任务都由epoll_event驱动。收到epoll_event后，对每一个event进行响应。每个client的socket都使用一个变量保存任务状态。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2020/09/27/ssh%E5%8A%9F%E8%83%BD%E4%BB%A5%E5%8F%8A%E5%88%A9%E7%94%A8%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/">
+              <a class="btn" href="/2021/02/28/%E4%B8%80%E4%B8%AA%E7%AE%80%E6%98%93%E7%9A%84ftp%E5%AE%9E%E7%8E%B0/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -219,7 +220,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-cn">
-    <link itemprop="mainEntityOfPage" href="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/24/Deep%20Learning%20for%203D%20Point%20Cloud%20Understanding:%20A%20Survey%20%E7%BF%BB%E8%AF%91/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/Peterchen931/Peterchen931.github.io/2021/01/05/cmake/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -233,7 +234,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/09/24/Deep%20Learning%20for%203D%20Point%20Cloud%20Understanding:%20A%20Survey%20%E7%BF%BB%E8%AF%91/" class="post-title-link" itemprop="url">翻译 Deep Learning for 3D Point Cloud Understanding\:A Survey</a>
+            <a href="/2021/01/05/cmake/" class="post-title-link" itemprop="url">c++ const与constexpr区别</a>
         </h2>
 
         <div class="post-meta">
@@ -242,10 +243,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2020-09-24 10:35:46 / Modified: 17:50:53" itemprop="dateCreated datePublished" datetime="2020-09-24T10:35:46+08:00">2020-09-24</time>
+              <time title="Created: 2021-01-05 09:11:15" itemprop="dateCreated datePublished" datetime="2021-01-05T09:11:15+08:00">2021-01-05</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-26 11:19:38" itemprop="dateModified" datetime="2021-02-26T11:19:38+08:00">2021-02-26</time>
+              </span>
 
           
 
@@ -258,10 +265,14 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h3 id="1-摘要"><a href="#1-摘要" class="headerlink" title="1. 摘要"></a>1. 摘要</h3><p>自动驾驶和机器人技术等实际应用的发展引起了人们对3D点云理解的日益关注。 虽然深度学习在基于图像的任务上取得了巨大的成功，但深度神经网络在处理大量，非结构化和嘈杂的3D点时仍面临许多独特的挑战。 为了演示深度学习对3D点云理解的最新进展，本文从几个不同的方向（分类，分段，检测，跟踪，流量估计，配准，增强和完成）总结了该领域的最新研究成果 ），以及常用的数据集，指标和最新性能。有关此调查的更多信息，请访问：<a href="https%EF%BC%9A//github.com/SHI-Labs/3D-Point-Cloud-Learning">https：//github.com/SHI-Labs/3D-Point-Cloud-Learning</a></p>
+          <h3 id="基本逻辑"><a href="#基本逻辑" class="headerlink" title="基本逻辑"></a>基本逻辑</h3><ol>
+<li>Declare a target</li>
+<li>Declare target’s traits</li>
+<li>It’s all about targets</li>
+</ol>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2020/09/24/Deep%20Learning%20for%203D%20Point%20Cloud%20Understanding:%20A%20Survey%20%E7%BF%BB%E8%AF%91/#more" rel="contents">
+              <a class="btn" href="/2021/01/05/cmake/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -285,7 +296,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-cn">
-    <link itemprop="mainEntityOfPage" href="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/22/pointnet%E8%AE%BA%E6%96%87%E7%9A%84%E7%90%86%E8%A7%A3%E4%B8%8E%E6%80%9D%E8%80%83/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/Peterchen931/Peterchen931.github.io/2021/01/03/select%E4%B8%8Eepoll/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -299,7 +310,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/09/22/pointnet%E8%AE%BA%E6%96%87%E7%9A%84%E7%90%86%E8%A7%A3%E4%B8%8E%E6%80%9D%E8%80%83/" class="post-title-link" itemprop="url">PointNet论文笔记</a>
+            <a href="/2021/01/03/select%E4%B8%8Eepoll/" class="post-title-link" itemprop="url">select与epoll</a>
         </h2>
 
         <div class="post-meta">
@@ -309,14 +320,14 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2020-09-22 16:34:58" itemprop="dateCreated datePublished" datetime="2020-09-22T16:34:58+08:00">2020-09-22</time>
+              <time title="Created: 2021-01-03 16:13:14" itemprop="dateCreated datePublished" datetime="2021-01-03T16:13:14+08:00">2021-01-03</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-09-24 10:41:17" itemprop="dateModified" datetime="2020-09-24T10:41:17+08:00">2020-09-24</time>
+                <time title="Modified: 2021-02-26 11:18:17" itemprop="dateModified" datetime="2021-02-26T11:18:17+08:00">2021-02-26</time>
               </span>
 
           
@@ -330,10 +341,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>记录阅读PointNet论文时的</p>
+          <p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/5383959/why-exactly-does-epoll-scale-better-than-poll">steakoverflow上对epoll的时间复杂度的讨论</a></p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2020/09/22/pointnet%E8%AE%BA%E6%96%87%E7%9A%84%E7%90%86%E8%A7%A3%E4%B8%8E%E6%80%9D%E8%80%83/">
+              <a class="btn" href="/2021/01/03/select%E4%B8%8Eepoll/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -357,7 +368,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-cn">
-    <link itemprop="mainEntityOfPage" href="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/20/#%20C++primer%E7%AC%94%E8%AE%B0/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/Peterchen931/Peterchen931.github.io/2020/12/28/%E7%BA%A2%E9%BB%91%E6%A0%91/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -371,7 +382,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/09/20/#%20C++primer%E7%AC%94%E8%AE%B0/" class="post-title-link" itemprop="url">C++primer随笔</a>
+            <a href="/2020/12/28/%E7%BA%A2%E9%BB%91%E6%A0%91/" class="post-title-link" itemprop="url">红黑树</a>
         </h2>
 
         <div class="post-meta">
@@ -381,14 +392,14 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2020-09-20 10:39:42" itemprop="dateCreated datePublished" datetime="2020-09-20T10:39:42+08:00">2020-09-20</time>
+              <time title="Created: 2020-12-28 11:39:21" itemprop="dateCreated datePublished" datetime="2020-12-28T11:39:21+08:00">2020-12-28</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-09-22 08:21:39" itemprop="dateModified" datetime="2020-09-22T08:21:39+08:00">2020-09-22</time>
+                <time title="Modified: 2021-02-26 11:20:21" itemprop="dateModified" datetime="2021-02-26T11:20:21+08:00">2021-02-26</time>
               </span>
 
           
@@ -402,10 +413,13 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>C++学习的的一些记录，以及一些要点的摘录</p>
+          <h3 id="前提知识"><a href="#前提知识" class="headerlink" title="前提知识"></a>前提知识</h3><p>关于红黑树的基本操作可以看这两部分</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/91960960">红黑树基本</a></p>
+<p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E7%BA%A2%E9%BB%91%E6%A0%91">红黑树wiki</a></p>
+<p>注：由于平衡二叉树的很多操作都需要回溯到父节点，所以很多实现都在其数据结构中加入了指向parent的指针</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2020/09/20/#%20C++primer%E7%AC%94%E8%AE%B0/">
+              <a class="btn" href="/2020/12/28/%E7%BA%A2%E9%BB%91%E6%A0%91/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -429,7 +443,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-cn">
-    <link itemprop="mainEntityOfPage" href="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/20/apt%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/Peterchen931/Peterchen931.github.io/2020/12/05/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%89%E5%85%A8%E8%AE%BE%E7%BD%AE/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -443,7 +457,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/09/20/apt%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/" class="post-title-link" itemprop="url">apt使用说明</a>
+            <a href="/2020/12/05/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%89%E5%85%A8%E8%AE%BE%E7%BD%AE/" class="post-title-link" itemprop="url">服务器安全配置</a>
         </h2>
 
         <div class="post-meta">
@@ -453,14 +467,14 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2020-09-20 10:39:42" itemprop="dateCreated datePublished" datetime="2020-09-20T10:39:42+08:00">2020-09-20</time>
+              <time title="Created: 2020-12-05 12:15:14" itemprop="dateCreated datePublished" datetime="2020-12-05T12:15:14+08:00">2020-12-05</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-09-21 16:56:36" itemprop="dateModified" datetime="2020-09-21T16:56:36+08:00">2020-09-21</time>
+                <time title="Modified: 2021-02-26 11:20:32" itemprop="dateModified" datetime="2021-02-26T11:20:32+08:00">2021-02-26</time>
               </span>
 
           
@@ -474,10 +488,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>本文叙述了apt是为了解决何种问题出现的，apt常用指令，apt具体做了什么。</p>
+          <p>最近由于实验室服务器密码过于简单导致被盗了，于是对服务器的安全作了一系列措施，具体如下</p>
+<h1 id="禁止sudo组用户使用密码登录"><a href="#禁止sudo组用户使用密码登录" class="headerlink" title="禁止sudo组用户使用密码登录"></a>禁止sudo组用户使用密码登录</h1><p>由于密码登录的安全性始终会密钥登录，而sudo组用户又是能够获得管理员权限的用户，所以这里设置其仅能通过密钥文件登录，但是sshd的配置文件是全局的，位于<code>/etc/ssh/sshd_config</code>，如果直接对其<code>PasswordAuthentication</code>字段进行修改的话，则会影响到所有的用户，而我所需要的仅仅是对一个用户进行修改。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2020/09/20/apt%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/">
+              <a class="btn" href="/2020/12/05/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%89%E5%85%A8%E8%AE%BE%E7%BD%AE/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -501,7 +516,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-cn">
-    <link itemprop="mainEntityOfPage" href="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/20/git%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/Peterchen931/Peterchen931.github.io/2020/11/15/xkb%E4%B8%8Ecapslock%E9%87%8D%E6%98%A0%E5%B0%84/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -515,7 +530,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/09/20/git%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/" class="post-title-link" itemprop="url">git常用命令</a>
+            <a href="/2020/11/15/xkb%E4%B8%8Ecapslock%E9%87%8D%E6%98%A0%E5%B0%84/" class="post-title-link" itemprop="url">linux 键盘重映射（xkb）</a>
         </h2>
 
         <div class="post-meta">
@@ -525,14 +540,14 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2020-09-20 10:39:42" itemprop="dateCreated datePublished" datetime="2020-09-20T10:39:42+08:00">2020-09-20</time>
+              <time title="Created: 2020-11-15 12:00:11" itemprop="dateCreated datePublished" datetime="2020-11-15T12:00:11+08:00">2020-11-15</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-09-21 21:49:33" itemprop="dateModified" datetime="2020-09-21T21:49:33+08:00">2020-09-21</time>
+                <time title="Modified: 2021-02-26 11:17:20" itemprop="dateModified" datetime="2021-02-26T11:17:20+08:00">2021-02-26</time>
               </span>
 
           
@@ -546,10 +561,16 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>本文用于记载一些git的常用指令以及这些指令的常见用法</p>
+          <h3 id="xkb键盘映射大致的逻辑"><a href="#xkb键盘映射大致的逻辑" class="headerlink" title="xkb键盘映射大致的逻辑"></a>xkb键盘映射大致的逻辑</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(keycode, group, state) → keysym</span><br><span class="line">(keysym, state) → action</span><br></pre></td></tr></table></figure>
+
+<p>这里的group代表键盘布局，如us，cn，eu等</p>
+<p>keycode指的是我们所按的普通键</p>
+<p>state指的是类似shift，ctrl这样的键，在xkb中叫状态键</p>
+<p>keysym是xkb内部的映射</p>
+<p>action是最终传递给x终端的指令（x终端的指令与键盘指令并不相同，比如，x终端指令可以是‘关闭音量’这样的键盘中没有的指令）</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2020/09/20/git%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/">
+              <a class="btn" href="/2020/11/15/xkb%E4%B8%8Ecapslock%E9%87%8D%E6%98%A0%E5%B0%84/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -573,7 +594,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-cn">
-    <link itemprop="mainEntityOfPage" href="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/20/go%E8%AF%AD%E8%A8%80%E5%B0%8F%E8%AE%B0/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/Peterchen931/Peterchen931.github.io/2020/11/02/rsync%E7%94%A8%E6%B3%95%E7%AE%80%E4%BB%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -587,7 +608,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/09/20/go%E8%AF%AD%E8%A8%80%E5%B0%8F%E8%AE%B0/" class="post-title-link" itemprop="url">go语言小记</a>
+            <a href="/2020/11/02/rsync%E7%94%A8%E6%B3%95%E7%AE%80%E4%BB%8B/" class="post-title-link" itemprop="url">rsync用法简介</a>
         </h2>
 
         <div class="post-meta">
@@ -597,14 +618,14 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2020-09-20 10:39:42" itemprop="dateCreated datePublished" datetime="2020-09-20T10:39:42+08:00">2020-09-20</time>
+              <time title="Created: 2020-11-02 10:23:14" itemprop="dateCreated datePublished" datetime="2020-11-02T10:23:14+08:00">2020-11-02</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-09-22 08:21:43" itemprop="dateModified" datetime="2020-09-22T08:21:43+08:00">2020-09-22</time>
+                <time title="Modified: 2021-02-26 11:18:27" itemprop="dateModified" datetime="2021-02-26T11:18:27+08:00">2021-02-26</time>
               </span>
 
           
@@ -618,10 +639,14 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>Golang学习的的一些记录，以及一些要点的摘录</p>
+          <p>rsync命令用法及常用选项介绍：</p>
+<p>用法：</p>
+<ul>
+<li>拷贝本地文件<br><code>rsync [OPTION]... SRC [SRC]... DEST</code></li>
+</ul>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2020/09/20/go%E8%AF%AD%E8%A8%80%E5%B0%8F%E8%AE%B0/">
+              <a class="btn" href="/2020/11/02/rsync%E7%94%A8%E6%B3%95%E7%AE%80%E4%BB%8B/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -645,7 +670,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-cn">
-    <link itemprop="mainEntityOfPage" href="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/20/ssh%E5%AF%86%E9%92%A5%E8%BF%9E%E6%8E%A5/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/Peterchen931/Peterchen931.github.io/2020/10/29/apex%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91%E4%BB%A5%E5%8F%8A%E6%B3%A8%E9%87%8A/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -659,7 +684,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/09/20/ssh%E5%AF%86%E9%92%A5%E8%BF%9E%E6%8E%A5/" class="post-title-link" itemprop="url">ssh秘钥连接</a>
+            <a href="/2020/10/29/apex%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91%E4%BB%A5%E5%8F%8A%E6%B3%A8%E9%87%8A/" class="post-title-link" itemprop="url">使用apex进行混合精度训练以及单机多GPU训练</a>
         </h2>
 
         <div class="post-meta">
@@ -669,14 +694,14 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2020-09-20 10:39:42" itemprop="dateCreated datePublished" datetime="2020-09-20T10:39:42+08:00">2020-09-20</time>
+              <time title="Created: 2020-10-29 10:06:56" itemprop="dateCreated datePublished" datetime="2020-10-29T10:06:56+08:00">2020-10-29</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-09-22 08:08:00" itemprop="dateModified" datetime="2020-09-22T08:08:00+08:00">2020-09-22</time>
+                <time title="Modified: 2021-02-26 11:19:53" itemprop="dateModified" datetime="2021-02-26T11:19:53+08:00">2021-02-26</time>
               </span>
 
           
@@ -690,10 +715,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>利用ssh-keygen生成公钥私钥对，并且利用其免密登录</p>
+          <h2 id="apex混合精度训练"><a href="#apex混合精度训练" class="headerlink" title="apex混合精度训练"></a>apex混合精度训练</h2><p>混合精度训练可以加快模型训练速度，减少显存的占用，是一个比较使用的技巧，这里记录以下其使用方法，以及一些重要参数的解释。</p>
+<p>启用apex混合精度训练代码很简单，对原训练代码做如下修改即可：</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2020/09/20/ssh%E5%AF%86%E9%92%A5%E8%BF%9E%E6%8E%A5/">
+              <a class="btn" href="/2020/10/29/apex%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91%E4%BB%A5%E5%8F%8A%E6%B3%A8%E9%87%8A/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -717,7 +743,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-cn">
-    <link itemprop="mainEntityOfPage" href="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/20/%E4%B8%80%E4%B8%AA%E7%AE%80%E6%98%93%E7%9A%84ftp%E5%AE%9E%E7%8E%B0/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/Peterchen931/Peterchen931.github.io/2020/10/22/unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -731,7 +757,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/09/20/%E4%B8%80%E4%B8%AA%E7%AE%80%E6%98%93%E7%9A%84ftp%E5%AE%9E%E7%8E%B0/" class="post-title-link" itemprop="url">一个简易的ftp实现</a>
+            <a href="/2020/10/22/unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/" class="post-title-link" itemprop="url">unix高级环境编程笔记</a>
         </h2>
 
         <div class="post-meta">
@@ -741,14 +767,14 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2020-09-20 10:39:42" itemprop="dateCreated datePublished" datetime="2020-09-20T10:39:42+08:00">2020-09-20</time>
+              <time title="Created: 2020-10-22 08:40:19" itemprop="dateCreated datePublished" datetime="2020-10-22T08:40:19+08:00">2020-10-22</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-09-22 08:09:19" itemprop="dateModified" datetime="2020-09-22T08:09:19+08:00">2020-09-22</time>
+                <time title="Modified: 2021-02-26 11:17:52" itemprop="dateModified" datetime="2021-02-26T11:17:52+08:00">2021-02-26</time>
               </span>
 
           
@@ -762,10 +788,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>本学期老师布置了一个使用epollET+非阻塞方法实现的FTP服务器，这里写下自己的思路与感想。</p>
+          <p>todo</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2020/09/20/%E4%B8%80%E4%B8%AA%E7%AE%80%E6%98%93%E7%9A%84ftp%E5%AE%9E%E7%8E%B0/">
+              <a class="btn" href="/2020/10/22/unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/">
                 Read more &raquo;
               </a>
             </div>
@@ -789,7 +815,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-cn">
-    <link itemprop="mainEntityOfPage" href="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/20/%E5%AE%A2%E6%88%B7%E6%9C%BA(ubuntu)%E5%A6%82%E4%BD%95ssh%E8%BF%9E%E6%8E%A5vmware/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/Peterchen931/Peterchen931.github.io/2020/10/09/Learning%20Guided%20Convolutional%20Network%20for%20Depth%20Completion%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -803,7 +829,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/09/20/%E5%AE%A2%E6%88%B7%E6%9C%BA(ubuntu)%E5%A6%82%E4%BD%95ssh%E8%BF%9E%E6%8E%A5vmware/" class="post-title-link" itemprop="url">客户机如何ssh连接vmware（ubuntu）</a>
+            <a href="/2020/10/09/Learning%20Guided%20Convolutional%20Network%20for%20Depth%20Completion%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/" class="post-title-link" itemprop="url">Learning Guided Convolutional Network forDepth Completion翻译</a>
         </h2>
 
         <div class="post-meta">
@@ -813,14 +839,14 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2020-09-20 10:39:42" itemprop="dateCreated datePublished" datetime="2020-09-20T10:39:42+08:00">2020-09-20</time>
+              <time title="Created: 2020-10-09 16:16:55" itemprop="dateCreated datePublished" datetime="2020-10-09T16:16:55+08:00">2020-10-09</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-09-22 08:11:35" itemprop="dateModified" datetime="2020-09-22T08:11:35+08:00">2020-09-22</time>
+                <time title="Modified: 2021-02-26 11:19:05" itemprop="dateModified" datetime="2021-02-26T11:19:05+08:00">2021-02-26</time>
               </span>
 
           
@@ -834,10 +860,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>本文记载了如何用ssh连接vmware中的ubuntu虚拟机，并配置静态ip</p>
+          <p>原文连接：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1908.01238">Learning Guided Convolutional Network forDepth Completion</a></p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2020/09/20/%E5%AE%A2%E6%88%B7%E6%9C%BA(ubuntu)%E5%A6%82%E4%BD%95ssh%E8%BF%9E%E6%8E%A5vmware/">
+              <a class="btn" href="/2020/10/09/Learning%20Guided%20Convolutional%20Network%20for%20Depth%20Completion%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -860,7 +886,7 @@
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -926,7 +952,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-count">25</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -954,7 +980,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

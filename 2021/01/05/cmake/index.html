@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"github.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="基本逻辑 Declare a target Declare target’s traits It’s all about targets">
+<meta property="og:type" content="article">
+<meta property="og:title" content="c++ const与constexpr区别">
+<meta property="og:url" content="https://github.com/Peterchen931/Peterchen931.github.io/2021/01/05/cmake/index.html">
+<meta property="og:site_name" content="siyuan Chen">
+<meta property="og:description" content="基本逻辑 Declare a target Declare target’s traits It’s all about targets">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-01-05T01:11:15.000Z">
+<meta property="article:modified_time" content="2021-02-26T03:19:38.821Z">
+<meta property="article:author" content="Peter chen">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://github.com/Peterchen931/Peterchen931.github.io/2021/01/05/cmake/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-cn'
+  };
+</script>
+
+  <title>c++ const与constexpr区别 | siyuan Chen</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">siyuan Chen</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-cn">
+    <link itemprop="mainEntityOfPage" href="https://github.com/Peterchen931/Peterchen931.github.io/2021/01/05/cmake/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Peter chen">
+      <meta itemprop="description" content="siyuan Chen personal page">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="siyuan Chen">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          c++ const与constexpr区别
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-01-05 09:11:15" itemprop="dateCreated datePublished" datetime="2021-01-05T09:11:15+08:00">2021-01-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-26 11:19:38" itemprop="dateModified" datetime="2021-02-26T11:19:38+08:00">2021-02-26</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="基本逻辑"><a href="#基本逻辑" class="headerlink" title="基本逻辑"></a>基本逻辑</h3><ol>
+<li>Declare a target</li>
+<li>Declare target’s traits</li>
+<li>It’s all about targets</li>
+</ol>
+<a id="more"></a>
+
+<h3 id="常用变量"><a href="#常用变量" class="headerlink" title="常用变量"></a>常用变量</h3><table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Info</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CMAKE_SOURCE_DIR</td>
+<td>cmake文件所在的目录</td>
+</tr>
+<tr>
+<td>CMAKE_CURRENT_SOURCE_DIR</td>
+<td>当前cmake文件所在的目录，与上一个不同，如果使用了sub_object那么在执行子项目时该变量就是子项目的目录（上一个仍为顶层的cmake）</td>
+</tr>
+<tr>
+<td>PROJECT_SOURCE_DIR</td>
+<td>cmake项目所在的根目录，通常由于CMakeLists.txt文件就是在project目录下，所以其与CMAKE_SOURCE_DIR一般一致</td>
+</tr>
+<tr>
+<td>CMAKE_BINARY_DIR</td>
+<td>构建二进制文件的目录，该目录通常为运行cmake命令的目录</td>
+</tr>
+<tr>
+<td>CMAKE_CURRENT_BINARY_DIR</td>
+<td>指的是工程编译结果存放的目标目录，可以通过set命令或ADD_SUBDIRECTORY(src bin)改变这个变量的值</td>
+</tr>
+<tr>
+<td>PROJECT_BINARY_DIR</td>
+<td>生成project文件的目录</td>
+</tr>
+</tbody></table>
+<h3 id="构建target的命令"><a href="#构建target的命令" class="headerlink" title="构建target的命令"></a>构建target的命令</h3><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">add_executable</span>(&lt;name&gt; [source1] [source2 ...])</span><br></pre></td></tr></table></figure>
+
+<p>构建一个<code>target</code>，名为name，该target指定目标是生成一个可执行的二进制文件</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">add_library</span>(&lt;name&gt; [STATIC | SHARED | MODULE] [&lt;source&gt;...])</span><br></pre></td></tr></table></figure>
+
+<p>构建一个<code>target</code>，名为name，该target指定目标是生成一个library，[STATIC | SHARED]是对该库的修饰，决定该库的类型</p>
+<h3 id="target-命令（修饰-lt-target-gt-）"><a href="#target-命令（修饰-lt-target-gt-）" class="headerlink" title="target_*命令（修饰&lt;target&gt;）"></a>target_*命令（修饰&lt;target&gt;）</h3><p>这类命令语义是对上面两个命令生成的<code>target</code>进行修饰，其语法通常是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">target_*(&lt;target&gt; &lt;INTERFACE|PUBLIC|PRIVATE&gt; [items1...])</span><br></pre></td></tr></table></figure>
+
+<p>值得注意的是修饰词<code>&lt;INTERFACE|PUBLIC|PRIVATE&gt;</code>的语义，</p>
+<blockquote>
+<p>private：表示修饰仅仅用于被修饰target构建的本身(producer  require but the consumers doesn’t)<br>interface：表示修饰仅仅用于需要引用该target对象(consumers require but the producer doesn’t)<br>public：表示两者均有(both consumer and producer require)</p>
+</blockquote>
+<h4 id="具体命令的意义以及作用"><a href="#具体命令的意义以及作用" class="headerlink" title="具体命令的意义以及作用"></a>具体命令的意义以及作用</h4><p><strong>target_compile_definitions</strong>    在编译器中进行宏定义，等效于gcc中的-D xxx</p>
+<p><strong>target_compile_features</strong>        指定编译器特性，典型的就是指定标准，还有一些关于编译器细节的设定。cmake支持以下三类</p>
+<blockquote>
+<p>CMAKE_C_COMPILE_FEATURES    如c_std_90，c_static_assert</p>
+<p>CMAKE_CUDA_COMPILE_FEATURES    如cuda_std_03</p>
+<p>CMAKE_CXX_COMPILE_FEATURES    如cxx_std_20，cxx_alignas</p>
+</blockquote>
+<p><strong>target_compile_options</strong>    指定编译器的编译选项，如 <code>-Wall</code>, <code>-O3</code>，其实上面的两项也可以通过此来设定，本质上就是将其中的值复制到gcc命令行</p>
+<p><strong>target_include_directories</strong>    将某个目录加入到compiler对头文件的搜索目录 等效于gcc中的<code>-I xxx</code></p>
+<p><strong>target_link_directories</strong>    将某个目录加入到linker的搜索目录，等效于gcc中的<code>-L xxx</code></p>
+<p><strong>target_link_libraries</strong>    将一些文件添加到target的连接过程中，如果<code>item</code>的是<code>target</code>类型，由<code>add_library</code>构建，则cmake自动处理路径关系。如果是路径，则必须是绝对路径。cmake将该路径传递给linker，linker再根据其搜索路径进行搜索。值得注意的是，只有标准路径<code>/usr/lib</code>才作为默认搜索路径，当前目录并不在默认的搜索路径中。如果需要添加搜索路径，可以使用<code>target_link_directories</code></p>
+<p><strong>target_link_options</strong>    与complie option类似，关于连接器的设置</p>
+<p><strong>target_precompile_headers</strong>    （这个不是很理解，照搬官方文档的解释）预编译头文件可以通过创建部分头文件的部分处理版本，然后在编译过程中使用该版本，而不是反复分析原始头，来加快编译速度。</p>
+<p><strong>target_sources</strong>    将源文件加入目标，相对源文件路径被解释为相对于当前源目录（即<code>CMAKE_CURRENT_SOURCE_DIR</code>）</p>
+<h4 id="语义类似的全局命令"><a href="#语义类似的全局命令" class="headerlink" title="语义类似的全局命令"></a>语义类似的全局命令</h4><p>*<em>target_**</em>命令是针对<code>target</code>进行设置，如果要进行全局设置，可以用下面</p>
+<table>
+<thead>
+<tr>
+<th>全局</th>
+<th>target only</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>add_compile_definitions</td>
+<td>target_compile_definitions</td>
+</tr>
+<tr>
+<td>add_compile_options</td>
+<td>target_compile_options</td>
+</tr>
+<tr>
+<td>add_link_options</td>
+<td>target_link_options</td>
+</tr>
+<tr>
+<td>link_directories</td>
+<td>target_link_directories</td>
+</tr>
+<tr>
+<td>link_libraries</td>
+<td>target_link_libraries</td>
+</tr>
+<tr>
+<td>include_directories</td>
+<td>target_include_directories</td>
+</tr>
+</tbody></table>
+<h3 id="install命令"><a href="#install命令" class="headerlink" title="install命令"></a>install命令</h3><p>install命令只列出最基本的三个的用法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">install(TARGETS &lt;target&gt; DESTINATION &lt;dir&gt;)</span><br><span class="line">install(&#123;FILES&#125; &lt;file&gt; DESTINATION &lt;dir&gt;)</span><br><span class="line">install(DIRECTORY &lt;dir&gt; DESTINATION &lt;dir&gt;)</span><br></pre></td></tr></table></figure>
+
+<p>这会将target生成的文件，文件，目录复制到指定位置，其中dir为相对目录时使用<code>CMAKE_INSTALL_PREFIX</code>作为前缀，该变量可以通过set设置</p>
+<h3 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h3><p>cmake的变量只有两种，list与string。list可以看做是一组string，string也能视为长度为1的list</p>
+<p>cmake通过set来设置变量。<code>set(KEY VALUE)</code>接受两个参数，用来声明变量，如果其只有单一value，则视为string，如果value有多个，则会视为list。在camke语法中使用<code>KEY</code>并不能直接取到<code>VALUE</code>,必须使用<code>$&#123;KEY&#125;</code>这种写法来取到<code>VALUE</code>。取消定义变量是<code>unset(KEY)</code>。</p>
+<p>例： <code>set(var a b c d e)</code> 创建 <code>a;b;c;d;e</code>这样的list。可以使用引号强制生成单个sting <code>set(var &quot;a b c d e&quot;)</code></p>
+<p>环境变量引用的形式为<code>$ENV&#123;VAR&#125;</code>，<code>set(ENV&#123;NAME&#125; new_val)</code>可以重设环境变量</p>
+<h3 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h3><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">message</span>([&lt;mode&gt;] <span class="string">&quot;message text&quot;</span> ...)</span><br></pre></td></tr></table></figure>
+
+<p>向终端输出一条语句。这个命令有很多用法，一个好用的方法是用message来测试变量是否正确的被设置了（如上面file搜索的确认）。</p>
+<h3 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h3><p>make信息可以用 make VERBOSE=1来显示详细信息（每条生成命令）</p>
+<p>可以用<code>man cmake-...</code>快速查看cmake信息，如<code>man cmake-buildsystem, man cmake-command, man cmake-variable</code></p>
+<p>file()，list()，string()分别代表对文件，cmake list，cmake string的三种处理函数。具体可以见文档</p>
+<p><code>file(GLOB &lt;out-var&gt; [...])</code> 可以利用通配符进行查找，并将查找结果存入变量，这个通常可以用于将一个文件夹的所有文件打包，而不用一个一个输入</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">file</span>(GLOB LIBRARY <span class="string">&quot;lib/*&quot;</span>) <span class="comment">#将lib文件夹下的所有文件设为LIBRARY变量</span></span><br><span class="line"><span class="keyword">message</span>(<span class="variable">$&#123;LIBRARY&#125;</span>)	<span class="comment">#确认是否正确的找到了lib</span></span><br><span class="line"><span class="keyword">target_link_libraries</span>(hello_cmk <span class="variable">$&#123;LIBRARY&#125;</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h3><p><a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.19/">cmake官方文档</a></p>
+<p><a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/guide/tutorial/index.html">cmake tutorial</a></p>
+<p><a href="https://github.com/ttroy50/cmake-examples">cmake-examples</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903558861553672#heading-5">cmake使用教程（六）-蛋疼的语法</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/58949190/answer/999701073">https://www.zhihu.com/question/58949190/answer/999701073</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/01/03/select%E4%B8%8Eepoll/" rel="prev" title="select与epoll">
+      <i class="fa fa-chevron-left"></i> select与epoll
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/02/28/%E4%B8%80%E4%B8%AA%E7%AE%80%E6%98%93%E7%9A%84ftp%E5%AE%9E%E7%8E%B0/" rel="next" title="">
+       <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E9%80%BB%E8%BE%91"><span class="nav-number">1.</span> <span class="nav-text">基本逻辑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%8F%98%E9%87%8F"><span class="nav-number">2.</span> <span class="nav-text">常用变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%84%E5%BB%BAtarget%E7%9A%84%E5%91%BD%E4%BB%A4"><span class="nav-number">3.</span> <span class="nav-text">构建target的命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#target-%E5%91%BD%E4%BB%A4%EF%BC%88%E4%BF%AE%E9%A5%B0-lt-target-gt-%EF%BC%89"><span class="nav-number">4.</span> <span class="nav-text">target_*命令（修饰&lt;target&gt;）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E5%91%BD%E4%BB%A4%E7%9A%84%E6%84%8F%E4%B9%89%E4%BB%A5%E5%8F%8A%E4%BD%9C%E7%94%A8"><span class="nav-number">4.1.</span> <span class="nav-text">具体命令的意义以及作用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%AD%E4%B9%89%E7%B1%BB%E4%BC%BC%E7%9A%84%E5%85%A8%E5%B1%80%E5%91%BD%E4%BB%A4"><span class="nav-number">4.2.</span> <span class="nav-text">语义类似的全局命令</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#install%E5%91%BD%E4%BB%A4"><span class="nav-number">5.</span> <span class="nav-text">install命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%98%E9%87%8F"><span class="nav-number">6.</span> <span class="nav-text">变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E8%AF%95"><span class="nav-number">7.</span> <span class="nav-text">调试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E5%AE%83"><span class="nav-number">8.</span> <span class="nav-text">其它</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">9.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Peter chen</p>
+  <div class="site-description" itemprop="description">siyuan Chen personal page</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Peter chen</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

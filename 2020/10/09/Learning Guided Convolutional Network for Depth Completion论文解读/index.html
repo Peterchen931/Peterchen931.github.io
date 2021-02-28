@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"github.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="原文连接：Learning Guided Convolutional Network forDepth Completion">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Learning Guided Convolutional Network forDepth Completion翻译">
+<meta property="og:url" content="https://github.com/Peterchen931/Peterchen931.github.io/2020/10/09/Learning%20Guided%20Convolutional%20Network%20for%20Depth%20Completion%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/index.html">
+<meta property="og:site_name" content="siyuan Chen">
+<meta property="og:description" content="原文连接：Learning Guided Convolutional Network forDepth Completion">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-10-09T08:16:55.000Z">
+<meta property="article:modified_time" content="2021-02-26T03:19:05.640Z">
+<meta property="article:author" content="Peter chen">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://github.com/Peterchen931/Peterchen931.github.io/2020/10/09/Learning%20Guided%20Convolutional%20Network%20for%20Depth%20Completion%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-cn'
+  };
+</script>
+
+  <title>Learning Guided Convolutional Network forDepth Completion翻译 | siyuan Chen</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">siyuan Chen</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-cn">
+    <link itemprop="mainEntityOfPage" href="https://github.com/Peterchen931/Peterchen931.github.io/2020/10/09/Learning%20Guided%20Convolutional%20Network%20for%20Depth%20Completion%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Peter chen">
+      <meta itemprop="description" content="siyuan Chen personal page">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="siyuan Chen">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Learning Guided Convolutional Network forDepth Completion翻译
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-10-09 16:16:55" itemprop="dateCreated datePublished" datetime="2020-10-09T16:16:55+08:00">2020-10-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-26 11:19:05" itemprop="dateModified" datetime="2021-02-26T11:19:05+08:00">2021-02-26</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>原文连接：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1908.01238">Learning Guided Convolutional Network forDepth Completion</a></p>
+<a id="more"></a>
+
+<h2 id="简要翻译"><a href="#简要翻译" class="headerlink" title="简要翻译"></a>简要翻译</h2><p>Abstract—-深度感应对于自动驾驶和其他机器人应用至关重要。但是，现代的Li-DAR传感器仅提供稀疏的深度测量。因此，有必要完成稀疏的LiDAR数据，其中通常使用异步指导RGB图像来促进此完成。为此任务设计了许多神经网络。但是，它们通常通过执行特征级联或逐元素加法来轻松融合LiDAR数据和RGB图像信息。受到制导图像过滤技术的启发，我们设计了一个新颖的制导网络，以根据制导图像预测内核权重。然后将这些预测的核应用于提取深度图像特征。这样，我们的网络就可以生成内容依赖和空间变化的内核，以进行多模式特征融合。动态生成的空间变量内核可能导致GPU内存消耗过大和计算开销。我们进一步设计卷积分解以减少计算量和内存消耗。 GPU内存的减少使特征融合可以在多阶段方案中工作。我们进行了全面的实验，以验证我们在真实的室外，室内和合成数据集上的方法。我们的方法产生强大的结果。在提交时，它的性能优于NYUv2数据集上的最新方法，在KITTI深度完成基准中排名第一。它还在不同的3D点密度，不同的光照和天气条件以及跨数据集评估方面具有强大的泛化能力。该代码将被发布以进行复制。</p>
+<h4 id="1-introduction"><a href="#1-introduction" class="headerlink" title="1. introduction"></a>1. introduction</h4><p>DENSE深度感知对于许多机器人应用（例如自动驾驶或其他移动机器人）至关重要。对观察到的图像进行准确的密集深度感知是解决以下任务（如避开障碍物，物体检测或识别以及3D场景重建）的先决条件。虽然在室内场景中可以轻松采用深度摄像头，但室外密集的深度感知主要依靠立体视觉或LiDAR传感器。立体视觉算法[1] – [4]在重建薄且不连续的物体方面仍然存在许多困难。到目前为止，LiDAR传感器可提供最可靠，最准确的深度感应，并且已广泛集成到许多机器人和自动驾驶汽车中。但是，当前的LiDAR传感器仅获得稀疏深度测量值，例如垂直方向上有64条扫描线，对于像机器人导航这样的实际应用来说，如此稀疏的深度感应是不够的。因此，从稀疏的LiDAR输入估计密集深度图对于学术研究和工业应用都具有巨大的价值。</p>
+<p>许多关于该主题的最新著作[5] – [7]都采用深度学习作为方法，并利用附加的同步RGB图像进行深度完成。与传统方法相比，这些方法已取得了显着改进[8] – [10]。例如，邱等人。 [6]训练网络从RGB图像和LiDAR数据中估计表面法线，并进一步使用恢复的表面法线来指导深度完成。 Ma等。 [7]利用相邻视频帧之间的照片一致性来完成深度。 Jaritz etat。 [11]采用深度损失以及监督的语义损失。尽管这些工作提出了不同的方法，但它们在多模态特征融合中基本上共享相同的方案。具体而言，这些工作采用类似级联或逐元素相加的操作，将稀疏深度的特征矢量与RGB图像直接融合在一起，以进行进一步处理。但是，当考虑异构数据和复杂环境时，通常使用的级联或逐元素加法运算不太合适。通过这种简单的方法很难充分利用RGB图像作为指导的潜力。相反，我们建议使用更复杂的融合模块来提高深度完成任务的性能。</p>
+<p>我们的工作灵感来自于引导图像过滤[13]，[14]。在引导图像过滤中，一个像素的输出是附近像素的加权平均值，其中权重是引导图像的函数。该策略已被用于RGB和范围图像的通用完成/超分辨率[15] – [17]。受制于指导图像滤波的成功启发，我们寻求学习一种指导网络，以根据输入图像自动生成空间变异卷积核，然后将其应用到我们的指导卷积模块中，以从稀疏深度图像中提取特征。与在引导图像过滤中手工生成内核的功能相比[13]，我们的端到端学习型网络结构有可能产生更强大的内核，且场景深度一致，以完成深度学习。与标准卷积模块相比，在标准卷积模块中内核是空间不变的，并且所有位置的像素都共享同一内核，而我们的引导卷积模块具有根据内容自动生成的空间变量内核。因此，我们的网络更强大，可以处理深度完成任务中的各种挑战性情况。</p>
+<p>使用空间变量内核的明显缺点是GPU内存消耗大，这也是卷积神经网络中参数共享的原始动机。尤其是在多级融合中应用空间变量卷积模块进行深度完成时，计算平台甚至无法承受大量GPU内存消耗（有关内存和计算的讨论，请参阅第III-C小节）。因此，寻找使网络可用的实用方法并非易事。受最近网络压缩技术的启发[18]，我们将导引卷积模块中的卷积运算分解为两个阶段，即无变通道方式的卷积阶段和无变量跨通道的卷积阶段。通过使用这种新颖的分解，我们极大地减少了GPU内存，从而可以将引导卷积模块与功能强大的编码器-解码器网络多级集成到现代GPU设备中。</p>
+<p>在室外和室内数据集（来自真实场景和合成场景）上评估了所提出的方法。 它在KITTI深度完成基准上的性能优于最新技术，在提交论文时排名第一。 全面的消融研究证明了我们方法中使用的每个组件的有效性和融合策略。 与其他深度完成方法相比，我们的方法在室内NYUv2数据集上也达到了最佳性能。 最后但并非最不重要的一点是，我们的模型在不同的深度点密度，各种光照和天气条件以及跨数据集评估中都表现出强大的概括能力。 我们的代码将在<a href="https://github.com/kakaxi314/GuideNet%E4%B8%8A%E5%8F%91%E5%B8%83%E3%80%82">https://github.com/kakaxi314/GuideNet上发布。</a></p>
+<h4 id="2-related-work"><a href="#2-related-work" class="headerlink" title="2. related work"></a>2. related work</h4><p>根据是否有RGB图像指导深度完成，可以将先前的方法大致分为两类：仅深度方法和图像指导方法。 我们简要回顾了这些技术以及与我们的网络设计相关的其他文献。</p>
+<p><strong>Depth-only  Methods</strong>    这些方法使用稀疏或低分辨率深度图像作为输入来生成全分辨率深度图。一些早期的方法基于压缩感知理论[8]或组合的小波-轮廓波字典[9]来重建密集的视差图[8]或深度图[9]。 Kuet al。 [10]使用一系列手工制作的常规算子，例如扩张，闭孔，填孔和模糊等，将稀疏的深度图转换为密集的图。最近，基于深度学习的方法证明了令人鼓舞的结果。 [5]提出了一种稀疏不变的CNN，通过使用观察蒙版来处理稀疏数据或特征。 [19]通过生成一个完整的深度以及具有标准化卷积的置信度图来解决深度完成。 Chodosh等。 [20]将压缩感知与深度学习相结合以进行深度预测。这些方法的主要重点是设计适当的运算符，例如稀疏不变的CNN [5]，用于处理稀疏输入并将这些备用信息传播到整个图像。</p>
+<p>在深度超分辨率方面，一些方法利用配对的低分辨率和高分辨率深度图像块或自相似搜索[22]的数据库[21]生成高分辨率深度图像。 一些方法[23]，[24]提出了通过词典学习解决深度超分辨率的方法。 Riegler等。 [25]使用深度网络生成高分辨率的深度图以及深度不连续性，并将它们输入到变化模型中以精炼深度。与这些深度超分辨率方法不同，这些方法以密集且规则的深度图像作为输入。 相反，我们方法中的深度输入是稀疏且不规则的，而且我们无需任何进一步的优化或后处理即可端对端训练模型。</p>
+<p><strong>Image-guided   Methods</strong>    </p>
+<p>这些方法通常会获得更好的结果，因为它们利用了附加的RGB图像，从而在语义信息，边缘信息或表面信息等方面提供了强有力的线索。早期的工作主要是通过双边滤波[16]或全局能量最小化[26]解决深度超分辨率问题。 ]-[28]，其中深度完成由图像[16]，[26]-[28]，语义分段[29]或边缘信息[30]指导。</p>
+<p>最近，张等人。 [31]提出从深层网络预测表面法线和遮挡边界，并进一步利用它们来帮助在室内场景中完成深度。 Qiuet等。 [6]将类似的表面法线作为指导思想扩展到室外环境，并从稀疏的LiDAR数据中恢复密集深度。 Ma等。 [7]提出了一种自我监督的网络来探索相邻视频帧之间的光一致性，以进行深度完成。 黄等。 [32]提出了三种稀疏不变操作来处理稀疏输入。 Eldesokey等。 [33]将他们的置信度传播[19]与RGB信息结合起来解决了这个问题。 Gansbeke等。 [34]使用两个并行网络来预测深度并学习不确定性以融合两个结果。 程等。 [35]使用CNN学习邻近像素之间的亲和力，以帮助深度估计。</p>
+<p>尽管已经提出了各种方法来对参考RGB图像进行深度补全，但是它们在融合深度和图像特征方面几乎共享相同的策略，这是简单的串联或逐元素加法运算。 在本文中，受制导图像过滤的启发[13]，我们提出了一种新颖的用于特征融合的制导卷积模块，以更好地利用RGB图像中的制导信息。</p>
+<p><strong>Joint  Filtering  and  Guided  Filtering</strong>    我们的方法也与联合双边滤波[14]和引导图像滤波[13]有关。 联合/引导图像过滤使用参考图像作为先导图像，旨在将结构从参考图像转移到目标图像，以实现彩色/深度图像超分辨率[15]，[16]，图像恢复[36]等。</p>
+<p>早期的联合滤波方法[37]-[39]探索目标图像和参考图像之间的共同结构，并将其表述为迭代能量最小化问题。 最近，李等人。 [40]提出了一种基于CNNs的联合滤波，用于图像降噪，深度上采样等，但是联合滤波是作为简单的特征级联实现的。 Gharbi等。 [41]通过深层网络生成仿射参数，以执行颜色转换以增强图像。 Lee等。 [42]采用与[41]类似的双边学习方案，但生成双边权重，并将其一次应用于预先获得的深度图以进行深度细化。 相反，我们的引导式卷积模块可处理图像特征，并在编码器-解码器网络的多个阶段中充当可灵活插入的组件。</p>
+<p>在[43]中，Wu等。 提出了一个指导过滤层来执行联合上采样，这与我们的工作很接近。 它直接重新构造了传统的导引滤波器[13]，并使其可区分为神经网络层。 结果，由相同的导引滤波器[13]的近似形式方程生成核权重，以对输入图像进行滤波。 正如导引滤波器作者在他们的会议论文[44]中所评论的那样，这种算子不适用于填充稀疏的LiDAR点。我们的方法也受到了导引滤波器的启发[13]。 我们考虑从指导图像中学习更多通用和强大的内核，并将这些内核融合到用于完成深度任务的多模式特征中，而不是从特定的闭合式方程生成引导的过滤器内核。</p>
+<p><strong>Dynamic  Filtering</strong>    </p>
+<p>另一方面，在卷积神经网络中，动态过滤网络（DFN）[45]在国外是一种方法类别，其中网络根据输入图像动态生成过滤内核，以对输入特征进行诸如局部空间变换之类的操作。 在[45]中首先提出的概念主要是在视频（和立体声）预测上进行评估，并以先前的帧作为输入。</p>
+<p>最近，已经开发了DFN的一些应用程序和扩展。 “可变形卷积” [46]动态生成固定几何结构的偏移，通过关注采样位置可以将其视为DFN的扩展。 Simonovsky等。 [47]将DFN扩展到空间域的图形信号中，在其中为每个特定的输入样本动态生成滤波器权重，并在边缘标签上进行调节。 Wu等。 [48]提出了通过使用多个采样邻域来动态生成具有较大接收场的权重的DFN扩展。</p>
+<p>我们的内核生成方法与DFN具有相同的理念，并且可以被视为变体和扩展，着眼于多模态数据的多阶段特征融合。DFN [45]生成的空间变量内核消耗较大的GPU内存，因此仅 一次应用于低分辨率图像或功能。 然而，多阶段特征融合对于深度完成任务中从稀疏深度和彩色图像中提取特征至关重要，但是以前的DFN论文尚未对此进行研究。 为了解决这个问题，我们设计了一种具有卷积因子分解的新颖网络结构，并进一步讨论了融合策略对深度完成结果的影响。</p>
+<h4 id="3-the-proposed-method"><a href="#3-the-proposed-method" class="headerlink" title="3. the proposed method"></a>3. the proposed method</h4><p>给定一个稀疏的深度图<strong>S</strong>，该深度图是通过将LiDAR点投影到具有校准参数的图像平面和以RGB图像<strong>I</strong>作为指导参考而生成的，深度补全将生成整个图像的密集深度图<strong>D</strong>。RGB图像描绘了对象边界和场景内容，因此可以为深度完成任务提供极为有用的信息。</p>
+<p>为了说明我们在<strong>I</strong>的指导下将<strong>S</strong>更新到<strong>D</strong>的引导卷积网络(guided  convolutional  network)，我们首先简要回顾一下引导图像过滤，它启发了III-A小节中的引导卷积模块。然后我们在第III-B小节中详细介绍了引导卷积模块的设计，并在第III-C小节中介绍了一种新颖的卷积因式分解。在接下来的内容中，我们将说明如何将该模块用于常见的编码器/解码器网络以及多级融合方案 在第III-D小节的方法中使用。 最后，第III-E小节中的详细实现细节包括超参数设置。</p>
+<h5 id="A-Guided-Image-Filtering"><a href="#A-Guided-Image-Filtering" class="headerlink" title="A.Guided Image Filtering"></a>A.Guided Image Filtering</h5><p>![image-20201010162222553](Learning Guided Convolutional Network for Depth Completion论文解读/image-20201010162222553.png)</p>
+<p>深度信息与image信息融合的方法，本文使用的不是简单的将image</p>
+<p>实验要做什么</p>
+<p>各种数据集</p>
+<p>消融研究</p>
+<p>如何可视化一个层？光流？</p>
+<p>A</p>
+<p>主要讲述了其融合image与depth信息的理念，即不使用传统的add，concat加编解码器进行融合，而使用image生成一系列guide矩阵来作为稀疏depth的卷积核，以达到信息融合的目的。</p>
+<p>B</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/09/29/Non-Local%20Spatial%20Propagation%20Network%20forDepth%20Completion%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/" rel="prev" title="Non-Local Spatial Propagation Network forDepth Completion 论文解读">
+      <i class="fa fa-chevron-left"></i> Non-Local Spatial Propagation Network forDepth Completion 论文解读
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/10/22/unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/" rel="next" title="unix高级环境编程笔记">
+      unix高级环境编程笔记 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E8%A6%81%E7%BF%BB%E8%AF%91"><span class="nav-number">1.</span> <span class="nav-text">简要翻译</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-introduction"><span class="nav-number">1.0.1.</span> <span class="nav-text">1. introduction</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-related-work"><span class="nav-number">1.0.2.</span> <span class="nav-text">2. related work</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-the-proposed-method"><span class="nav-number">1.0.3.</span> <span class="nav-text">3. the proposed method</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#A-Guided-Image-Filtering"><span class="nav-number">1.0.3.1.</span> <span class="nav-text">A.Guided Image Filtering</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Peter chen</p>
+  <div class="site-description" itemprop="description">siyuan Chen personal page</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Peter chen</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

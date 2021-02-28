@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"github.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="todo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="unix高级环境编程笔记">
+<meta property="og:url" content="https://github.com/Peterchen931/Peterchen931.github.io/2020/10/22/unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="siyuan Chen">
+<meta property="og:description" content="todo">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://github.com/Peterchen931/Peterchen931.github.io/2020/10/22/unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/image-20201031091736254.png">
+<meta property="og:image" content="https://github.com/Peterchen931/Peterchen931.github.io/2020/10/22/unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/image-20201031122937098.png">
+<meta property="og:image" content="https://github.com/Peterchen931/Peterchen931.github.io/2020/10/22/unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/image-20201031103207059.png">
+<meta property="og:image" content="https://github.com/Peterchen931/Peterchen931.github.io/2020/10/22/unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/image-20201031110005743.png">
+<meta property="og:image" content="https://github.com/Peterchen931/Peterchen931.github.io/2020/10/22/unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/image-20201031145705379.png">
+<meta property="og:image" content="https://github.com/Peterchen931/Peterchen931.github.io/2020/10/22/unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/image-20201031145843904.png">
+<meta property="og:image" content="https://github.com/Peterchen931/Peterchen931.github.io/2020/10/22/unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/image-20201031150046096.png">
+<meta property="og:image" content="https://github.com/Peterchen931/Peterchen931.github.io/2020/10/22/unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/image-20201118153230708.png">
+<meta property="og:image" content="https://github.com/Peterchen931/Peterchen931.github.io/2020/10/22/unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/image-20201118154849694.png">
+<meta property="og:image" content="https://github.com/Peterchen931/Peterchen931.github.io/2020/10/22/unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/image-20201118155257146.png">
+<meta property="og:image" content="https://github.com/Peterchen931/Peterchen931.github.io/2020/10/22/unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/image-20201118155222034.png">
+<meta property="article:published_time" content="2020-10-22T00:40:19.000Z">
+<meta property="article:modified_time" content="2021-02-26T03:17:52.407Z">
+<meta property="article:author" content="Peter chen">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://github.com/Peterchen931/Peterchen931.github.io/2020/10/22/unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/image-20201031091736254.png">
+
+<link rel="canonical" href="https://github.com/Peterchen931/Peterchen931.github.io/2020/10/22/unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-cn'
+  };
+</script>
+
+  <title>unix高级环境编程笔记 | siyuan Chen</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">siyuan Chen</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-cn">
+    <link itemprop="mainEntityOfPage" href="https://github.com/Peterchen931/Peterchen931.github.io/2020/10/22/unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Peter chen">
+      <meta itemprop="description" content="siyuan Chen personal page">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="siyuan Chen">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          unix高级环境编程笔记
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-10-22 08:40:19" itemprop="dateCreated datePublished" datetime="2020-10-22T08:40:19+08:00">2020-10-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-26 11:17:52" itemprop="dateModified" datetime="2021-02-26T11:17:52+08:00">2021-02-26</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+            <div class="post-description">todo</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>原子操作</p>
+<p>一般情况，进程的有效用户ID是实际用户ID执行程序的用户ID，但是在st_mode中可以</p>
+<p>这种又有fd又有pathname的函数，一般遵循以下规则</p>
+<p><img src="unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/image-20201031091736254.png" alt="image-20201031091736254"></p>
+<p>如果pathname为相对路径，则访问路径为fd文件描述符代表的目录路径，</p>
+<p>如果fd参数设置为AT_DCWD，则通过相对于调用进程的当前工作目录计算路径名，</p>
+<p>如果pathname为绝对路径，fd会被忽略</p>
+<a id="more"></a>
+
+<p>有一些文件的操作会有是否跟随符号连接的区别，一般不跟随符号链接的会在函数名前加<code>l</code></p>
+<p><img src="unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/image-20201031122937098.png" alt="image-20201031122937098"></p>
+<h2 id="文件系统概述"><a href="#文件系统概述" class="headerlink" title="文件系统概述"></a>文件系统概述</h2><p><img src="unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/image-20201031103207059.png" alt="image-20201031103207059"></p>
+<p><strong>cylinder group</strong>: 柱面组，与磁盘硬件有关</p>
+<p><strong>superblock</strong>: 记录整个文件系统相关信息的地方，一般大小为1024bytes，记录的信息主要有以下</p>
+<ol>
+<li>block 与inode 的总量</li>
+<li>未使用与已使用的inode / block 数量</li>
+<li>一个valid bit 数值，若此文件系统已被挂载，则valid bit 为0 ，若未被挂载，则valid bit 为1</li>
+<li>block 与inode 的大小 (block 为1, 2, 4K，inode 为128bytes 或256bytes)；</li>
+<li>其他各种文件系统相关信息：filesystem 的挂载时间、最近一次写入资料的时间、最近一次检验磁碟(fsck) 的时间</li>
+</ol>
+<p><strong>inode</strong>: 主要记录文件（所有文件类型）的属性以及该文件实际数据是放置在哪些block中，主要信息如下</p>
+<ol>
+<li>大小、真正内容的block号码（一个或多个），定义为12个直接，一个间接, 一个双间接与一个三间接记录区</li>
+<li>文件属性（-, d, l, s, b, c, p）</li>
+<li>引用连接数（硬链接与删除）</li>
+<li>访问模式(read/write/excute)</li>
+<li>拥有者与群组(owner/group)</li>
+<li>各种时间：建立或状态改变的时间、最近一次的读取时间、最近修改的时间</li>
+<li>一个文件占用一个 inode，每个inode有编号</li>
+<li>没有文件名！文件名在目录的block中！</li>
+</ol>
+<p><strong>data block</strong>: 放置文件内容数据的地方。</p>
+<ol>
+<li>在格式化时block的大小就固定了，且每个block都有编号，以方便inode的记录。</li>
+<li>原则上，block 的大小与数量在格式化完就不能够再改变了(除非重新格式化)。</li>
+<li>在Ext2文件系统中所支持的block大小有1K, 2K及4K三种</li>
+<li>每个block 内最多只能够放置一个文件的资料，但一个文件可以放在多个block中（大的话）</li>
+</ol>
+<p><strong>i-node bitmap</strong>: 用来记录cylinder group中inode分配情况的map，使用位记录使用情况，用于分配空间的算法中</p>
+<p><strong>datablock bitmap</strong>: 用来记录cylinder group中datablock分配情况的map，使用位记录使用情况，用于分配空间的算法中</p>
+<p><strong>创建文件过程</strong></p>
+<p>当在ext2下建立一个一般文件时， ext2 会分配一个inode 与相对于该文件大小的block 数量给该文件</p>
+<ol>
+<li>例如：假设我的一个block 为4 Kbytes ，而我要建立一个100 KBytes 的文件，那么linux 将分配一个inode 与25 个block 来储存该文件</li>
+<li>但同时请注意，由于inode 仅有12 个直接指向，因此还要多一个block 来作为区块号码的记录</li>
+</ol>
+<p><strong>创建目录过程</strong></p>
+<p>当在ext2文件系统建立一个目录时（就是新建了一个目录文件），文件系统会分配一个inode与至少一块block给该目录</p>
+<ol>
+<li>inode记录该目录的相关权限与属性，并记录分配到的那块block号码</li>
+<li>而block则是记录在这个目录下的文件名与该文件对应的inode号</li>
+<li>block中还会自动生成两条记录，一条是.文件夹记录，inode指向自身，另一条是..文件夹记录，inode指向父文件夹</li>
+</ol>
+<p>创建一个文件后，文件完整信息分布在3处地方，生成2个新文件：</p>
+<ol>
+<li>文件名记录在该文件所在目录的目录文件的block中，没有新文件生成</li>
+<li>文件属性、权限信息、记录具体内容的block编号记录在inode中，inode是新生成文件</li>
+<li>文件具体内存记录在block中，block是新生成文件</li>
+</ol>
+<p><img src="unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/image-20201031110005743.png" alt="image-20201031110005743"></p>
+<p>这张图展示了inode与datablock之间的关系以及如何寻址一个文件</p>
+<p>首先，通过directory block（也是data block，只不过是一个为d的inode所指向的）找到该block中的文件或者子目录的inode（如果是子目录，则重复该步骤）</p>
+<p>接下来，通过inode找到对应的data block（可能有多个），寻找完毕。</p>
+<p>值得注意的是图中有两个目录中的file同时指向了一个inode，这在ext2中这是可行的，其中后生成的文件项就是所谓的<strong>硬链接</strong>，他们指向同一个inode。</p>
+<p>在unix文件系统中对一个文件进行删除的原语为unlink，不是delete。因为实际的删除操作就是对目录的file项进行删除，并减少对应inode的引用计数，而inode<strong>并不一定会被删除</strong>，只有当inode引用计数为0的时候才会被删除。</p>
+<p><strong>软连接：</strong>一个文件，其内容是一个指向一个文件的链接（有一个data block以及一个inode）。这意味着，文件A依赖于文件B而存在，如果删除了文件B，打开文件A就会报错：”No such file or directory”。文件A指向文件B的文件名，而不是文件B的inode号码，文件B的inode”链接数”不会因此发生变化。</p>
+<p><strong>硬链接：</strong>一个目录项，指向一个i节点（仅储存于dictory block中）。这意味着，可以用不同的文件名访问同样的内容；对文件内容进行修改，会影响到所有文件名；但是，删除一个文件名，不影响另一个文件名的访问。这种情况就被称为”硬链接”（hard link）。</p>
+<p><strong>引用计数：</strong>一个普通文件的引用计数为1（无硬链接），而一个目录项的引用计数为2加上它的子目录总数（本身+<code>&#39;.&#39;</code>+每个子目录的<code>&#39;..&#39;</code>）</p>
+<p>一般情况，<strong>hardlink不允许指向目录</strong>，因为这可能导致文件目录出现环（进行递归访问时这时毁灭性的，不过有些版本是支持的，他们有特殊的处理方法）</p>
+<h2 id="文件属性说明"><a href="#文件属性说明" class="headerlink" title="文件属性说明"></a>文件属性说明</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">struct stat &#123; </span><br><span class="line">	mode_t st_mode;&#x2F;* file type &amp; mode (permissions) *&#x2F; </span><br><span class="line">	ino_t st_ino;&#x2F;* i-node number (serial number) *&#x2F; </span><br><span class="line">	dev_t st_dev;&#x2F;* device number (file system) *&#x2F; </span><br><span class="line">	dev_t st_rdev;&#x2F;* device number for special files *&#x2F; </span><br><span class="line">	nlink_t st_nlink; &#x2F;* number of links *&#x2F; </span><br><span class="line">	uid_t st_uid;&#x2F;* user ID of owner *&#x2F; </span><br><span class="line">	gid_t st_gid;&#x2F;* group ID of owner *&#x2F; </span><br><span class="line">	off_t st_size;&#x2F;* size in bytes, for regular files *&#x2F; </span><br><span class="line">	struct timespec st_atim;&#x2F;* time of last access *&#x2F; </span><br><span class="line">	struct timespec st_mtim;&#x2F;* time of last modification *&#x2F; s</span><br><span class="line">	truct timespec st_ctim;&#x2F;* time of last file status change *&#x2F; </span><br><span class="line">	blksize_t st_blksize; &#x2F;* best I&#x2F;O block size *&#x2F; </span><br><span class="line">	blkcnt_t st_blocks; &#x2F;* number of disk blocks allocated *&#x2F; </span><br><span class="line">&#125;; </span><br></pre></td></tr></table></figure>
+
+<p>st_mode：文件属性，用来记录文件的类型文件类型，文件访问权限，set-user-ID，set-group-id，文件类型一共有7种</p>
+<p>st_ino：文件inode号</p>
+<p>st_dev：文件系统设备号</p>
+<p>st_rdev：用于标识特定子设备</p>
+<p>st_nlink：文件引用计数（链接数）</p>
+<p>st_uid：文件拥有者</p>
+<p>st_group：文件所属组</p>
+<p>st_size：文件大小，仅对普通文件</p>
+<p>st_atime，st_mtime，st_ctime：最后访问时间，最后修改时间，最后stat修改时间</p>
+<p>st_blksize：最佳缓冲区大小</p>
+<p>st_blocks：已分配块数量</p>
+<p>这里重点说一下st_mode属性，首先有记录文件类型，一共7种：</p>
+<p><img src="unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/image-20201031145705379.png" alt="image-20201031145705379"></p>
+<p>文件访问权限分为对owner，group，other的权限：</p>
+<p><img src="unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/image-20201031145843904.png" alt="image-20201031145843904"></p>
+<p>set-user-ID，set-group-id这两个位的作用是确定effective ID，这里首先需要说明一下与进程相关的ID信息：</p>
+<p> <img src="unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/image-20201031150046096.png" alt="image-20201031150046096"></p>
+<p>​    real user ID，real group ID：用于执行这个进程的用户的ID与组ID</p>
+<p>​    effective user ID，effective group ID，effective subgroup ID：用来确定这个进程的文件访问权限</p>
+<p>而对与effective IDs 设置就会由</p>
+<p>set-user-ID与set-group-ID确定。默认情况下，使用real IDs对effective IDs进行赋值。而如果使用了set-user-ID或set-group-ID则会分别使用st_uid，st_gid对effective IDs进行赋值</p>
+<p>文中举了一个十分典型的例子：当我们设置或者修改登录密码时，需要在用户的情况下对<code>/etc/passwd</code>中的文件进行修改，这是没有权限的。这就需要设置修改password的程序的set-user-id位，这样就可以在使用该程序修改密码了。</p>
+<h2 id="标准I-O库"><a href="#标准I-O库" class="headerlink" title="标准I/O库"></a>标准<code>I/O</code>库</h2><p>标准io就是在文件io的基础上，增加了缓冲机制，标准io将这种增加了缓冲机制的io成为流</p>
+<p>增加缓冲主要是为了减少对read与write的调用次数（减少系统调用）</p>
+<p>标准io中缓冲写是很常见的，那缓冲是否会用于读呢？</p>
+<p>流的定向（orentied，不是direct）：确定流是单字节还是多字节的</p>
+<p>打开一个流，在第一次读写操作之前，流是未定向的，对一个以及定向的流可以用freopen进行重新定向</p>
+<p>自动设定io buffsize的值由st_blksize决定</p>
+<p>fdopen常用于打开fifo与socket的描述符，因为这些描述符无法用fopen直接打开</p>
+<p>对于fread与fwrite，出错与达到文件尾端都会导致实际读写少于要求的，这时需要用ferror或feof判断哪种情况发生</p>
+<p>格式化io部分可以好好看看，P127</p>
+<h2 id="进程环境"><a href="#进程环境" class="headerlink" title="进程环境"></a>进程环境</h2><p>一个进程一共有5种正常终止的方式：</p>
+<ol>
+<li>main函数调用return</li>
+<li>调用exit</li>
+<li>调用_exit或_Exit</li>
+<li>最后一个线程从其启动历程返回（主函数调用了wait）</li>
+<li>最后一个线程调用了pthread_exit</li>
+</ol>
+<p>异常终止有3种方式：</p>
+<ol>
+<li>调用abort</li>
+<li>接收一个signal</li>
+<li>最后一个线程对取消做出反应（不理解）</li>
+</ol>
+<p>exit与_Exit之间的区别：exit会执行一些清理，如对I/O库的清理，再调用_Exit，而_Exit直接进入内核</p>
+<p>_Exit与_exit的区别：_Exit是由ISOC说明的，_exit是由POSIX说明的</p>
+<p>atexit：用于注册一些函数，这些函数由exit调用（exit handler）</p>
+<p>内核执行程序的唯一方法就是调用exec函数。进程唯一的正常退出方式就是调用_exit或者_Exit。</p>
+<p><img src="unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/image-20201118153230708.png" alt="image-20201118153230708"></p>
+<p>命令行参数</p>
+<p><img src="unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/image-20201118154849694.png" alt="image-20201118154849694"></p>
+<p>内存空间</p>
+<p><img src="unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/image-20201118155257146.png" alt="image-20201118155257146"></p>
+<p>.BSS段内容并不会存在可执行文件中，由内核在程序开始运行前设置为0</p>
+<p>环境表（环境变量）</p>
+<p><img src="unix%E9%AB%98%E7%BA%A7%E7%8E%AF%E5%A2%83%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/image-20201118155222034.png" alt="image-20201118155222034"></p>
+<p>由于内存空间的布局我们可以发现，环境变量的区域无法向上增长，同时其下方又是栈的开始区域，所以环境变量的增加会用malloc分配在堆中，并用指针连接。</p>
+<p>使用fork建立子进程会与父进程共享text段（text段只读，自然共享），其余均不共享。<strong>进程的PCB、线程的系统堆栈、进程的用户空间、进程打开的设备</strong>这些信息都会复制一个副本</p>
+<p>其使用copy on write方式进行。避免不需要的复制以及减少创建进程瞬间系统的负担。</p>
+<p>fork()之后，kernel把父进程中所有的内存页的权限都设为read-only，然后子进程的地址空间指向父进程。当父子进程都只读内存时，相安无事。当其中某个进程写内存时，CPU硬件检测到内存页是read-only的，于是触发页异常中断（page-fault），陷入kernel的一个中断例程。中断例程中，kernel就会<strong>把触发的异常的页复制一份</strong>，于是父子进程各自持有独立的一份。</p>
+<p>Linux 3.2提供了clone系统调用，是fork的推广形式，因为在linux中进程与线程的区别就是共享的内容不同。利用clone可以创建进程与线程</p>
+<p>进程的标准输入，标准输入，标准错误分别对应的fd为012。</p>
+<p>fork(), exec(), wait() 这三个都是系列函数，分别用于创建进程，执行任务，同步工作</p>
+<p>exec()系列不会创建新的进程，而是会使进程的<strong>全部</strong>上下文进行切换，进行exec后的进程会将原有<strong>线程的系统堆栈、进程的用户空间、进程打开的设备</strong>的全部丢弃</p>
+<p>wait()系列用于父进程为子进程收尸。</p>
+<p>system()是利用fork与exec组合成的一个函数，用于执行一个命令行命令。其使用多线程实现，但是需要表现的像单线程一样，运行外部命令时，主线程阻塞。</p>
+<p>进程关闭不需要的资源，进程使用最小权限</p>
+<p>Wall clock time: time elapsed according to the computer’s internal clock, which should match time in the outside world. This has nothing to do with CPU usage; it’s given for reference.</p>
+<p>User CPU time and system time: exactly what you think. System calls, which include I/O calls such as <code>read</code>, <code>write</code>, etc. are executed by jumping into kernel code and executing that.</p>
+<p>If wall clock time &lt; CPU time, then you’re executing a program in parallel. If wall clock time &gt; CPU time, you’re waiting for disk, network or other devices.</p>
+<p>信号只能由内核发出</p>
+<p>可重入的定义：<strong>待完成</strong></p>
+<p>用户可以设计信号处理程序，或者调用内核接口发出信号</p>
+<p>信号产生与递送中间的时间间隔内，称该信号为未决的</p>
+<p>信号集，创建一个集合，其中有多个信号，以01bit表示，用于对信号集体处理。</p>
+<p>信号处理函数与信号屏蔽字是两个东西，一个是用于确定是否接收信号，一个用于接收到信号后的处理。</p>
+<p>进程停止 process stop 进终止 process terminated</p>
+<p>信号处理函数完成后返回的位置。</p>
+<p>线程函数执行完毕返回的位置</p>
+<p>pthread_cond      </p>
+<p>1.调用wait阻塞进程</p>
+<p>2.将该进程加入到唤醒队列中</p>
+<p>线程</p>
+<p>异步信号可重入与线程可重入</p>
+<p>异步信号安全与线程安全</p>
+<p>posix的信号处理函数注册一次后会一直使用</p>
+<p>守护进程</p>
+<p>修改创建文件的umask，为了保证创建文件的权限（自己写的代码创建的权限可以保证，但是库函数保证不了）。一般组权限或者root权限</p>
+<p>调用fork，父进程exit，调用setsid</p>
+<p><strong>1.同步与异步</strong><br>同步和异步关注的是<strong>消息通信机制</strong> (synchronous communication/ asynchronous communication)<br>所谓同步，就是在发出一个<em>调用</em>时，在没有得到结果之前，该<em>调用</em>就不返回。但是一旦调用返回，就得到返回值了。<br>换句话说，就是由<em>调用者</em>主动等待这个<em>调用</em>的结果。</p>
+<p>而异步则是相反，*<strong>调用*在发出之后，这个调用就直接返回了，所以没有返回结果</strong>。换句话说，当一个异步过程调用发出后，调用者不会立刻得到结果。而是在<em>调用</em>发出后，<em>被调用者</em>通过状态、通知来通知调用者，或通过回调函数处理这个调用。</p>
+<p>典型的异步编程模型比如Node.js</p>
+<p>举个通俗的例子：<br>你打电话问书店老板有没有《分布式系统》这本书，如果是同步通信机制，书店老板会说，你稍等，”我查一下”，然后开始查啊查，等查好了（可能是5秒，也可能是一天）告诉你结果（返回结果）。<br>而异步通信机制，书店老板直接告诉你我查一下啊，查好了打电话给你，然后直接挂电话了（不返回结果）。然后查好了，他会主动打电话给你。在这里老板通过“回电”这种方式来回调。</p>
+<p><strong>2.阻塞与非阻塞</strong><br>阻塞和非阻塞关注的是<strong>程序在等待调用结果（消息，返回值）时的状态.</strong></p>
+<p>阻塞调用是指调用结果返回之前，当前线程会被挂起。调用线程只有在得到结果之后才会返回。<br>非阻塞调用指在不能立刻得到结果之前，该调用不会阻塞当前线程。</p>
+<p>还是上面的例子，<br>你打电话问书店老板有没有《分布式系统》这本书，你如果是阻塞式调用，你会一直把自己“挂起”，直到得到这本书有没有的结果，如果是非阻塞式调用，你不管老板有没有告诉你，你自己先一边去玩了， 当然你也要偶尔过几分钟check一下老板有没有返回结果。<br>在这里阻塞与非阻塞与是否同步异步无关。跟老板通过什么方式回答你结果无关。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/10/09/Learning%20Guided%20Convolutional%20Network%20for%20Depth%20Completion%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/" rel="prev" title="Learning Guided Convolutional Network forDepth Completion翻译">
+      <i class="fa fa-chevron-left"></i> Learning Guided Convolutional Network forDepth Completion翻译
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/10/29/apex%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91%E4%BB%A5%E5%8F%8A%E6%B3%A8%E9%87%8A/" rel="next" title="使用apex进行混合精度训练以及单机多GPU训练">
+      使用apex进行混合精度训练以及单机多GPU训练 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">文件系统概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E5%B1%9E%E6%80%A7%E8%AF%B4%E6%98%8E"><span class="nav-number">2.</span> <span class="nav-text">文件属性说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%87%E5%87%86I-O%E5%BA%93"><span class="nav-number">3.</span> <span class="nav-text">标准I&#x2F;O库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E7%8E%AF%E5%A2%83"><span class="nav-number">4.</span> <span class="nav-text">进程环境</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Peter chen</p>
+  <div class="site-description" itemprop="description">siyuan Chen personal page</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Peter chen</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -28,7 +28,7 @@
 <meta property="og:description" content="利用ssh-keygen生成公钥私钥对，并且利用其免密登录">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-09-20T02:39:42.000Z">
-<meta property="article:modified_time" content="2020-09-22T00:08:00.279Z">
+<meta property="article:modified_time" content="2021-02-26T03:18:01.311Z">
 <meta property="article:author" content="Peter chen">
 <meta name="twitter:card" content="summary">
 
@@ -180,7 +180,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-09-22 08:08:00" itemprop="dateModified" datetime="2020-09-22T08:08:00+08:00">2020-09-22</time>
+                <time title="Modified: 2021-02-26 11:18:01" itemprop="dateModified" datetime="2021-02-26T11:18:01+08:00">2021-02-26</time>
               </span>
 
           
@@ -203,16 +203,21 @@
 
       
         <h1 id="ssh密钥连接"><a href="#ssh密钥连接" class="headerlink" title="ssh密钥连接"></a>ssh密钥连接</h1><p>动机，使用密码进行ssh连接，密码有可能有暴力破解的问题。但是通过密钥进行连接就不会有这个问题（其实就是相当于生成一个特别复杂的密码，只不过记录在了电脑里面），配置完成后，该电脑就可以免密登录服务器。</p>
+<a id="more"></a>
+
 <p>首先使用<code>ssh-keygen</code> 生成公钥私钥对</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen [-q] [-b bits] [-t dsa | ecdsa | ed25519 | rsa]</span><br><span class="line">                  [-N new_passphrase] [-C comment] [-f output_keyfile]</span><br><span class="line">                  </span><br><span class="line"><span class="comment"># -b 生成的秘钥的长度（不同的加密算法会有不同的bit数要求）</span></span><br><span class="line"><span class="comment"># -t 加密算法（dsa，ecdsa，ed25519，rsa 四种供选择），默认rsa</span></span><br><span class="line"><span class="comment"># -N 提供一个新的密语（不懂）</span></span><br><span class="line"><span class="comment"># -C 提供一个注释</span></span><br><span class="line"><span class="comment"># -f 输出文件名以及位置，默认位置为~/.ssh，id_rsa与id_rsa.pub两个文件</span></span><br><span class="line"></span><br><span class="line">ssh-keygen -f 456 <span class="comment"># 会生在当前目录生成  456和456.pub两个文件</span></span><br><span class="line"><span class="comment"># 通常用法如下</span></span><br><span class="line">ssh-keygen -C commit <span class="comment"># 并且在询问passphrase输入空密码</span></span><br></pre></td></tr></table></figure>
 
 <p>生成秘钥对后，需要将公钥写入需要连接的<strong>服务器用户</strong>的<code>~/.ssh/authorized_keys</code>文件中这一步需要服务器管理员或者自己可以登陆上该服务器用户。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 方法1</span></span><br><span class="line">ssh-copy-id user@server_ip	<span class="comment"># 将本机的公钥拷贝到服务器用户的~/.ssh/authorized_keys下</span></span><br><span class="line"><span class="comment"># 方法2</span></span><br><span class="line"><span class="comment"># 直接修改~/.ssh/authorized_keys文件，将公钥拷贝进去</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;公钥字符串\n&quot;</span> &gt; ~/.ssh/authorized_keys <span class="comment"># 一个公钥一个换行符 -e开启echo转义</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 方法1</span></span><br><span class="line">ssh-copy-id user@server_ip	<span class="comment"># 将本机的公钥拷贝到user用户的~/.ssh/authorized_keys下</span></span><br><span class="line">							<span class="comment"># [-i filepath]可以指定路径(默认~/.ssh/id_rsa.pub)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 方法2</span></span><br><span class="line"><span class="comment"># 直接修改~/.ssh/authorized_keys文件，将公钥拷贝进去</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;公钥字符串\n&quot;</span> &gt; ~/.ssh/authorized_keys <span class="comment"># 一个公钥一个换行符 -e开启echo转义</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果公钥丢失可以使用</span></span><br><span class="line">ssh-keygen -y -e -f private_key恢复公钥</span><br></pre></td></tr></table></figure>
 
 <p>在配置完成后就可以直接<code>ssh user@server_ip</code>了不需要输入密码即可登录</p>
-<p>我们可以将这一个秘钥对进行备份，当我们换了一台电脑后，将<code>id_rsa</code>与<code>id_rsa</code>拷贝到<code>~/.ssh</code>下即可，该电脑也可以进行免密登录了</p>
+<p>我们可以将这一个秘钥对进行备份，当我们换了一台电脑后，将<code>id_rsa</code>与<code>id_rsa.pub</code>拷贝到<code>~/.ssh</code>下即可，该电脑也可以进行免密登录了</p>
 <p>有个很典型的例子，<code>github</code>上的免密登录也是通过秘钥进行匹配的，在使用<code>git</code>进行版本控制时，需要将本机的公钥复制到<code>github</code>中才行。</p>
 <p>有个很典型的例子，<code>github</code>上的免密登录也是使用这种方法来完成的当我们在命令行连接github仓库时，需要将本机秘钥上传至github中。</p>
+<p><strong>指定私钥文件登录</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh user@server [-i identity_file]	<span class="comment"># 指定私钥文件路径，默认  ~/.ssh/id_rsa</span></span><br></pre></td></tr></table></figure>
+
 
     </div>
 
@@ -228,12 +233,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/09/20/%E4%B8%80%E4%B8%AA%E7%AE%80%E6%98%93%E7%9A%84ftp%E5%AE%9E%E7%8E%B0/" rel="prev" title="一个简易的ftp实现">
-      <i class="fa fa-chevron-left"></i> 一个简易的ftp实现
+    <a href="/2020/09/20/%E5%AE%A2%E6%88%B7%E6%9C%BA(ubuntu)%E5%A6%82%E4%BD%95ssh%E8%BF%9E%E6%8E%A5vmware/" rel="prev" title="客户机如何ssh连接vmware（ubuntu）">
+      <i class="fa fa-chevron-left"></i> 客户机如何ssh连接vmware（ubuntu）
     </a></div>
       <div class="post-nav-item">
-    <a href="/2020/09/20/go%E8%AF%AD%E8%A8%80%E5%B0%8F%E8%AE%B0/" rel="next" title="go语言小记">
-      go语言小记 <i class="fa fa-chevron-right"></i>
+    <a href="/2020/09/20/git%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/" rel="next" title="git常用命令">
+      git常用命令 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -307,7 +312,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-count">25</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -335,7 +340,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

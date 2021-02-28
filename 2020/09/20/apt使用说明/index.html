@@ -30,7 +30,7 @@
 <meta property="og:image" content="https://gitee.com/pchen7592/picgo/raw/master/image-20200917231440318.png">
 <meta property="og:image" content="https://gitee.com/pchen7592/picgo/raw/master/image-20200917230636544.png">
 <meta property="article:published_time" content="2020-09-20T02:39:42.000Z">
-<meta property="article:modified_time" content="2020-09-21T08:56:36.275Z">
+<meta property="article:modified_time" content="2021-02-26T03:19:44.500Z">
 <meta property="article:author" content="Peter chen">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://gitee.com/pchen7592/picgo/raw/master/image-20200917231440318.png">
@@ -183,7 +183,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-09-21 16:56:36" itemprop="dateModified" datetime="2020-09-21T16:56:36+08:00">2020-09-21</time>
+                <time title="Modified: 2021-02-26 11:19:44" itemprop="dateModified" datetime="2021-02-26T11:19:44+08:00">2021-02-26</time>
               </span>
 
           
@@ -207,6 +207,8 @@
       
         <h3 id="为什么需要包管理工具"><a href="#为什么需要包管理工具" class="headerlink" title="为什么需要包管理工具"></a>为什么需要包管理工具</h3><p>最早在linux系统上安装软件是需要通过源码进行构建的。最初只有.tar.gz 的打包文件，用户必须编译每个他想在 GNU/Linux 上运行的软件。这种方法十分复杂且容易出错，于是就有将这一系列安装过程打包起来的需求，就产生了deb包。deb包中的内容可以看该文章<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/6b89c9a4c002">如何制作deb包</a>，其中列出了deb包中的内容。</p>
 <p>在有了deb包之后，安装软件似乎变得简单了许多，但是新的问题又出现了，在deb包中有一个<code>Depends</code>项，这是该deb包安装所需要的前提条件，如果这些前提条件未能满足，则deb包无法正常安装（在使用dpkg安装deb包时，依赖错误是很常见的一种）。并且这个依赖关系可能是一个很大的树状关系。而apt就是提供一个能够解决这些依赖关系的<strong>高级包管理工具</strong></p>
+<a id="more"></a>
+
 <h3 id="软件依赖的解决思路"><a href="#软件依赖的解决思路" class="headerlink" title="软件依赖的解决思路"></a>软件依赖的解决思路</h3><p>apt就是通过一个数据库来记录各种软件安装包的依赖关系，这样每一个包都可以生成一个依赖关系树。同时apt还记录着本地下载的软件列表。在安装软件时，apt会检查该软件依赖树，并与本地软件列表进行对比，将其所需要的所有本地没有的依赖一并下载。完成软件的安装。  </p>
 <h3 id="APT是什么"><a href="#APT是什么" class="headerlink" title="APT是什么"></a>APT是什么</h3><p>首先应用debian wiki的原话</p>
 <ul>
@@ -333,8 +335,8 @@
       <i class="fa fa-chevron-left"></i> git常用命令
     </a></div>
       <div class="post-nav-item">
-    <a href="/2020/09/20/#%20C++primer%E7%AC%94%E8%AE%B0/" rel="next" title="C++primer随笔">
-      C++primer随笔 <i class="fa fa-chevron-right"></i>
+    <a href="/2020/09/22/pointnet%E8%AE%BA%E6%96%87%E7%9A%84%E7%90%86%E8%A7%A3%E4%B8%8E%E6%80%9D%E8%80%83/" rel="next" title="PointNet论文笔记">
+      PointNet论文笔记 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -408,7 +410,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-count">25</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -436,7 +438,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

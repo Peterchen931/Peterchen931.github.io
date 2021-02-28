@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"github.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="这里将的是针对c++11标准的gcc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="c++对象模型">
+<meta property="og:url" content="https://github.com/Peterchen931/Peterchen931.github.io/2020/03/05/c++%E5%A4%A7%E6%9D%82%E7%83%A9/c++%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B/index.html">
+<meta property="og:site_name" content="siyuan Chen">
+<meta property="og:description" content="这里将的是针对c++11标准的gcc">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/pchen7592/picgo/raw/master/memoryLayoutC.jpg">
+<meta property="og:image" content="https://gitee.com/pchen7592/picgo/raw/master/IMG_0260(20201105-233235).PNG">
+<meta property="og:image" content="https://gitee.com/pchen7592/picgo/raw/master/IMG_0261(20201106-085426).PNG">
+<meta property="og:image" content="https://gitee.com/pchen7592/picgo/raw/master/IMG_0264(20201106-092201).PNG">
+<meta property="article:published_time" content="2020-03-05T05:34:32.000Z">
+<meta property="article:modified_time" content="2021-02-26T03:20:49.327Z">
+<meta property="article:author" content="Peter chen">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/pchen7592/picgo/raw/master/memoryLayoutC.jpg">
+
+<link rel="canonical" href="https://github.com/Peterchen931/Peterchen931.github.io/2020/03/05/c++%E5%A4%A7%E6%9D%82%E7%83%A9/c++%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-cn'
+  };
+</script>
+
+  <title>c++对象模型 | siyuan Chen</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">siyuan Chen</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-cn">
+    <link itemprop="mainEntityOfPage" href="https://github.com/Peterchen931/Peterchen931.github.io/2020/03/05/c++%E5%A4%A7%E6%9D%82%E7%83%A9/c++%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Peter chen">
+      <meta itemprop="description" content="siyuan Chen personal page">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="siyuan Chen">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          c++对象模型
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-03-05 13:34:32" itemprop="dateCreated datePublished" datetime="2020-03-05T13:34:32+08:00">2020-03-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-26 11:20:49" itemprop="dateModified" datetime="2021-02-26T11:20:49+08:00">2021-02-26</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>这里将的是针对c++11标准的gcc </p>
+<a id="more"></a>
+
+<h2 id="从c说起"><a href="#从c说起" class="headerlink" title="从c说起"></a>从c说起</h2><p>一个c程序的内存布局可以用下图表示：</p>
+<p><img src="https://gitee.com/pchen7592/picgo/raw/master/memoryLayoutC.jpg" alt="img"></p>
+<p>具体说明可以看 <a target="_blank" rel="noopener" href="https://blog.csdn.net/gatieme/article/details/43567433">C程序的内存布局(Memory Layout)</a>。</p>
+<p>一个c程序的执行流程：从main函数开始（text段），调用main将从stack分配空间，如果使用malloc等内存分配函数，则会在堆中进行空间分配，如果遇到函数，则会开辟新的栈，执行完毕又退栈，最后main函数执行完毕，程序退出。</p>
+<p>一个需要清楚的认知是，<strong>程序的控制流与数据流是分离的</strong>，<strong>程序的控制流（函数）存在且只存在与ext段中的code部分</strong>，而数据部分有text中的RO常量，RW数据段，BSS数据段，以及栈和堆（栈和堆中不会有code段）。一个程序的对数据的操纵都是通过对数据部分的直接以及间接引用来实现的（汇编中的各种寻址方式）。</p>
+<h2 id="c-的内存布局"><a href="#c-的内存布局" class="headerlink" title="c++的内存布局"></a>c++的内存布局</h2><p>接下来看c++。实际上，c++的内存布局与c的内存布局基本一致。那么问题就来了，c++比c多出的那么多机制又是怎么实现的呢？</p>
+<p>其实在程序语言中的很多机制都是“写”给编译器看的，最后处理完毕后就只有变量与函数了。比如public，private，protected的权限控制由编译器来保证。局部const变量的不变性也只是由编译器保证，有一些小trick可以绕开编译器的检查（不过全局的const会写到rodata中，如果修改该区域的值会出现segment fault，这是操作系统保证的只读）。</p>
+<p>事实上，c++中的类方法，虚函数等等机制，在编译器的处理后，都会变成普通的函数。这里主要讲述c++是如何实现继承，多态机制的。</p>
+<p>在c++中无论是名称空间（类的机制），类方法，或者是多态机制，都是由编译器来支持的，当c++经过编译器变成汇编代码时，名称空间等都会由直接，间接的寻址所替代。</p>
+<p>将类方法实现成普通函数比较简单，只需要把类的函数重写成带this指针的普通函数即可。</p>
+<p>而虚函数的设计，以及对于继承体系中<strong>对象</strong>存储模型就比较复杂了。</p>
+<h2 id="c-对象模型以及虚函数的实现"><a href="#c-对象模型以及虚函数的实现" class="headerlink" title="c++对象模型以及虚函数的实现"></a>c++对象模型以及虚函数的实现</h2><h4 id="单继承"><a href="#单继承" class="headerlink" title="单继承"></a>单继承</h4><p>现在，我们知道所有的函数最后都会以普通函数的形式写入text段，那么，多态是如何实现的？</p>
+<p>在<strong>inside c++ object model</strong>书中，对虚函数的机制有所叙述，不过由于c++标准对与虚机制只是指定行为，并没有具体实现，所以实现方式可能会与编译器的不同而发生改变。这里我们以<code>gcc 7.5.0</code>编译器为例，比较具体的来叙述。</p>
+<p><img src="https://gitee.com/pchen7592/picgo/raw/master/IMG_0260(20201105-233235).PNG" alt="IMG_0260(20201105-233235)"></p>
+<p>上面就是在不考虑多重继承的情况下的内存布局形式，规则还是比较简单的，直接将基类的数据段放到派生类的数据段之前（与组合类似），如果有虚函数，就会在<strong>最前面</strong>加上一个虚表指针，指向虚函数表，通过虚函数表可以找到对应的函数（函数始终在text段）。</p>
+<p>值得注意的是，如果派生类B，没有完成A中的v func，则B中的vtable会用一个指向A中（上一个完成该函数的派生类）的虚函数的指针，不过这个行为与普通函数相似。</p>
+<p><strong>现在可以模拟一下多态的过程：</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">C c;</span><br><span class="line">A &amp;a = c;</span><br><span class="line">c.vfunc1();</span><br><span class="line"><span class="comment">//相当于被等效转换为</span></span><br><span class="line">(*c-&gt;vptr[i])();<span class="comment">// i代表是由第几个指针指向的vfunc</span></span><br></pre></td></tr></table></figure>
+
+<p>由于使用i作为索引进行vfunc寻址，所以虚表中指针所指向的函数是固定的严格按照声明的顺序排列，不会有这次p1指向vfunc1，下次 p1指向func2。</p>
+<p>有了这个模型，我们就很好的去解释为什么指针以及引用能够实现多态而变量不行。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 行,调用C实现的vfunc</span></span><br><span class="line">C c;</span><br><span class="line">A *a = &amp;c;</span><br><span class="line">a.vfunc1();</span><br><span class="line"><span class="comment">// 不行,调用A实现的vfunc</span></span><br><span class="line">C c;</span><br><span class="line">A a = c;</span><br><span class="line">a.vfunc1();</span><br></pre></td></tr></table></figure>
+
+<p>上面的情况，其实编译器帮我们做了一个隐式操作将c的指针类型转换为了A的类型，然后调用虚函数都是通过虚表进行调用，a的指针类型虽然是A但是访问的虚表却是C类型的。所以vfunc调用的是C的。</p>
+<p>下面的，a实际上是使用了拷贝初始化，但是拷贝初始化并不会拷贝虚表指针，所以访问的是A的vfunc。</p>
+<h4 id="多重继承"><a href="#多重继承" class="headerlink" title="多重继承"></a>多重继承</h4><p><strong>多重情况下的内存布局</strong></p>
+<ol>
+<li>普通的多继承：</li>
+</ol>
+<p><img src="https://gitee.com/pchen7592/picgo/raw/master/IMG_0261(20201106-085426).PNG" alt="IMG_0261(20201106-085426)"></p>
+<ol start="2">
+<li>菱形继承：</li>
+</ol>
+<p><img src="https://gitee.com/pchen7592/picgo/raw/master/IMG_0264(20201106-092201).PNG" alt="IMG_0264(20201106-092201)"></p>
+<p>注：虚继承的语义是其基类在之后的继承体系中只会出现一次。</p>
+<p><strong>多继承情况下的多态实现</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">base2 *pb = <span class="keyword">new</span> derived;</span><br><span class="line"><span class="comment">// 在这两个指针复制时，编译器会对pb进行调整，使其指向base2的vptr或者是第一个数据</span></span><br><span class="line"><span class="comment">// 调用虚函数的操作与一般继承一致。</span></span><br><span class="line">        |                        |          </span><br><span class="line">        |------------------------| &lt;------ derived object memory layout</span><br><span class="line">        |  base1::_vptr_base1    |----------|          </span><br><span class="line">        |------------------------|          |---------&gt;|----------------------|</span><br><span class="line">        |  base1::base1_var      |			           |   type_info derived  |</span><br><span class="line">pb ---&gt; |------------------------|                     |----------------------|</span><br><span class="line">        |  base2::_vptr_base2    |----------|          |   base1::base1_func  |</span><br><span class="line">        |------------------------|          |          |----------------------|</span><br><span class="line">        |  base2::base2_var      |			|          |    derived:::print   |</span><br><span class="line">        |------------------------|          |          |----------------------|</span><br><span class="line">        |  derived::derived_var  |          |          |------GUARD_AREA------|</span><br><span class="line">        |------------------------|          |---------&gt;|----------------------|</span><br><span class="line">        |                        |                     |   type_info derived  |</span><br><span class="line">        |                        |                     |----------------------|</span><br><span class="line">        |                        |                     |   base2::base2_func  |</span><br><span class="line">        |                        |                     |----------------------|</span><br><span class="line">                                                       |    derived:::print   |</span><br><span class="line">                                                       |----------------------|</span><br></pre></td></tr></table></figure>
+
+
+
+<p>总结：</p>
+<ol>
+<li><p>_vptr是属于object的</p>
+</li>
+<li><p>_vptr是有固定偏移量的</p>
+</li>
+<li><p>_vptr是在调用构造函数时生成的（栈数据区）</p>
+</li>
+<li><p>vtb是属于class的</p>
+</li>
+<li><p>vtb是在编译时生成的（rodata区）</p>
+</li>
+<li><p>虚继承是用于解决菱形继承的问题的</p>
+</li>
+</ol>
+<p>参考连接</p>
+<p><a target="_blank" rel="noopener" href="http://www.vishalchovatiya.com/part-1-all-about-virtual-keyword-in-cpp-how-virtual-function-works-internally/">Part 1: All About Virtual Keyword in C++: How Does Virtual Function Works Internally?</a></p>
+<p><a target="_blank" rel="noopener" href="http://www.vishalchovatiya.com/part-2-all-about-virtual-keyword-in-cpp-how-virtual-class-works-internally/">Part 2: All About Virtual Keyword in C++: How Does Virtual Base Class Works Internally?</a></p>
+<p><a target="_blank" rel="noopener" href="http://www.vishalchovatiya.com/part-3-all-about-virtual-keyword-in-c-how-virtual-destructor-works/">Part 3: All About Virtual Keyword in C++: How Does Virtual Destructor Works?</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.shuzhiduo.com/A/l1dyxRgq5e/">从汇编看c++的虚拟继承以及其内存布局(一)</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/lixungogogo/article/details/51144759">C++多态篇3——虚函数表详解之多继承、虚函数表的打印</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/gatieme/article/details/43567433#t7">C程序的内存布局(Memory Layout)</a></p>
+<p><a target="_blank" rel="noopener" href="http://www.vishalchovatiya.com/memory-layout-of-cpp-object/">Memory Layout of C++ Object in Different Scenarios</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/ddazz0621/article/details/95588244">C++多态原理详解（GDB调试分析）</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/05/c++%E5%A4%A7%E6%9D%82%E7%83%A9/c++%20const%E4%B8%8Econstexpr/" rel="prev" title="c++ const与constexpr区别">
+      <i class="fa fa-chevron-left"></i> c++ const与constexpr区别
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/03/07/c++%E5%A4%A7%E6%9D%82%E7%83%A9/c++%20%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/" rel="next" title="c++智能指针">
+      c++智能指针 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8Ec%E8%AF%B4%E8%B5%B7"><span class="nav-number">1.</span> <span class="nav-text">从c说起</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#c-%E7%9A%84%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80"><span class="nav-number">2.</span> <span class="nav-text">c++的内存布局</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#c-%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B%E4%BB%A5%E5%8F%8A%E8%99%9A%E5%87%BD%E6%95%B0%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">c++对象模型以及虚函数的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%95%E7%BB%A7%E6%89%BF"><span class="nav-number">3.0.1.</span> <span class="nav-text">单继承</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E9%87%8D%E7%BB%A7%E6%89%BF"><span class="nav-number">3.0.2.</span> <span class="nav-text">多重继承</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Peter chen</p>
+  <div class="site-description" itemprop="description">siyuan Chen personal page</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Peter chen</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

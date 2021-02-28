@@ -31,7 +31,7 @@
 <meta property="og:image" content="https://gitee.com/pchen7592/picgo/raw/master/20200928201748.gif">
 <meta property="og:image" content="https://gitee.com/pchen7592/picgo/raw/master/20200928201749.jpg">
 <meta property="article:published_time" content="2020-09-27T14:30:48.000Z">
-<meta property="article:modified_time" content="2020-09-28T12:18:15.355Z">
+<meta property="article:modified_time" content="2021-02-26T03:18:07.084Z">
 <meta property="article:author" content="Peter chen">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://gitee.com/pchen7592/picgo/raw/master/20200928201747.gif">
@@ -184,7 +184,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-09-28 20:18:15" itemprop="dateModified" datetime="2020-09-28T20:18:15+08:00">2020-09-28</time>
+                <time title="Modified: 2021-02-26 11:18:07" itemprop="dateModified" datetime="2021-02-26T11:18:07+08:00">2021-02-26</time>
               </span>
 
           
@@ -211,12 +211,14 @@
 <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>IPV4下，公网IP是奢侈的资源，就算是家里的宽带也不一定能有公网IP，为了能够远程连接家里的Ubuntu，就需要进行内网穿透。</p>
 <p>已有的方案包括很多，其中TeamViewer、VNC还能做到可视化界面，但是平时的开发并不需要这么重，界面传输反而会加重网络的负担。ngrok、花生壳也可以实现，但是前者很麻烦，后者收费。</p>
 <p>用SSH实现就非常的优雅，并且可以进行很多的扩展。</p>
+<a id="more"></a>
+
 <h2 id="什么是SSH"><a href="#什么是SSH" class="headerlink" title="什么是SSH"></a>什么是SSH</h2><p>SSH表示的是一种网络协议，它定义了一种通过网络建立安全通信的方法，SSH协议从1995年提出以来，演化出了两个大版本，分别是SSH-1和SSH-2.两个版本并不兼容，SSH-2相比于SSH-1安全性更高，并且增加了一些特性。</p>
 <p>SSH采用的是client/server模型，通过在client和server之间建立加密通道，从认证、加密和数据的完整性三个方面保障通信安全。</p>
 <blockquote>
 <p>SSH协议及基于其开发的产品在名称上很容易混淆，先进行简单的说明。<br>SSH-1/SSH-2 表示的是协议。<br>SSH1/SSH2表示的是基于SSH1和SSH2协议开发的产品<br>ssh/ssh1/ssh2等表示的是客户端程序<br>OpenSSH是OpenBSD项目的一个产品，它实现了SSH-1和SSH-2协议。</p>
 </blockquote>
-<h2 id="常用SSH指令"><a href="#常用SSH指令" class="headerlink" title="常用SSH指令"></a>常用SSH指令</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ssh [-f background] <span class="comment"># 后台运行（常用与转发）</span></span><br><span class="line">	[-L address] <span class="comment"># 本地转发</span></span><br><span class="line">    [-o option] <span class="comment"># 一些其他选项</span></span><br><span class="line">    [-p port] <span class="comment"># 指定远端连接端口号</span></span><br><span class="line">    [-R address] <span class="comment"># 远程转发</span></span><br><span class="line">    [-N no_command]	<span class="comment"># 不进入远程命令行（常用于转发）</span></span><br><span class="line">    &lt;user@host&gt;</span><br><span class="line">    [<span class="built_in">command</span>] <span class="comment"># 发往远程的指令</span></span><br></pre></td></tr></table></figure>
+<h2 id="常用SSH指令"><a href="#常用SSH指令" class="headerlink" title="常用SSH指令"></a>常用SSH指令</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ssh [-f background] <span class="comment"># 后台运行（常用与转发）</span></span><br><span class="line">	[-L address] <span class="comment"># 本地转发</span></span><br><span class="line">    [-o option] <span class="comment"># 一些其他选项</span></span><br><span class="line">    [-p port] <span class="comment"># 指定远端连接端口号</span></span><br><span class="line">    [-R address] <span class="comment"># 远程转发</span></span><br><span class="line">    [-N no_command]	<span class="comment"># 不进入远程命令行（常用于转发）</span></span><br><span class="line">    [[-i identity_file]] <span class="comment"># 指定口令文件（密钥文件）</span></span><br><span class="line">    &lt;user@host&gt;</span><br><span class="line">    [<span class="built_in">command</span>] <span class="comment"># 发往远程的指令</span></span><br></pre></td></tr></table></figure>
 <h2 id="SSH一些用法"><a href="#SSH一些用法" class="headerlink" title="SSH一些用法"></a>SSH一些用法</h2><ol>
 <li><p>远程登录</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh user@host</span><br></pre></td></tr></table></figure>
@@ -302,7 +304,7 @@
 <blockquote>
 <p>注意，A和C虽然都在内网，但是是不同的内网。</p>
 </blockquote>
-<p>首先内网的机器是可以ssh到外网的服务器上的，那么我就希望这个通道能够一直保持，并且我能通过这个通道从外网ssh到内网来。</p>
+<p>首先内网的机器是可以ssh到外网的服务器上的，那么我就希望这个通道能够一直保持，并且我能通过这个通道从外网ssh到内网来。</p>
 <p>在内网机器A上与外网机器B建立一个远程端口转发通道，当我在机器C上企图对转发端口建立SSH链接时，就会将数据转发到机器A上，这样就实现了内网穿透。</p>
 <p>通过一下命令就能实现上述的功能。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh -fNR 1234:localhost:22 user.b@30.23.1.23</span><br></pre></td></tr></table></figure>
@@ -313,6 +315,9 @@
 <p>注意，这里的<code>NR</code>的位置是不能错的，一定要<code>R</code>在后面，因为后面跟的是<code>R</code>的参数值。</p>
 </blockquote>
 <p>还有一个重要的点，就是需要在具有公网ip的B机器上进行GatewayPort配置，使得B机器1234端口能通过C机器访问。</p>
+<blockquote>
+<p>GatewayPorts指定是否允许远程主机连接到为客户端转发的端口。 默认情况下，sshd（8）将远程端口转发绑定到环回地址。 这样可以防止其他远程主机连接到转发的端口。 可以使用GatewayPorts指定sshd应该允许远程端口转发绑定到非环回地址，从而允许其他主机进行连接。 该参数可能为no，以强制远程端口转发仅对本地主机可用， 是，以强制远程端口转发绑定到通配符地址，或由客户端指定，以允许客户端选择转发绑定到的地址。 默认为“否”。</p>
+</blockquote>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># /etc/ssh/sshd_config</span></span><br><span class="line">GatewayPorts yes</span><br></pre></td></tr></table></figure>
 
 <p>此时，你就能够在C机器上通过<code>1234</code>端口ssh到A机器上了。但是要注意以下命令中的用户名是user.a</p>
@@ -450,10 +455,13 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/09/24/Deep%20Learning%20for%203D%20Point%20Cloud%20Understanding:%20A%20Survey%20%E7%BF%BB%E8%AF%91/" rel="prev" title="翻译 Deep Learning for 3D Point Cloud Understanding\:A Survey">
+    <a href="/2020/09/24/Deep%20Learning%20for%203D%20Point%20Cloud%20Understanding%EF%80%BA%20A%20Survey%20%E7%BF%BB%E8%AF%91/" rel="prev" title="翻译 Deep Learning for 3D Point Cloud Understanding\:A Survey">
       <i class="fa fa-chevron-left"></i> 翻译 Deep Learning for 3D Point Cloud Understanding\:A Survey
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2020/09/29/Non-Local%20Spatial%20Propagation%20Network%20forDepth%20Completion%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/" rel="next" title="Non-Local Spatial Propagation Network forDepth Completion 论文解读">
+      Non-Local Spatial Propagation Network forDepth Completion 论文解读 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -526,7 +534,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-count">25</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -554,7 +562,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

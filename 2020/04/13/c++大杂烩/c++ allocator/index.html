@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"github.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="这里主要讲sgi实现的二级allocator 如果分配的内存大于128byte则直接调用一级分配器">
+<meta property="og:type" content="article">
+<meta property="og:title" content="stl allocator实现">
+<meta property="og:url" content="https://github.com/Peterchen931/Peterchen931.github.io/2020/04/13/c++%E5%A4%A7%E6%9D%82%E7%83%A9/c++%20allocator/index.html">
+<meta property="og:site_name" content="siyuan Chen">
+<meta property="og:description" content="这里主要讲sgi实现的二级allocator 如果分配的内存大于128byte则直接调用一级分配器">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-04-13T01:13:16.000Z">
+<meta property="article:modified_time" content="2021-02-26T03:21:00.517Z">
+<meta property="article:author" content="Peter chen">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://github.com/Peterchen931/Peterchen931.github.io/2020/04/13/c++%E5%A4%A7%E6%9D%82%E7%83%A9/c++%20allocator/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-cn'
+  };
+</script>
+
+  <title>stl allocator实现 | siyuan Chen</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">siyuan Chen</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-cn">
+    <link itemprop="mainEntityOfPage" href="https://github.com/Peterchen931/Peterchen931.github.io/2020/04/13/c++%E5%A4%A7%E6%9D%82%E7%83%A9/c++%20allocator/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Peter chen">
+      <meta itemprop="description" content="siyuan Chen personal page">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="siyuan Chen">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          stl allocator实现
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-04-13 09:13:16" itemprop="dateCreated datePublished" datetime="2020-04-13T09:13:16+08:00">2020-04-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-26 11:21:00" itemprop="dateModified" datetime="2021-02-26T11:21:00+08:00">2021-02-26</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>这里主要讲sgi实现的二级allocator</p>
+<p>如果分配的内存大于<code>128byte</code>则直接调用一级分配器</p>
+<a id="more"></a>
+
+<p>首先二级分配器维护一个<code>free_list[16]</code>数组，分别代表16种不同大小的储存块（8,16,24…128），调用二级分配器获取的空间都会从其中获取，<code>free_list[i]</code>是一个链表，每一个元素都是一个union结构体。当该结构体处于free_list中时，其储存指向链表下一个元素的指针。而在被分配出去之后，则其储存该内存的位置。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">union</span> obj&#123;	<span class="comment">// 节省内存的方法</span></span><br><span class="line">    <span class="comment">// 如果该储存块被分配出去，则负责分配的函数会对obj的值进行修改</span></span><br><span class="line">	<span class="keyword">union</span> obj *free_list_link;	<span class="comment">// 处于free_list中，其用来解释的值</span></span><br><span class="line">	<span class="keyword">void</span> *data;		<span class="comment">// 被分配以后，其用来解释的值</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>二级分配器简单流程</strong></p>
+<p>用户每次调用分配内存的量都会被划align到8的整数倍</p>
+<p>尝试从free_list中获取</p>
+<p>成功则将该块移出free_list</p>
+<p>失败(free_list不足)则调用refill函数</p>
+<p>refill函数会尝试从memory_pool取内存(调用chuck)，并且，在一次refill调用中会向mp一次性取默认为20个的块（减少调用次数），</p>
+<p>对于获取到的块，将这些块留一个给用户，剩下的挂到free_list上。</p>
+<p>chunk调用保证至少能够返回一个块或者报出bad_alloc异常，当资源能够完全满足refill需求，则给予refill所有资源，当只能满足refill部分需求（如refill申请20个块，空间只能分配5个），则会返回能够分配的块。如果一个都不能满足，首先会将剩下的空间挂到free_list适合的位置(根据大小)，然后使用malloc向系统申请内存，申请的量是需求的两倍加上一个附加量，再悲惨些，系统内存用完了，chunk会再调用一次malloc看看out of memory机制能不能挤出一点空间，如果还么有，就会报错。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;allocator伪代码</span><br><span class="line">allocator(size):</span><br><span class="line">	if size&gt;128:</span><br><span class="line">		调用一级分配器</span><br><span class="line">	if size &lt;&#x3D;128:</span><br><span class="line">		尝试从free_list找一个块：</span><br><span class="line">			if 找到了:</span><br><span class="line">				分配该块</span><br><span class="line">			else:</span><br><span class="line">				refill(size)</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;refill伪代码</span><br><span class="line">refill(size):</span><br><span class="line">	chunk_alloc(size,20)	&#x2F;&#x2F;申请多个，减少调用次数</span><br><span class="line">	if 获取大于1个:</span><br><span class="line">		一个给用户，剩余给free_list</span><br><span class="line">	else if 获取了1个:</span><br><span class="line">		给用户</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; chunk_alloc伪代码</span><br><span class="line">chunk_alloc(size,nobjs):</span><br><span class="line">	if 空间足够:</span><br><span class="line">		给予空间</span><br><span class="line">	else if 空间能够提供一块以上区域:</span><br><span class="line">		尽力给出最多的块</span><br><span class="line">	else if 空间比一个块都少:</span><br><span class="line">		将剩下的空间挂到freelist的正确位置</span><br><span class="line">		尝试向系统申请空间(malloc)，size*objs*2+n</span><br><span class="line">			if 失败:</span><br><span class="line">				再次尝试向系统申请空间(malloc)，size*objs*2+n，利用out of mem机制</span><br><span class="line">					if 失败:</span><br><span class="line">						bad_alloc异常</span><br><span class="line">			else:</span><br><span class="line">				一半留给自己，一半上交给free_list</span><br></pre></td></tr></table></figure>
+
+<p>下图是二级分配器调用的示意图</p>
+<pre class="mermaid">graph TD
+
+A[调用allocator]
+B[free_list]
+C[memory_pool]
+D[malloc]
+E[bad_malloc]
+
+A-->B
+B--refill-->C
+C--chunk_alloc-->D
+D--throw-->E</pre>
+
+<p>具体细节可以看STL源码分析P60</p>
+<p>这样使用二级分配器的好处是，不会向系统申请很小块的内存，造成内存碎片化。同时可以减少小的内存分配造成的系统调用次数，加快分配。</p>
+<p>free_list使用固定大小的块分配的好处是能够用标准化的大小管理内存（与内存分页类似），如果直接用memory_pool进行内存管理，那么用户free的过程产生的碎片化内存会很难管理。如果只用free_list而不用memory_pool，会导致对malloc的次数明显增多，因为memory_pool在每次申请空间时都会保留一半，等到下次申请时，这部分空间可以作为与malloc调用之间的缓冲，而如果没有这一层缓冲，free_list为每一种不同大小的块进行申请都需要使用一次malloc。</p>
+<p>这样设计的方法下，memory_pool始终是一块连续的区间</p>
+<p>书中对deallocate的描述我不是很赞成，其只说了会归还给free_list，但是没有叙述如何从free_list归还给操作系统。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/07/c++%E5%A4%A7%E6%9D%82%E7%83%A9/c++%20%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/" rel="prev" title="c++智能指针">
+      <i class="fa fa-chevron-left"></i> c++智能指针
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/07/05/c++%E5%A4%A7%E6%9D%82%E7%83%A9/c++%20lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F/" rel="next" title="c++ const与constexpr区别">
+      c++ const与constexpr区别 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Peter chen</p>
+  <div class="site-description" itemprop="description">siyuan Chen personal page</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Peter chen</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

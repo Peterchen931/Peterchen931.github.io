@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"github.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="1. 摘要自动驾驶和机器人技术等实际应用的发展引起了人们对3D点云理解的日益关注。 虽然深度学习在基于图像的任务上取得了巨大的成功，但深度神经网络在处理大量，非结构化和嘈杂的3D点时仍面临许多独特的挑战。 为了演示深度学习对3D点云理解的最新进展，本文从几个不同的方向（分类，分段，检测，跟踪，流量估计，配准，增强和完成）总结了该领域的最新研究成果 ），以及常用的数据集，指标和最新性能。有关此调查的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="翻译 Deep Learning for 3D Point Cloud Understanding\:A Survey">
+<meta property="og:url" content="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/24/Deep%20Learning%20for%203D%20Point%20Cloud%20Understanding%EF%80%BA%20A%20Survey%20%E7%BF%BB%E8%AF%91/index.html">
+<meta property="og:site_name" content="siyuan Chen">
+<meta property="og:description" content="1. 摘要自动驾驶和机器人技术等实际应用的发展引起了人们对3D点云理解的日益关注。 虽然深度学习在基于图像的任务上取得了巨大的成功，但深度神经网络在处理大量，非结构化和嘈杂的3D点时仍面临许多独特的挑战。 为了演示深度学习对3D点云理解的最新进展，本文从几个不同的方向（分类，分段，检测，跟踪，流量估计，配准，增强和完成）总结了该领域的最新研究成果 ），以及常用的数据集，指标和最新性能。有关此调查的">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-09-24T02:35:46.000Z">
+<meta property="article:modified_time" content="2021-02-25T01:51:48.100Z">
+<meta property="article:author" content="Peter chen">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/24/Deep%20Learning%20for%203D%20Point%20Cloud%20Understanding%EF%80%BA%20A%20Survey%20%E7%BF%BB%E8%AF%91/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-cn'
+  };
+</script>
+
+  <title>翻译 Deep Learning for 3D Point Cloud Understanding\:A Survey | siyuan Chen</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">siyuan Chen</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-cn">
+    <link itemprop="mainEntityOfPage" href="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/24/Deep%20Learning%20for%203D%20Point%20Cloud%20Understanding%EF%80%BA%20A%20Survey%20%E7%BF%BB%E8%AF%91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Peter chen">
+      <meta itemprop="description" content="siyuan Chen personal page">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="siyuan Chen">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          翻译 Deep Learning for 3D Point Cloud Understanding\:A Survey
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-09-24 10:35:46" itemprop="dateCreated datePublished" datetime="2020-09-24T10:35:46+08:00">2020-09-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-25 09:51:48" itemprop="dateModified" datetime="2021-02-25T09:51:48+08:00">2021-02-25</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="1-摘要"><a href="#1-摘要" class="headerlink" title="1. 摘要"></a>1. 摘要</h3><p>自动驾驶和机器人技术等实际应用的发展引起了人们对3D点云理解的日益关注。 虽然深度学习在基于图像的任务上取得了巨大的成功，但深度神经网络在处理大量，非结构化和嘈杂的3D点时仍面临许多独特的挑战。 为了演示深度学习对3D点云理解的最新进展，本文从几个不同的方向（分类，分段，检测，跟踪，流量估计，配准，增强和完成）总结了该领域的最新研究成果 ），以及常用的数据集，指标和最新性能。有关此调查的更多信息，请访问：<a href="https%EF%BC%9A//github.com/SHI-Labs/3D-Point-Cloud-Learning">https：//github.com/SHI-Labs/3D-Point-Cloud-Learning</a></p>
+<a id="more"></a>
+
+<p>在过去的几年中，深度学习已在各种计算机视觉任务（尤其是图像任务）中表现出出色的性能。 同时，在许多实际应用中，例如自动驾驶汽车（图1显示了自动驾驶汽车收集的点云），我们需要的信息不仅是图像，还需要更多的信息，以更好地了解环境。 在这里，来自激光雷达或RGB-D摄像机的3D数据被认为是很好的补充。 这些设备以点云的形式生成3D几何数据。随着行业需求的增长，将点云与深度学习模型结合使用成为最近的研究热点。</p>
+<p>与图像数据相反，点云不直接包含空间结构，因此，点云上的深层模型必须解决三个主要问题：（1）如何从稀疏点云中找到高信息密度的表示形式；（2）如何构建网络 满足大小-变异和排列-不变的必要限制。（3）如何以较低的时间处理大量数据并计算资源消耗。 PointNet是代表性的早期尝试之一，它利用MLP和T-Net来设计一种新颖的深度网络，用于消费无序3D点集。 PointNet及其改进的PointNet ++版本激发了许多后续工作。</p>
+<p>点云中还存在图像的基本任务，例如分类，分段和对象检测，这些问题的大多数解决方案都受益于图像方面的研究发现，而不可避免地要进行适当的调整以适应3D特性数据。本文将点云上的最新作品分为以下几类：分类，分割，检测，匹配和配准，扩充，完成和重建。以下各节将提供每个类别的详细说明。</p>
+<p>越来越多的数据集可用于点云上的不同任务。 ShapeNet和ModelNet是由干净的3D模型组成的两个早期数据集。这些早期的数据集缺乏泛化能力。但是，将噪声和缺失点在内的干扰考虑进来，以建立鲁棒的模型是有必要的。考虑到这一点，ScanNet和KITTI数据集，就是通过对实际环境的扫描来创建的。通过在不同时间涉及各种环境，可以进一步推广针对自动驾驶汽车任务而设计的数据集，例如nuScenes和Lyft。当前，越来越多的数据集正在被提出，以满足不同的日益增长的需求。</p>
+<p>本文的结构如下。 第2节介绍了现有3D数据集和针对不同任务的相应指标。 第3节包括3D形状分类方法的概述。 第4节回顾了3D语义分割和实例分割的方法。 第5节概述了3D对象检测方法及其派生任务。 第6节介绍3D点云匹配和注册的最新进展。 第7节对提高数据质量的方法进行了概述。 最后，第8节总结了论文。</p>
+<h3 id="2-数据集和指标"><a href="#2-数据集和指标" class="headerlink" title="2. 数据集和指标"></a>2. 数据集和指标</h3><p>数据集在3D点云数据的深度学习方法中非常重要。 首先，精心设计的数据集可以在不同算法之间进行定性评估和比较。 其次，具有更丰富内容和元数据的数据集有助于定义更复杂的任务并提出新的研究主题。 在本节中，我们将简要介绍一些最常用的数据集和评估指标。</p>
+<h4 id="2-1-数据集"><a href="#2-1-数据集" class="headerlink" title="2.1 数据集"></a>2.1 数据集</h4><p>表1显示了三个成熟任务（分类，分割和检测）最常用的3D点云数据集，这些数据集在接下来各节将经常提到。 我们还将详细介绍它们中的每一个。</p>
+<p><strong>ShapeNet</strong>    ShapeNet是一个带丰富注释的数据集，其中包含55个类别的51300个3D模型。 它由几个子集组成。 ShapeNetSem是其中的一个子集，其中包含12000个模型，这些模型分布在270个类别中。 该数据集与ModelNet40相比相对干净小，因此在应用于更复杂的任务之前，<u>通常将它们用于评估骨干网的容量。</u></p>
+<p><strong>ModelNet40</strong>    ModelNet项目提供了三个基准：ModelNet10，ModelNet40和Aligned40。使用最广泛的是ModelNet40基准测试，其中“ 40”表示类的数量。为了找到最常见的对象类别，利用了从SUN数据库获得的统计信息。建立词汇表后，使用在线搜索引擎收集3D CAD模型，并由人工验证。</p>
+<p><strong>S3DIS</strong>    斯坦福大学大型3D室内空间（S3DIS）数据集由来自三座建筑物的5个大型室内场景组成，具有不同的建筑风格和外观。 点云是自动生成的，无需人工干预。 检测到12个语义元素，包括结构元素（地板，墙壁等）和公用家具。</p>
+<p><strong>Semantic3D</strong>    到目前为止，Semantic3D是用于室外场景分割的最大3D点云数据集。 它包含一个静态激光雷达从110000平方米的区域收集的40亿个点。 室外场景的自然状态，如点的不均匀分布和大量的遮挡，使该数据集具有挑战性。</p>
+<p><strong>ScanNet</strong>    ScanNetScanNet是一个视频数据集，由来自1000多次扫描的250万帧组成，并带有相机姿势，表面重建和实例级别的语义分割标注。 该数据集为多种3D场景理解任务提供了基准，例如分类，语义体素标注和CAD模型检索。</p>
+<p><strong>KITTY</strong>    KITTI视觉基准套件是最著名的3D数据基准套件，涵盖了3D对象检测，跟踪和场景流估计的基准套件。 多视图数据由具有两个高分辨率彩色和灰色相机的自动驾驶平台，Velodyne激光扫描仪和GPS定位系统捕获。 仅标记了对自动驾驶重要的三种对象：汽车，行人和骑自行车的人。</p>
+<p><strong>其他数据集</strong>    还有其他一些高质量但未广泛使用的数据集，例如Oakland，iQmu-lus和Paris-Lille-3D。 3DMatch推动了3D匹配和配准的研究，这在过去一段时间是一个不太流行的方向。最近，自动驾驶行业需求的增长催生了数个基于nuScenes，Lyft Level 5和Waymo OpenDataset的大规模道路数据集。他们提出了复杂的挑战，需要利用多视图数据和相关的元数据。数据集的发展有助于缩小研究与实际应用之间的差距。</p>
+<h4 id="2-2-指标"><a href="#2-2-指标" class="headerlink" title="2.2 指标"></a>2.2 指标</h4><p>不同算法之间的比较需要确定指标。 设计和选择适当的指标很重要。 精心设计的指标可以提供对不同模型的有效评估，而不合理的指标可能会导致错误的结论。</p>
+<p>表2列出了在不同任务中广泛使用的指标。 对于分类方法，最经常使用总体准确性和平均准确性。 可以通过精度或(m)IoU分析细分模型。 在检测任务中，通常会按区域对结果进行评估，因此可以应用(m)IoU，准确性，精度和召回率进行评估。 MOTA和MOTP是专门为对象跟踪模型而设计的，而EPE是为场景进行估计的。 ROC曲线是精度和查全率的派生形式，有助于评估3D匹配和配准模型的性能。 此外，可视化始终是数字的有效补充</p>
+<h3 id="3-分类"><a href="#3-分类" class="headerlink" title="3. 分类"></a>3. 分类</h3><h4 id="3-1-概述"><a href="#3-1-概述" class="headerlink" title="3.1 概述"></a>3.1 概述</h4><p>点云上的分类通常称为3Dshape分类。 与图像分类模型相似，基于3D形状分类的模型通常首先使用聚合编码器生成全局嵌入，然后将嵌入穿过几个完全连接的层以获得最终结果。 大多数3D形状分类方法都使用干净的3D模型进行了测试（如图2所示）。 基于点云聚合方法，分类模型通常可分为两类：基于投影的方法和基于点的方法。</p>
+<h4 id="3-2-基于投影的方法"><a href="#3-2-基于投影的方法" class="headerlink" title="3.2 基于投影的方法"></a>3.2 基于投影的方法</h4><p>与基于投影的方法从空间邻域聚合点相比，基于点的方法会尝试从单个点学习特征。 最近的工作大多集中在这个方向上。</p>
+<h5 id="3-2-1-多视图表示"><a href="#3-2-1-多视图表示" class="headerlink" title="3.2.1 多视图表示"></a>3.2.1 多视图表示</h5><p>MvCNN是一种基于点云的多视图表示的方法。 通过从不同角度渲染快照，由一组2D图像表示3D点云。 组中的每个图像都将通过CNN提取基于视图的特征，并跨视图合并，然后通过另一个CNN来构建紧凑的描述符。 虽然MVCNN不能区分不同的视图，但是考虑视图之间的关系是有帮助的。 GVCNN是一种利用这种关系的方法。 通过量化视图的区分度，我们能够基于视图的区分度将视图集分为几组。 视图描述符将通过组内合并和跨组融合进行预测。 除了上面提到的模型外，还通过多视图表示来提高识别准确性。</p>
+<h5 id="3-2-2-体积表示"><a href="#3-2-2-体积表示" class="headerlink" title="3.2.2 体积表示"></a>3.2.2 体积表示</h5><p>体积表示VoxNet是使用体积表示的一种早期方法。 该方法将每个点（x，y，z）投影到对应的离散体素点（i，j，k）中，每个点云将映射到32×32×32voxels的占用栅格中，并且栅格将 然后通过两个3D卷积层以获得最终表示。</p>
+<p>VoxNet仅将CNN层的适配用于预测头，这可能导致丢失详细的空间信息。 3D ShapeNet提出了一种基于信念(belief-base)的深度卷积网络来学习点云在不同3D形状中的分布。 在这种方法中，3D形状由网格上二进制变量的概率分布表示。</p>
+<p>尽管体积方法已经实现了令人满意的性能，但是大多数方法却遭受了计算复杂度和内存占用的三次增长，因此网格的分辨率受到严格限制。 OctNet通过将混合网格-八叉树结构引入分层划分点云来提高效率。 点云由沿着规则网格的几个八叉树表示，每个八叉树被编码为位串，并且特征是通过朴素算法生成的。 受到OctNet的启发，OCNN提出了一种引入3D-CNN来从八叉树中提取特征的方法。</p>
+<p>如上所述，基于体积表示的方法自然是粗糙的，因为只有一小部分体素是非空的，并且几乎不收集每个体素内部的详细上下文。 在实践中很难实现分辨率和计算之间的平衡。</p>
+<h5 id="3-2-3-Basis-point-set（不懂）"><a href="#3-2-3-Basis-point-set（不懂）" class="headerlink" title="3.2.3 Basis point set（不懂）"></a>3.2.3 Basis point set（不懂）</h5><p>BPS提出了一种新方法，打破了通常将点云（即使大小不同）通常投影到相同大小的网格上的约定。 在BPS中，首先将输入点归一化为一个单位球，然后对一组点进行随机采样以构成基本点集（BPS）。 对于数据集中的所有点云，采样的BPS都是常数。对于给定的点云X，每个点xi由其自身与BPS中最近邻之间的欧几里得距离表示。 通过将这种表示形式传递到PointNet的最后两个完全连接的层中，该模型可实现与原始PointNet设计相似的性能。</p>
+<h4 id="3-3-基于点的方法"><a href="#3-3-基于点的方法" class="headerlink" title="3.3 基于点的方法"></a>3.3 基于点的方法</h4><p>与基于投影的方法从空间邻域聚合点相比，基于点的方法会尝试从单个点学习特征。 最近的工作大多集中在这个方向上。</p>
+<h5 id="3-3-1-MLP网络"><a href="#3-3-1-MLP网络" class="headerlink" title="3.3.1 MLP网络"></a>3.3.1 MLP网络</h5><p>PointNet是利用多层感知器（MLP）的著名架构。输入（ann×32Dtensor）首先与由微型网络（T-Net）预测的仿射变换矩阵相乘，以保持几何变换下的不变性。然后，将点集通过一组MLP，再通过另一个联合对齐网络和一个最大池化层，以获得最终的全局特征。该主干可用于分类和分段预测。对于分类，全局特征通过MLP进行输出得分。对于分割，全局特征的串联和每个点不同级别的中间特征的级联通过MLP进行每个点的分类结果。常规的CNN通过一叠卷积层以不同尺度呈现特征。受此启发，提出了PointNet ++ [80]。在这项工作中，pointxis的局部区域定义为球体中心atx内的点。这里的一组抽象级别包含一个采样层，一个用于识别局部区域的分组层和一个Point-Net层。堆叠这样的集合抽象级别允许我们像图像任务的CNN一样分层提取特征。</p>
+<p>PointNet和PointNet ++的简单实现和令人鼓舞的性能激发了许多后续工作。 PointWeb改编自Point-Net ++，并通过引入自适应特征调整（AFA）来利用本地邻域的上下文信息来提高特征质量。 另外，SRN提出了结构关系网（SRN）来装备PointNet ++，并获得了更好的性能。</p>
+<h5 id="3-3-2-卷积网络"><a href="#3-3-2-卷积网络" class="headerlink" title="3.3.2 卷积网络"></a>3.3.2 卷积网络</h5><p>可以将2D数据上的卷积内核扩展为在3D点云数据上工作。如前所述，VoxNet [67]是直接利用3D卷积的早期工作。</p>
+<p>A-CNN提出了另一种在点云上应用卷积的方法。为了防止冗余信息来自重叠的局部区域（同一组相邻点可能以不同的尺度重复地包含在区域中），A-CNN提出了一种基于环的方案，而不是球体。为了在圆环内对点进行卷积，将点在查询点qi处的切平面上投影，然后使用叉积和点积按顺时针或逆时针方向排序，最终将得到一维卷积核应用于有序序列。就像PointNet中一样，输出功能可用于分类和分段。</p>
+<p>RS-CNN是另一个基于关系形状卷积的卷积网络。 RS-Conv内核将某个点附近的邻域作为其输入，并学习从幼稚关系（例如欧几里得距离，相对位置）到点之间的高级关系的映射，并使用学习的映射对邻域内的空间结构进行编码。</p>
+<p>在PointConv中，将卷积运算定义为相对于重要性采样找到隐藏的连续3D卷积的蒙特卡洛估计。该过程由加权函数和密度函数组成，由MLP层和核化的密度估计实现。此外，将3D卷积简化为矩阵乘法和2D卷积，以提高存储和计算效率并易于部署。在MCCNN [34]中使用了类似的想法，其中，基于样本的密度函数，通过蒙特卡洛估计替换了卷积。</p>
+<p>Geo-CNN提出了另一种对邻点之间的几何关系建模的方法。通过采用六个正交基，空间将被分成八象限，并且一个特定象限中的所有矢量都可以由三个基组成。沿着每个方向独立提取特征，并使用相应的方向关联权重矩阵，然后基于几何矢量和底物之间的角度进行聚合。当前层某个特定点的功能是给定点及其上一层的相邻边缘特征的特征之和。</p>
+<p>在SFCNN中，将输入点云投影到具有离散球面坐标的规则二十面体网格上，因此可以通过对球面网格的顶点及其相邻元素的级联特征进行maxpooling和卷积来实现卷积。 SFCNN具有旋转不变性，并且对扰动具有鲁棒性</p>
+<h5 id="3-2-3-图网络"><a href="#3-2-3-图网络" class="headerlink" title="3.2.3 图网络"></a>3.2.3 图网络</h5><p>图网络将点云视为图，将图的顶点视为点，并基于每个点的邻居生成边。 将在空间或光谱域中学习特征。</p>
+<p>ECC首先提出了将每个点视为图形的顶点并将点对之间的连接边缘视为“邻居”的想法。然后，将边缘条件卷积（ECC）与诸如MLP的滤波器生成网络一起应用。邻域信息通过maxpooling聚集，粗化的图将通过VoxelGrid算法生成。之后，DGCNN 使用MLP来实现EdgeConv，然后在每个点附近对边缘特征进行通道方式的对称聚合，从而可以在网络的每一层之后动态更新图形。</p>
+<p>受DGCNN的启发，Hassani和Haley 提出了一种无监督的多任务学习形状特征的方法。该方法由一个编码器和一个解码器组成，其中编码器由多比例图构成，而解码器则针对由联合损失训练的三个非监督任务（聚类，自我监督分类和重建）构建。</p>
+<p>ClusterNet使用严格的旋转不变（RRI）模块从每个点生成旋转不变特征，并使用无监督的聚集层次聚类方法来构建点云的层次结构。首先使用EdgeConv块学习每个级别的子集群的功能，然后通过maxpooling进行汇总</p>
+<p> <strong>注：未翻译4-6章</strong></p>
+<h3 id="7-去噪与补全"><a href="#7-去噪与补全" class="headerlink" title="7. 去噪与补全"></a>7. 去噪与补全</h3><h4 id="7-1-概述"><a href="#7-1-概述" class="headerlink" title="7.1 概述"></a>7.1 概述</h4><p>激光雷达收集的点云，尤其是那些来自室外场景的点云，受到各种质量问题的困扰，例如噪音，离群值和缺失点。 为了完成原始点云的质量，已经进行了许多尝试，包括完成缺失点，消除离群值等。不同方法的动机和实现方式差异很大。 在本文中，我们将它们分为两类：判别模型和生成模型</p>
+<h4 id="7-2-判别模型"><a href="#7-2-判别模型" class="headerlink" title="7.2 判别模型"></a>7.2 判别模型</h4><p>从室外场景收集的点云中的噪声自然是不可避免的。 为了防止噪声影响点云的编码，在预处理中应采用一些去噪方法。 常规方法包括局部表面拟合，邻域平均和猜测潜在的噪声模型。 PointCleanNet提出了一种数据驱动的方法来消除离群值并减少噪声。借助PCPNet改编的深度神经网络，该模型首先对离群值进行分类并将其丢弃，然后估算将噪声投射到原始表面的校正投影。</p>
+<p>Hermosilla等，提出了Total Denoising，它在没有附加数据的情况下实现了无监督的3D点云去噪。 通常在假设无声像素值遵循围绕干净像素值的分布的前提下构建无监督图像降噪器，在这种假设下，可以通过学习随机分布的参数来恢复原始干净值。 但是，由于点云中存在多种形式的噪声，例如不存在可靠参考点的全局位置偏差，因此无法将这种思想直接扩展到点云。 Total  Denoising引入了一个空间先验项，它找到了流形上所有可能模式中最接近的一种。 该模型与监督模型相比具有竞争优势。</p>
+<p>尽管许多模型都受益于密集点云中的丰富信息，但另一些模型却因大量点而效率低下。 常规的下采样方法通常必须冒这去掉关键点的风险。 Nezhadarya等，提出了关键点层（CPL），该层学习在保留重要点的同时减少点数。 通过avoiding neighbor search，该层是确定性的，与顺序无关的并且也是有效的。除此之外，SampleNet提出了一种可区分的点采样松弛方法，即通过将原始点的混合采样后的点近似来进行点采样。该方法已作为各种任务网络的前沿进行了测试，并仅以原始输入点云的一小部分获得良好的性能。</p>
+<h4 id="7-3-生成模型"><a href="#7-3-生成模型" class="headerlink" title="7.3 生成模型"></a>7.3 生成模型</h4><p>生成对抗网络已被广泛研究用于2D图像和CNN，因为它们通过生成虚假样本来帮助定位网络的潜在缺陷。当前点云模型的典型应用（例如自动驾驶）将安全性视为关键问题，研究点云上当前的深度神经网络如何受到错误样本的影响是有帮助的。</p>
+<p>Xiang等，提出了几种针对PointNet生成对抗性点云的算法。 adver-sarial算法以两种方式工作：点摄动和点生成。 通过微不足道地移动现有点来实现摄动，并且通过添加一些独立且分散的点或少量具有预定形状的点簇来实现生成。 舒特，提出了tree-GAN，一种树状图卷积网络。 通过与树进行图卷积，该模型利用祖先信息来丰富特征的能力。 随着对抗网络的发展，DUP-Net被提出来防护3D对抗模型。 该模型包含一个统计异常值消除（SOR）模块作为降噪器，并包含一个数据驱动的上采样网络作为上采样器。</p>
+<p>除了对抗性生成之外，生成模型还用于点云上采样。 通常有两种动机来对点云进行升采样。 首先是减少数据的稀疏性和不规则性，其次是恢复由于遮挡导致的缺失点。</p>
+<p>为了第一个目标，PU-Net提出了特征空间中的上采样。 对于每个点，通过多分支卷积单元提取并扩展多级特征；此后，将扩展后的特征拆分为多个特征并进行重构以对输入集进行上采样。 受到图像超分辨率模型的启发，Wang等，提出了一系列基于补丁的上采样网络，在不同的步骤中学习了不同级别的细节，其中在每个步骤中，网络仅专注于上一步输出中的本地补丁。 该架构能够将稀疏输入点集升采样为具有丰富细节的密集集。 Hui等，还提出了一种基于学习的反卷积网络，该网络基于低分辨率输入并在空间和特征空间中均进行了双边插值，从而生成多分辨率点云。</p>
+<p>同时，诸如[13]之类的早期完成方法往往从一开始就对输入点云进行体素化。PCN是第一个以粗糙到精细的方式处理原始点云的框架。 Wang等，通过两步重建设计改善了结果。 [39]提出了一种PF-Net，它可以保留原始不完整点云的空间结构，并在多尺度的生成网络中分层地预测缺失点。 另一方面，GRNet 提出了一种基于网格的方法，该网格通过对每个网格执行三次特征采样来检索结构上下文，并通过“反向网格化”层和MLP来完成输出。</p>
+<p>Lan等，提出了一种概率方法，通过应用EM算法和柯西均匀混合模型来抑制离群值，从而优化了离群值。 通常，PU-GAN提出了一种数据驱动的生成对抗网络，以从数据中学习点分布并在对象表面的斑块上对点进行上采样。 此外，RL-GAN-Net使用强化学习（RL）agent来提供对过时的对抗网络的快速可靠的控制。通过首先在降维的潜在空间表示上训练GAN，然后使用RL代理找到正确的输入以生成适合来自未完成点云的当前输入的表示，该框架能够实时的将嘈杂的部分点云转换为完整的形状。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/09/22/pointnet%E8%AE%BA%E6%96%87%E7%9A%84%E7%90%86%E8%A7%A3%E4%B8%8E%E6%80%9D%E8%80%83/" rel="prev" title="PointNet论文笔记">
+      <i class="fa fa-chevron-left"></i> PointNet论文笔记
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/09/27/ssh%E5%8A%9F%E8%83%BD%E4%BB%A5%E5%8F%8A%E5%88%A9%E7%94%A8%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/" rel="next" title="ssh功能以及利用端口转发实现内网穿透">
+      ssh功能以及利用端口转发实现内网穿透 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">1. 摘要</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%95%B0%E6%8D%AE%E9%9B%86%E5%92%8C%E6%8C%87%E6%A0%87"><span class="nav-number">2.</span> <span class="nav-text">2. 数据集和指标</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 数据集</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-%E6%8C%87%E6%A0%87"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 指标</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%88%86%E7%B1%BB"><span class="nav-number">3.</span> <span class="nav-text">3. 分类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-%E6%A6%82%E8%BF%B0"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 概述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-%E5%9F%BA%E4%BA%8E%E6%8A%95%E5%BD%B1%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 基于投影的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#3-2-1-%E5%A4%9A%E8%A7%86%E5%9B%BE%E8%A1%A8%E7%A4%BA"><span class="nav-number">3.2.1.</span> <span class="nav-text">3.2.1 多视图表示</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-2-2-%E4%BD%93%E7%A7%AF%E8%A1%A8%E7%A4%BA"><span class="nav-number">3.2.2.</span> <span class="nav-text">3.2.2 体积表示</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-2-3-Basis-point-set%EF%BC%88%E4%B8%8D%E6%87%82%EF%BC%89"><span class="nav-number">3.2.3.</span> <span class="nav-text">3.2.3 Basis point set（不懂）</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-%E5%9F%BA%E4%BA%8E%E7%82%B9%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 基于点的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#3-3-1-MLP%E7%BD%91%E7%BB%9C"><span class="nav-number">3.3.1.</span> <span class="nav-text">3.3.1 MLP网络</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-3-2-%E5%8D%B7%E7%A7%AF%E7%BD%91%E7%BB%9C"><span class="nav-number">3.3.2.</span> <span class="nav-text">3.3.2 卷积网络</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-2-3-%E5%9B%BE%E7%BD%91%E7%BB%9C"><span class="nav-number">3.3.3.</span> <span class="nav-text">3.2.3 图网络</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E5%8E%BB%E5%99%AA%E4%B8%8E%E8%A1%A5%E5%85%A8"><span class="nav-number">4.</span> <span class="nav-text">7. 去噪与补全</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#7-1-%E6%A6%82%E8%BF%B0"><span class="nav-number">4.1.</span> <span class="nav-text">7.1 概述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-2-%E5%88%A4%E5%88%AB%E6%A8%A1%E5%9E%8B"><span class="nav-number">4.2.</span> <span class="nav-text">7.2 判别模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-3-%E7%94%9F%E6%88%90%E6%A8%A1%E5%9E%8B"><span class="nav-number">4.3.</span> <span class="nav-text">7.3 生成模型</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Peter chen</p>
+  <div class="site-description" itemprop="description">siyuan Chen personal page</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Peter chen</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

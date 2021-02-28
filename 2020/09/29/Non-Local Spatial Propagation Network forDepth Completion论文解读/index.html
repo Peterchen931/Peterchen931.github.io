@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"github.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="原文地址：NLSPN 1. 简要翻译摘要在本文中，我们提出了一个健壮且有效的端到端非局部空间传播网络来进行深度完成。拟议的网络将RGB和稀疏深度图像作为输入，并估计每个像素的非本地邻居（non-local  neighbors）及其亲和力（affinities），以及带有像素方向置信度的初始深度图（depth map）。然后，基于预测的非本地邻居和相应的亲和力，通过其置信度和非本地空间传播过程来迭">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Non-Local Spatial Propagation Network forDepth Completion 论文解读">
+<meta property="og:url" content="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/29/Non-Local%20Spatial%20Propagation%20Network%20forDepth%20Completion%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/index.html">
+<meta property="og:site_name" content="siyuan Chen">
+<meta property="og:description" content="原文地址：NLSPN 1. 简要翻译摘要在本文中，我们提出了一个健壮且有效的端到端非局部空间传播网络来进行深度完成。拟议的网络将RGB和稀疏深度图像作为输入，并估计每个像素的非本地邻居（non-local  neighbors）及其亲和力（affinities），以及带有像素方向置信度的初始深度图（depth map）。然后，基于预测的非本地邻居和相应的亲和力，通过其置信度和非本地空间传播过程来迭">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/29/Non-Local%20Spatial%20Propagation%20Network%20forDepth%20Completion%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/Non-Local%20Spatial%20Propagation%20Network%20forDepth%20Completion论文解读/image-20201008220613672.png">
+<meta property="og:image" content="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/29/Non-Local%20Spatial%20Propagation%20Network%20forDepth%20Completion%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/Non-Local%20Spatial%20Propagation%20Network%20forDepth%20Completion论文解读/image-20200930100100565.png">
+<meta property="og:image" content="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/29/Non-Local%20Spatial%20Propagation%20Network%20forDepth%20Completion%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/Non-Local%20Spatial%20Propagation%20Network%20forDepth%20Completion论文解读/image-20200930100344669.png">
+<meta property="og:image" content="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/29/Non-Local%20Spatial%20Propagation%20Network%20forDepth%20Completion%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/Non-Local%20Spatial%20Propagation%20Network%20forDepth%20Completion论文解读/image-20201002104301640.png">
+<meta property="og:image" content="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/29/Non-Local%20Spatial%20Propagation%20Network%20forDepth%20Completion%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/Non-Local%20Spatial%20Propagation%20Network%20forDepth%20Completion论文解读/image-20201002102014862.png">
+<meta property="og:image" content="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/29/Non-Local%20Spatial%20Propagation%20Network%20forDepth%20Completion%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/Non-Local%20Spatial%20Propagation%20Network%20forDepth%20Completion论文解读/image-20201009091311623.png">
+<meta property="og:image" content="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/29/Non-Local%20Spatial%20Propagation%20Network%20forDepth%20Completion%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/Non-Local%20Spatial%20Propagation%20Network%20forDepth%20Completion论文解读/image-20201009093604262.png">
+<meta property="og:image" content="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/29/Non-Local%20Spatial%20Propagation%20Network%20forDepth%20Completion%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/Non-Local%20Spatial%20Propagation%20Network%20forDepth%20Completion论文解读/image-20201009101903211.png">
+<meta property="og:image" content="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/29/Non-Local%20Spatial%20Propagation%20Network%20forDepth%20Completion%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/Non-Local%20Spatial%20Propagation%20Network%20forDepth%20Completion论文解读/image-20201009101823684.png">
+<meta property="og:image" content="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/29/Non-Local%20Spatial%20Propagation%20Network%20forDepth%20Completion%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/Non-Local%20Spatial%20Propagation%20Network%20forDepth%20Completion论文解读/image-20201009093604262.png">
+<meta property="og:image" content="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/29/Non-Local%20Spatial%20Propagation%20Network%20forDepth%20Completion%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/Non-Local%20Spatial%20Propagation%20Network%20forDepth%20Completion论文解读/image-20201008220613672.png">
+<meta property="article:published_time" content="2020-09-29T02:47:16.000Z">
+<meta property="article:modified_time" content="2021-02-26T03:18:38.482Z">
+<meta property="article:author" content="Peter chen">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/29/Non-Local%20Spatial%20Propagation%20Network%20forDepth%20Completion%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/Non-Local%20Spatial%20Propagation%20Network%20forDepth%20Completion论文解读/image-20201008220613672.png">
+
+<link rel="canonical" href="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/29/Non-Local%20Spatial%20Propagation%20Network%20forDepth%20Completion%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-cn'
+  };
+</script>
+
+  <title>Non-Local Spatial Propagation Network forDepth Completion 论文解读 | siyuan Chen</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">siyuan Chen</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-cn">
+    <link itemprop="mainEntityOfPage" href="https://github.com/Peterchen931/Peterchen931.github.io/2020/09/29/Non-Local%20Spatial%20Propagation%20Network%20forDepth%20Completion%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Peter chen">
+      <meta itemprop="description" content="siyuan Chen personal page">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="siyuan Chen">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Non-Local Spatial Propagation Network forDepth Completion 论文解读
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-09-29 10:47:16" itemprop="dateCreated datePublished" datetime="2020-09-29T10:47:16+08:00">2020-09-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-26 11:18:38" itemprop="dateModified" datetime="2021-02-26T11:18:38+08:00">2021-02-26</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>原文地址：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2007.10042">NLSPN</a></p>
+<h2 id="1-简要翻译"><a href="#1-简要翻译" class="headerlink" title="1. 简要翻译"></a>1. 简要翻译</h2><h3 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h3><p>在本文中，我们提出了一个健壮且有效的端到端非局部空间传播网络来进行深度完成。拟议的网络将RGB和稀疏深度图像作为输入，并估计每个像素的非本地邻居（non-local  neighbors）及其亲和力（affinities），以及带有像素方向置信度的初始深度图（depth map）。然后，基于预测的非本地邻居和相应的亲和力，通过其置信度和非本地空间传播过程来迭代完善初始深度预测。与以前的利用固定本地邻居的算法（fixed-local neighbors）不同，该算法有效地避免了无关的邻居，并在传播过程中专注于相关的非本地邻居。此外，我们引入了可学习的亲和力归一化方法，以更好地了解与传统方法相比的亲和力组合。所提出的算法对于深度边界上的混合深度问题具有固有的鲁棒性，这是现有深度估计/完成算法的主要问题之一。在室内和室外数据集上的实验结果表明，该算法在深度完成精度和对混合深度问题的鲁棒性方面优于常规算法。我们的实施可在项目页面上公开获得</p>
+<a id="more"></a>
+
+<h3 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h3><p>近年来，随着计算机视觉应用（如增强现实，无人机控制，自动驾驶和运动计划）的迅猛发展，深度估计已成为一个重要问题。 为了获得可靠的深度预测，利用了来自各种传感器的信息，例如RGB摄像机，雷达，LiDAR和超声传感器[2,3]。 深度传感器（例如LiDAR传感器）可产生高频率的精确深度测量。 但是，由于诸如扫描通道数量之类的硬件限制，获取深度的密度通常很少。为了克服这种限制，已经出现了很多工作来估算基于给定的稀疏深度值稠密深度信息，称为深度完成。</p>
+<p>早期的深度完成方法仅依靠稀疏测量，因此，它们的预测会受到不必要的伪影（unwanted artifacts）的影响，例如模糊和混合深度值（即混合深度问题）。由于RGB图像显示出颜色和纹理的细微变化，因此最近的方法使用RGB图像作为指导来预测准确的密集深度图。</p>
+<p>直接深度完成算法可拍摄RGB或RGB-D图像，并使用深度卷积神经网络（CNN）直接推断密集深度。与传统算法相比，这些直接算法已显示出卓越的性能。 但是，它们仍然在深度边界附近生成模糊的深度图。 不久之后，这种现象通过最近的基于亲和力的空间传播方法（affinity-based spatial propagation methods）得到缓解。通过学习对本地邻居的亲和力并反复细化深度预测，最终的密集深度将变得更加准确。但是，先前的传播网络有一个明确的限制，即它们具有用于传播的固定本地邻居配置。固定本地邻居通常具有不相关的信息，不应将其与参考信息混合，尤其是在深度边界上。 因此，他们在深度完成任务中仍然遭受混合深度问题的困扰（见图1（c））。</p>
+<p>为了解决该问题，我们提出了一个非本地空间传播网络（NLSPN），该网络预测每个像素（即信息应来自的地方）的非本地邻居，然后使用空间变化的关联性（即应传播多少信息）汇总相关信息，这些关联性也可以从网络中进行预测。通过放宽固定本地邻居的配置，我们提出的的网络可以避免与其他相邻对象隶属的无关本地邻居。 因此，我们的方法对混合深度问题具有固有的鲁棒性。另外，基于对常规亲和力归一化方案的分析，我们提出了一种具有较大亲和力表示能力的可学习的亲和力归一化方法。它使更精确的亲和力估计成为可能，从而改善了非本地邻居之间的传播。为了进一步从输入和不准确的初始预测中提高对异常值的鲁棒性，我们同时预测了初始密集深度的置信度，并将其纳入亲和力归一化以最小化不可靠深度值的传播。在室内和室外数据集上的实验结果表明， 与最先进的方法相比，我们的方法具有出色的深度补全性能。</p>
+<h3 id="2-相关工作"><a href="#2-相关工作" class="headerlink" title="2. 相关工作"></a>2. 相关工作</h3><p>**深度估计和深度补全 **    深度估计的目的是基于各种输入信息生成密集的深度预测，例如单个RGB图像，多视图图像，稀疏LiDAR测量等传统的深度估计算法通常利用来自单一模态的信息。 Eigenet等人[11] 使用多尺度神经网络从单个图像预测深度。在Zbontar和LeCun [35]提出的方法中，从立体校正图像中提取图像斑块的较深特征，然后通过沿对极线搜索最相似的斑块来确定视差。具有准确但稀疏的深度信息的深度估计也已被深入研究（depth completion）。 Uhriget等人[30]提出了稀疏不变的CNN，以预测来自LiDAR传感器的稀疏深度图像来预测密集深度图。Ma和Sertac [21]引入了一种方法，该方法通过将RGB和稀疏深度图像进行级联来构造4D体积，然后将其馈入编码器-解码器CNN以进行最终预测。Chenet等人[7]采用了2D卷积和3D连续卷积的融合，以有效地考虑3D点的几何构型</p>
+<p><strong>空间传播网络</strong>     尽管直接深度完成算法已经证明了不错的性能，但是从不同模态（例如RGB图像）以精确指导进行稀疏到密集传播是从稀疏输入获得密集预测的更有效方法[9,32,17,22] 。Liuet等人[19]提出了一种空间传播网络（SPN）来学习局部亲和力。SPN可以从大规模数据中学习特定于任务的亲和力值，并且可以应用于各种高级视觉任务，包括深度完成和语义分割。但是，空间传播采用 three-way connection in four-direction，这不适合同时考虑所有本地邻居。Chenget等人[9]克服了这一限制，他提出了卷积空间传播网络（CSPN）来预测局部邻居的亲和力值，并同时根据其局部上下文更新所有像素以提高效率。但是，SPN和CSPN都依赖固定本地邻居，这可能来自无关对象。<br>因此，基于这些邻居的传播将导致“混合深度值”，并且在其体系结构中使用的迭代传播过程将增加影响。此外，固定的邻域模式限制了图像中相关但广泛的（即非本地）上下文的使用</p>
+<p><strong>非本地网络</strong>    非本地信息的重要性已在各种视觉任务中得到广泛探讨[5,31,34,28]。最近，Wang Et等人[31]提出了深度神经网络中的非局部块。 它由成对相似度计算和特征处理模块组成。作者通过将非本地块嵌入到现有的用于视频分类和图像识别的深度网络中，证明了其有效性。<br>与本地方法相比，这些方法显示出显着改进。</p>
+<p><strong>我们的工作</strong>    与以前的算法[19,9,32]不同，我们的网络经过训练可以预测具有相应亲和力的非本地邻居。另外，我们的可学习的亲和力归一化算法搜索最佳的亲和力空间，这在常规算法中尚未探索[6,19,9]。此外，我们将初始密集深度预测（将通过传播过程进行细化）的置信度纳入亲和力归一化，以最大程度地减少不确定深度值的传播。此外，我们将初始密集深度预测的置信度（将通过传播程序进行完善）纳入亲和力归一化，以最大程度地减少不确定深度值的传播。图2概述了我们的算法。 每个组件将在后续章节中详细介绍3。</p>
+<h3 id="3-非局部空间传播"><a href="#3-非局部空间传播" class="headerlink" title="3. 非局部空间传播"></a>3. 非局部空间传播</h3><p>空间传播的目标是通过传播具有相应亲和力的邻域观测值（即相似点）来估计缺失值并优化不太可信的值。空间传播已被用作各种计算机视觉应用中的关键模块之一[24,17,16]。特别是，空间传播适用于深度完成任务[19,9,32]，并且与直接回归算法相比，其空间性能已得到证明[30,21]。在本节中，我们首先简要回顾一下本地SPN及其局限性，然后描述提出的非本地SPN</p>
+<h4 id="3-1-本地空间传播网络"><a href="#3-1-本地空间传播网络" class="headerlink" title="3.1 本地空间传播网络"></a>3.1 本地空间传播网络</h4><p>主要部分，公式多，翻译效果不好，推荐看原文</p>
+<p>一个点的深度可以由下式计算，其中w对应亲和度，N函数对应编解码器的neborhood部分</p>
+<img src="Non-Local Spatial Propagation Network forDepth Completion论文解读/image-20201008220613672.png" alt="image-20201008220613672" style="zoom: 67%;" />
+
+<p>固定区间的传播主要有两种，一是spn，它从4个方向计算affinity（上下，下上，右左，左右），从一个上下方向的做法是<img src="Non-Local Spatial Propagation Network forDepth Completion论文解读/image-20200930100100565.png" alt="image-20200930100100565" style="zoom: 35%;" /></p>
+<p>其他的可以进行类比，推理出来</p>
+<p>另一种是cspn，他选取周围3x3的区域<img src="Non-Local Spatial Propagation Network forDepth Completion论文解读/image-20200930100344669.png" alt="image-20200930100344669" style="zoom:30%;" /></p>
+<h4 id="3-2-非本地空间传播网络"><a href="#3-2-非本地空间传播网络" class="headerlink" title="3.2 非本地空间传播网络"></a>3.2 非本地空间传播网络</h4><p>同上</p>
+<p>主要讲述了local-spatial propagation的不足，即在深度发生变化的边界效果不好depth-mix problem，即使是周围相邻点，在深度边界也会有很大深度变化。所以本文使用了一个推理网络来进行有关点的预测。</p>
+<h3 id="4-置信度结合的affinity-learning"><a href="#4-置信度结合的affinity-learning" class="headerlink" title="4 置信度结合的affinity learning"></a>4 置信度结合的affinity learning</h3><p>亲和力学习是SPN中的关键组成部分之一，可实现准确，稳定的传播。 常规的基于亲和力的算法利用颜色统计或手工制作的特征[17,27,16]。 最近的亲和力学习方法[18,19,9]采用深度神经网络来预测亲和力并显示出实质性的性能提升。 在这些方法中，亲和力归一化对稳定传播过程起着重要作用。</p>
+<p>在本节中，我们分析了常规归一化方法及其局限性，然后以可学习的方式提出了归一化方法。 此外，我们在归一化期间合并了初始预测的置信度，以抑制传播期间不可靠的深度值产生的负面影响，</p>
+<h4 id="4-1-affinity归一化"><a href="#4-1-affinity归一化" class="headerlink" title="4.1 affinity归一化"></a>4.1 affinity归一化</h4><p>亲和力归一化的目的是确保传播过程中的稳定性。为了稳定，时间雅可比行列的范数，∂xt/∂xt-1应该等于或小于1 [19]。在等式中的空间传播公式。</p>
+<p><img src="Non-Local Spatial Propagation Network forDepth Completion论文解读/image-20201002104301640.png" alt="image-20201002104301640" style="zoom:50%;" />首先需要保证affinity和小于1</p>
+<p>常用的归一化方法是用</p>
+<img src="Non-Local Spatial Propagation Network forDepth Completion论文解读/image-20201002102014862.png" alt="image-20201002102014862" style="zoom:67%;" />
+
+<p>来进行的，但是这存在一个问题，就是它的w值只能在边界上，中心区域无法靠近</p>
+<p>随后提出abs-sum* ，即只对w和大于1的进行归一化，这样就可以部分利用中心区域，但是当k变大时，处于中心部分的概率就会很小。</p>
+<p>于是就找到了一种tanh-c的方法，将每一个w约束到[-1/C,1/C]中</p>
+<p>Tanh−γ将C值视为可学习的一个参数。</p>
+<p>Tanh−γ−Abs−Sum∗在r的基础上引入了只对w和大于1进行归一化的性质。</p>
+<p>蓝色底，点为白色，点越密集的地方越白，纯蓝色的地方代表不可达区域</p>
+<p>![](Non-Local Spatial Propagation Network forDepth Completion论文解读/IMG_0206(20201002-195017).PNG)</p>
+<p>a. 被处理后的点仅在白色线上</p>
+<p>b. 超过中心菱形区域的点会被归一化到白色线上，中心区域不会被处理</p>
+<p>c.  所有点均进行tanh约束，到（-1/c, 1/c）</p>
+<p>d. 只有超过了黄色菱形区域或红色区域才会被约束。（这个还不太明白，需要看代码）</p>
+<h4 id="4-2-置信度结合的affinity归一化"><a href="#4-2-置信度结合的affinity归一化" class="headerlink" title="4.2 置信度结合的affinity归一化"></a>4.2 置信度结合的affinity归一化</h4><p>在现有的传播框架中[17,27,16,18,19,9]，亲和性描述了像素之间的相关性，并为基于相似性的传播提供了指导。 在这种情况下，在不考虑其可靠性的情况下，均等地对待地图中的每个像素。 然而，在深度补全任务中，应基于不同像素的可靠性对其进行加权。例如，不应将来自不可靠像素（例如，噪声像素和深度边界上的像素）的信息传播到邻居中，而不管它们与相邻像素的亲和力如何。最近的工作DepthNormal [32]通过置信度预测解决了这个问题。 它利用置信度作为加权求和的mask以及种子点保存的预测。但是，它不能完全防止错误的深度值的传播，因为在每次传播之前分别进行加权求和</p>
+<p>在这项工作中，我们考虑像素的confidence map，并将其与affinity nomolization相结合。 也就是说，我们不仅预测初始密集深度，而且还预测其置信度，然后将置信度合并到亲和度归一化中，以减少传播过程中来自不可靠深度的干扰。 </p>
+<p>图5（d）显示了与置信度无关的深度估计结果的示例。 一些嘈杂的输入深度点会以低置信度生成不可靠的深度值（请参见图5（c））。 如果不使用置信度，那么噪点少且置信度低的像素将在传播过程中损害其相邻像素，并导致令人不快的伪像（见图5（d））。 将置信度归一化后，我们的算法可以成功消除不置信像素的影响并生成更准确的深度估计，如图5（e）所示。</p>
+<p>主要就是将置信度相结合。</p>
+<h3 id="5-深度补全网络"><a href="#5-深度补全网络" class="headerlink" title="5. 深度补全网络"></a>5. 深度补全网络</h3><p>在本节中，我们描述网络架构和用于网络训练的损失函数。 提出的NLSPN主要包括两部分：（1）用于初始深度图，置信度图和具有其原始亲和力的非本地邻居预测的编码器-解码器体系结构，以及（2）具有以下特征的非本地空间传播层： 可学习的亲和力归一化。</p>
+<h4 id="5-1-网络架构"><a href="#5-1-网络架构" class="headerlink" title="5.1 网络架构"></a>5.1 网络架构</h4><p>拟议网络的编码器-解码器部分建立在残差网络[13]之上，并从RGB和稀疏深度图像中提取高级特征。此外，我们采用了编码器-解码器特征连接策略[26,9]。 同时使用低级和高级特征。</p>
+<p>在图2中，我们提供了算法的概述。 来自编码器/解码器网络的功能被共享，用于初始密集深度，置信度，非本地邻居和原始亲和力估计。 然后，以迭代的方式进行非局部空间传播。如3.2所述，非本地邻居可以具有分数坐标( fractional  coordinates)。为了更好地将分数坐标纳入训练中，在传播过程中采用了可微分采样(differentiable sampling )[15,36]。 我们注意到，我们的非局部传播可以通过可变形卷积(deformable convolution)有效地计算出来[36]。 因此，每个传播都需要通过我们的亲和力归一化来进行可变形卷积的简单前进步骤。 有关详细的网络配置，请参阅补充材料。</p>
+<h4 id="5-2损失函数"><a href="#5-2损失函数" class="headerlink" title="5.2损失函数"></a>5.2损失函数</h4><p>损失函数就是根据给定深度与预测深度无欧式距离决定的，可选择l1或来l2范数。关于confidence的预测</p>
+<p>函数的优化会与网络结构一起训练。</p>
+<p>![ ](Non-Local Spatial Propagation Network forDepth Completion论文解读/image-20201002152731788.png)</p>
+<h3 id="6-实验"><a href="#6-实验" class="headerlink" title="6. 实验"></a>6. 实验</h3><p>在本节中，我们首先描述实施细节和培训环境。 之后，提出了与室内和室外数据集上以前算法的定量和定性比较。我们还提出了消融研究，以验证所提出算法的每个组件的有效性。</p>
+<p>拟议的方法是使用PyTorch [23]和NVIDIAApex [1]实现的，并在配备Intel Xeon E5-2620和4NVIDIA GTX 1080 Ti GPU的计算机上进行了培训。 对于我们所有的实验，我们采用的ADAMoptimizer的β1= 0.9，β2= 0.999，初始学习率为0.001。 网络训练分别在NYU Depth V2 [29]和KITTIDepth Completion [30]数据集上进行了大约1天和3天。我们采用ResNet34 [13]作为编码器-解码器基准网络。 为了与使用3×3本地邻居的其他算法进行公平比较，将非本地邻居的数量设置为8。 经验上将传播步骤数设置为18。 其他培训细节将分别针对每个数据集进行描述。 为了进行定量评估，我们使用了以下常用指标[29,21,9]：</p>
+<p>![image-20201002153055837](Non-Local Spatial Propagation Network forDepth Completion论文解读/image-20201002153055837.png)</p>
+<h4 id="6-1-NYU-Depth-V2"><a href="#6-1-NYU-Depth-V2" class="headerlink" title="6.1 NYU Depth V2"></a>6.1 NYU Depth V2</h4><p>纽约大学深度V2数据集[29]（NYUv2）由RGB和Kinect传感器捕获的464个室内场景的深度图像组成。 对于训练数据，我们使用了官方训练中约50K图像的子集。 将每个图像缩小为320×240，然后应用304×228中心裁剪。<br>我们对模型使用l1loss进行了25个时期的训练，学习率在前10个时期后每5个时期下降了0.2。 我们将批次大小设置为24。使用官方测试的654张图像进行了评估和比较。</p>
+<p>在图6中，我们介绍了针对NYUv2数据集获得的一些深度完成结果。 与以前的工作[21,9]一样，从密集深度图像中随机采样500个深度像素，并将其与相应的RGB图像一起用作输入。 为了进行比较，我们提供了从稀疏到密集（S2D）[21]和CSPN [9]的结果。 S2D（图6（c））生成模糊深度图像，因为它是直接回归算法。与S2D相比，CSPN和我们的方法通过迭代的空间传播过程生成深度图，并大大提高了精度。 但是，CSPN存在混合深度问题，尤其是在微小或薄薄的结构上。 相比之下，我们的方法可以通过非局部传播保留微小的结构和深度边界。</p>
+<p>表1显示了NYUv2数据集的定量评估。 提出的算法取得了最佳结果，并且以较大的幅度（RMSE 0.020m）优于其他方法。 与几何无关的方法[21,19,9]相比，几何感知的方法[14,8,25,32]总体上表现出更好的性能。我们提出的算法也可以看作是几何感知算法，因为它隐式地探索了几何相关的邻居进行传播。</p>
+<h4 id="6-2-KITTI-Depth-Completion"><a href="#6-2-KITTI-Depth-Completion" class="headerlink" title="6.2 KITTI Depth Completion"></a>6.2 KITTI Depth Completion</h4><p>KITTI深度完成（KITTI DC）数据集[30]包含90KRGB和LiDAR对。 我们忽略了没有LiDAR投影（即top100像素）和中心裁剪的1216×240色块进行训练的区域。 所提议的网络训练了25个带有1和2损失的时期以平衡RMSE和MAE，并且在最初的10个时期之后，每5个时期的初始学习率下降了0.4。 我们使用了批量为25的培训。</p>
+<p>表2显示了KITTI DC数据集的定量评估。 与从NYUv2获得的结果类似，几何感知算法[32,25,7,8]与几何无关方法[21,9]总体上表现更好。 由于LiDAR传感器噪声（即如图5所示的混合前景点和背景点）是不可避免的，因此预测的置信度对消除噪声的影响非常有益。 DepthNormal [32]利用置信度值作为细化过程中加权求和的掩码。 但是，它的置信度掩码不能完全防止不正确的值传播到相邻像素中。 相反，所提出的结合置信度的亲和力归一化有效地限制了传播过程中错误值的传播。</p>
+<p>我们注意到，在我们提交论文时，所提出的方法胜过了KITTIonline排行榜中所有同行评审的方法。</p>
+<p>图7展示了一些预测的密集深度示例，其中突出了挑战边缘区域。 这些区域通常在深度边界附近包含小的结构，很容易受到混合深度问题的影响。 与其他方法（图7（c）-（g））相比，我们的算法（图7（h））在非本地邻居的帮助下可以更好地处理那些挑战区域。</p>
+<h4 id="6-3-消融研究"><a href="#6-3-消融研究" class="headerlink" title="6.3 消融研究"></a>6.3 消融研究</h4><p>我们进行了消融研究，以验证网络中每个组成部分的作用，包括非本地传播，亲和力归一化和置信度合并的传播。 对于所有实验，我们使用从KITTI DC训练数据集中采样的一组10K图像进行训练，并评估完整验证数据集上的性能。 对网络进行了20个时期的训练，并以912×228的中心裁剪补丁进行了快速训练，并且批大小设置为12。其他设置与6.2中提到的设置相同。</p>
+<p>非本地邻居图8可视化了我们算法预测的一些非本地邻居示例。 与固定本地邻居相比，我们预测的非本地邻居在选择邻居像素方面具有更高的灵活性。 特别地，从深度边界附近的在颜色和几何上相关的位置（例如，相同的物体或平面）中选择非局部邻居。 此外，我们收集了相邻像素深度方差的统计数据，以显示所选相邻像素的相关性</p>
+<p>在KITTI DC验证集中，固定局部和非局部邻居配置的平均深度方差分别为22.7mm和11.6mm。 非本地邻居配置的小方差表明，该方法能够选择更多相关邻居进行传播。</p>
+<p>置信度掩码不能完全防止不正确的值传播到相邻像素中。 相反，所提出的结合置信度的亲和力归一化有效地限制了传播过程中错误值的传播。（why）</p>
+<p>表中显示了使用固定本地NCS和使用非本地邻居NNL获得的网络的定量结果。 3.还使用两种归一化技术测试了这些网络：（1）使用Abs-Sum（Tab。3（b）和（g）），以及（2）使用Tanh-γ-Abs-Sum∗（Tab。3（d）和 （m））。 所提出的具有非本地邻居的方法始终优于具有固定本地邻居的方法，这证明了非本地框架的优越性。</p>
+<p><strong>亲和力归一化和置信度合并</strong>    为了验证建议的亲和力归一化算法，我们将其与三种不同的亲和力归一化方法进行比较（参见第4节）。 表3（g）-（i）和（m）使用相同的网络但使用不同的亲和力标准化方法评估了性能。 由于亲和力组合的范围有限，具有Abs-Sum的模型表现不佳，如图4（a）所示。 当在保持稳定条件（Abs-Sum ∗）的同时放松归一化条件时，由于可行亲和空间的面积更大并且亲和力分布更好，性能得到了改善（图4（b））。Tanh-C可以在没有明确归一化的情况下增强稳定性条件。 但是，如图4（c）所示，所得的亲和力值驻留在较小的亲和力空间中（即，在边缘尺寸为2 / K的k维超立方体中）； 因此，与Abs-Sum ∗相比，它的性能稍差。 所提出的Tanh-γ-Abs-Sum*能够通过可学习的归一化参数γ减轻这种限制。所学习的γ在Abs-Sum ∗和Tanh-C之间折衷，可以提高性能。 请注意，在NYUv2（第6.1节）和KITTI DC（第6.2节）数据集上训练的最终γ值（用γ= K = 8初始化）分别为5.2和6.3。 该观察结果表明最优γ根据训练环境而变化。</p>
+<p>我们还比较了有置信度和无置信度的网络性能，以验证置信度合并的重要性。 另外，我们测试了两个备选的置信度感知网络（1）通过使用阈值0.5的置信度从置信度生成二进制掩码，以及（2）使用DepthNormal [32]的加权求和方法，并在传播过程中应用每种方法以消除离群值的影响。比较结果显示在选项卡中。 3（j）-（m）。 所提出的置信度结合的亲和力归一化（表3（m））优于其他方法，因为它具有抑制不可靠像素传播的能力。与我们的方法相比，基于掩码的方法（表3（k））和加权求和（表3（l））显示出较差的性能，表明硬阈值法和加权求和法对于鼓励相关像素的传播并抑制无关像素传播不是最佳的。请注意，建议的置信度合并方法对于使用NNL和NCS的网络均有效（表3（a）-（d）），这些结果证明了我们进行置信度合并的有效性。</p>
+<p><strong>更多的分析</strong>    为了验证学习的亲和力的重要性，我们使用基于颜色强度之间的欧式距离计算出的常规亲和力，进一步评估了所提出的方法。 如标签所示。 如图3（e）和（m）所示，使用学习的亲和力的网络比使用手工制作的网络的网络性能要好得多。 此外，我们在Tab中提供了比较方法的网络参数数量。 4.所提出的方法在相对较少的网络参数下获得了优异的性能。更多的实验结果，可视化和消融研究请参考补充材料。</p>
+<h3 id="7-结论"><a href="#7-结论" class="headerlink" title="7. 结论"></a>7. 结论</h3><p>我们提出了一种端到端的可训练非局部空间传播网络，用于深度完成。 所提出的方法在选择传播邻居时具有很高的灵活性，这有利于精确传播，并消除了相似性学习问题。 与以前的算法（即固定局部传播）不同，拟议的非局部空间传播有效地排除了不相关的邻居，并强制传播以关注相关邻居之间的协同作用。 另外，所提出的结合了置信度的可学习亲和力归一化鼓励了更多的亲和力组合，并使传播过程中错误的深度值所产生的有害影响最小化。 我们的实验结果证明了该方法的优越性</p>
+<p>这项工作得到了美国国家信息学会的部分支持，用于构建人工智能的培训数据（2100-2131-305-107-19）。</p>
+<h2 id="2-网络结构分析"><a href="#2-网络结构分析" class="headerlink" title="2. 网络结构分析"></a>2. 网络结构分析</h2><p>本小结会结合论文与代码，对NLSPN的网络结构进行分析。</p>
+<p>![image-20201008203258686](Non-Local Spatial Propagation Network forDepth Completion论文解读/image-20201008203258686.png)</p>
+<ol>
+<li><p>信息编解码阶段</p>
+<p>将输入放入一个编解码器中，解码器会输出3个矩阵，<strong>初始深度矩阵，邻居以及邻居亲和度矩阵，初始置信度矩阵</strong>。编解码器的网络结构如下</p>
+<p>![IMG_0211(20201009-082451)](Non-Local Spatial Propagation Network forDepth Completion论文解读/IMG_0211(20201009-082451).PNG)</p>
+<p>ini_dep：初始深度图    [B, 1, H, W]</p>
+<p>guide：提供neighbor位置，neighbor的亲和度(affinity)    [B, K, H, W]    K为选择邻居的个数</p>
+<p>confidence：提供每个点预测的置信度    [B, 1, H, W]</p>
+</li>
+<li><p>置信度结合的affinity归一化</p>
+</li>
+</ol>
+   <img src="Non-Local Spatial Propagation Network forDepth Completion论文解读/image-20201009091311623.png" alt="image-20201009091311623" style="zoom:80%;" />
+
+<p>   这一部分是将guide_map解码，并且与confidence进行结合的过程。首先，先对gudie_map进行卷积，生成[B, 3*K, H, W]的矩阵，随后将矩阵划分为3部分，offsetX， offsetY， affinity。其意义如下</p>
+<p>   ![IMG_0214(20201009-092555)](Non-Local Spatial Propagation Network forDepth Completion论文解读/IMG_0214(20201009-092555).PNG)</p>
+<p>   有了offsetX与offsetY，我们就可以找到预测出的depth_map的邻居的位置dep(i, j)的邻居即为dep(i+offx, j+offy)， 其中，offx与offy为Ox(k, i, j) 。（K为第几个邻居）</p>
+<p>   根据原文的公式</p>
+   <img src="Non-Local Spatial Propagation Network forDepth Completion论文解读/image-20201009093604262.png" alt="image-20201009093604262"  />
+
+<p>   我们需要将affinity进行归一化，并且与置信度相结合。与置信度相结合又有一个问题，affinity数据的每一层（HxW）都是一个被偏移的点的位置affinity，所以置信度也需要进行移位相乘。</p>
+<p>   ![IMG_0215(20201009-094336)](Non-Local Spatial Propagation Network forDepth Completion论文解读/IMG_0215(20201009-094336).PNG)</p>
+<p>   这个时候就引出了文章中使用的deformable convolution了，它与本文中的non-local-neighbor的操作方法十分相似。deform conv的核心思想就是，给普通卷积的每一个位置添加一个偏移量，然后对偏移后的位置进行卷积操作。</p>
+<p>   ![image-20201008225627060](Non-Local Spatial Propagation Network forDepth Completion论文解读/image-20201008225627060.png)</p>
+<p>   同样的，这个偏移量的指明需要依靠额外的矩阵offsetx，offsety。</p>
+<p>   随后提出的deformable convolution v2中，引入了一个mask以解决一些无用偏移位置的问题，其实就是每个位置多乘了一个置信度。</p>
+   <img src="Non-Local Spatial Propagation Network forDepth Completion论文解读/image-20201009101903211.png" alt="image-20201009101903211" style="zoom:67%;" />
+
+   <img src="Non-Local Spatial Propagation Network forDepth Completion论文解读/image-20201009101823684.png" alt="image-20201009101823684" style="zoom:67%;" />
+
+<p>   如果将deformable convolution的kernel_size设置为1，权重固定为1，那么deformable convolution操作就是一个对输入的矩阵的每个元素位置进行重排的一个操作。我们将其应用在confidence_map上，偏移矩阵使用offsetx、offsety的一个坐标，那么就可以以实现将confidence_map转换到与affinity同一个坐标空间。</p>
+<p>   $$c(i, j) = w(i,j) * C(i+x, j+y)$$</p>
+<p>   这样就可以与affinity进行相乘了。不过对每一个neighbor，都需要进行condidence_map转换，最后应该会有K个转换后的condidence_map，将其叠加，并与归一化后的affinity相乘。这样，公式<img src="Non-Local Spatial Propagation Network forDepth Completion论文解读/image-20201009093604262.png" alt="image-20201009093604262" style="zoom: 67%;" />就完成了。</p>
+<ol start="3">
+<li><p>初始深度图调优</p>
+<p>![image-20201009110331709](Non-Local Spatial Propagation Network forDepth Completion论文解读/image-20201009110331709.png)</p>
+<p>这一部分根据归一化且置信度结合后的affinity，offset，对初始depth_map进行不断优化的过程。</p>
+<p>这一步的核心公式是</p>
+<img src="Non-Local Spatial Propagation Network forDepth Completion论文解读/image-20201008220613672.png" alt="image-20201008220613672" style="zoom: 80%;" />
+
+<p>函数N会指出邻居的位置信息，然后将所指出的邻居与中心点进行加权求和（汇集neighbor信息）。关于权重w，则是由affinity with confidence and normalized提供。将上式与deformable convolution相比，将x视为depth_map中的值，p视为offset，mk视为affinity，就可以发现本文中的non-local-neighbor正好可以使用deformable convolution来计算。然后将计算后的结果作为新一轮的输入，保持offset，affinity不变，继续进行deformable convolution，优化t次后，得到output depth_map。</p>
+</li>
+</ol>
+<h2 id="3-损失函数"><a href="#3-损失函数" class="headerlink" title="3. 损失函数"></a>3. 损失函数</h2><p>损失函数由l1,l2距离加上权重结合而成，比较简单</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/09/27/ssh%E5%8A%9F%E8%83%BD%E4%BB%A5%E5%8F%8A%E5%88%A9%E7%94%A8%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/" rel="prev" title="ssh功能以及利用端口转发实现内网穿透">
+      <i class="fa fa-chevron-left"></i> ssh功能以及利用端口转发实现内网穿透
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/10/09/Learning%20Guided%20Convolutional%20Network%20for%20Depth%20Completion%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/" rel="next" title="Learning Guided Convolutional Network forDepth Completion翻译">
+      Learning Guided Convolutional Network forDepth Completion翻译 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E7%AE%80%E8%A6%81%E7%BF%BB%E8%AF%91"><span class="nav-number">1.</span> <span class="nav-text">1. 简要翻译</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%AE%80%E4%BB%8B"><span class="nav-number">1.2.</span> <span class="nav-text">1. 简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="nav-number">1.3.</span> <span class="nav-text">2. 相关工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E9%9D%9E%E5%B1%80%E9%83%A8%E7%A9%BA%E9%97%B4%E4%BC%A0%E6%92%AD"><span class="nav-number">1.4.</span> <span class="nav-text">3. 非局部空间传播</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-%E6%9C%AC%E5%9C%B0%E7%A9%BA%E9%97%B4%E4%BC%A0%E6%92%AD%E7%BD%91%E7%BB%9C"><span class="nav-number">1.4.1.</span> <span class="nav-text">3.1 本地空间传播网络</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-%E9%9D%9E%E6%9C%AC%E5%9C%B0%E7%A9%BA%E9%97%B4%E4%BC%A0%E6%92%AD%E7%BD%91%E7%BB%9C"><span class="nav-number">1.4.2.</span> <span class="nav-text">3.2 非本地空间传播网络</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E7%BD%AE%E4%BF%A1%E5%BA%A6%E7%BB%93%E5%90%88%E7%9A%84affinity-learning"><span class="nav-number">1.5.</span> <span class="nav-text">4 置信度结合的affinity learning</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-affinity%E5%BD%92%E4%B8%80%E5%8C%96"><span class="nav-number">1.5.1.</span> <span class="nav-text">4.1 affinity归一化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-%E7%BD%AE%E4%BF%A1%E5%BA%A6%E7%BB%93%E5%90%88%E7%9A%84affinity%E5%BD%92%E4%B8%80%E5%8C%96"><span class="nav-number">1.5.2.</span> <span class="nav-text">4.2 置信度结合的affinity归一化</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E6%B7%B1%E5%BA%A6%E8%A1%A5%E5%85%A8%E7%BD%91%E7%BB%9C"><span class="nav-number">1.6.</span> <span class="nav-text">5. 深度补全网络</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-1-%E7%BD%91%E7%BB%9C%E6%9E%B6%E6%9E%84"><span class="nav-number">1.6.1.</span> <span class="nav-text">5.1 网络架构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="nav-number">1.6.2.</span> <span class="nav-text">5.2损失函数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E5%AE%9E%E9%AA%8C"><span class="nav-number">1.7.</span> <span class="nav-text">6. 实验</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#6-1-NYU-Depth-V2"><span class="nav-number">1.7.1.</span> <span class="nav-text">6.1 NYU Depth V2</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-2-KITTI-Depth-Completion"><span class="nav-number">1.7.2.</span> <span class="nav-text">6.2 KITTI Depth Completion</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-3-%E6%B6%88%E8%9E%8D%E7%A0%94%E7%A9%B6"><span class="nav-number">1.7.3.</span> <span class="nav-text">6.3 消融研究</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E7%BB%93%E8%AE%BA"><span class="nav-number">1.8.</span> <span class="nav-text">7. 结论</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84%E5%88%86%E6%9E%90"><span class="nav-number">2.</span> <span class="nav-text">2. 网络结构分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="nav-number">3.</span> <span class="nav-text">3. 损失函数</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Peter chen</p>
+  <div class="site-description" itemprop="description">siyuan Chen personal page</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Peter chen</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
